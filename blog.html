@@ -1,0 +1,315 @@
+<!DOCTYPE html>
+<html lang="en-AU">
+<head>
+<script>
+/* The cards in this page are the fallback. If the database is going to
+   replace them, showing one set and swapping to another a moment later
+   reads as a glitch, so the list is held back from the first paint.
+   Inline and not in alter.js on purpose: it has to run before anything
+   renders, and the timeout has to fire even if alter.js never loads. */
+document.documentElement.className += ' list-wait';
+window.ALTER_LIST_READY = function () {
+  document.documentElement.classList.remove('list-wait');
+  document.documentElement.classList.add('list-ready');
+};
+setTimeout(function () { window.ALTER_LIST_READY(); }, 1500);
+</script>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+
+<title>The ALTER YOU Blog: Strength Training for Women</title>
+<meta name="description" content="Short, honest reads on lifting, eating enough, progressive overload and training with your cycle, from the coach who built ALTER YOU.">
+<link rel="canonical" href="https://alteryouapp.com/blog.html">
+<meta name="theme-color" content="#F6F3ED">
+<meta name="author" content="Roxy Alterio">
+<meta name="geo.region" content="AU-QLD">
+<meta name="robots" content="index, follow, max-image-preview:large">
+
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="ALTER YOU">
+<meta property="og:locale" content="en_AU">
+<meta property="og:url" content="https://alteryouapp.com/blog.html">
+<meta property="og:title" content="The ALTER YOU Blog">
+<meta property="og:description" content="Short, honest reads on lifting, eating enough, progressive overload and training with your cycle, from the coach who built ALTER YOU.">
+<!-- The share image is read by crawlers that never run JavaScript, so it has to
+     be a real URL. This one points at the admin's storage, where uploading
+     "Share image" overwrites it in place. -->
+<meta property="og:image" content="https://alteryouapp.com/og-image.jpg">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="ALTER YOU, a strength training and cycle syncing app for women">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:site" content="@alteryouapp">
+<meta name="apple-mobile-web-app-title" content="ALTER YOU">
+<!-- ROXY: once the app is live, put your App Store ID here and iPhone Safari
+     shows an "Open in the App Store" banner above the page:
+     <meta name="apple-itunes-app" content="app-id=0000000000"> -->
+<meta name="format-detection" content="telephone=no">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,wght@0,300;0,400;0,500;0,700;1,400&family=Instrument+Serif:ital@0;1&family=Jost:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="alter.css?v=162">
+<link rel="icon" href="favicon.png" id="fav">
+<link rel="apple-touch-icon" href="icon.png" id="appicon">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Blog",
+  "name": "The ALTER YOU Blog",
+  "url": "https://alteryouapp.com/blog.html",
+  "inLanguage": "en-AU",
+  "publisher": { "@type": "Organization", "name": "ALTER YOU", "url": "https://alteryouapp.com" },
+  "author": { "@type": "Person", "name": "Roxy Alterio" }
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://alteryouapp.com/" },
+    { "@type": "ListItem", "position": 2, "name": "Blog", "item": "https://alteryouapp.com/blog.html" }
+  ]
+}
+</script>
+</head>
+<body>
+
+<div class="bar offer" id="offerBar"
+     data-launch="2026-09-19T09:00:00+10:00"
+     data-doors="2026-09-27T23:59:00+10:00"
+     data-starts="2026-09-28T05:00:00+10:00">
+  <span class="bar-txt">
+    <b id="barLabel">Summer Shred &middot; save 43%</b>
+    <span class="bar-count" id="barCount"></span>
+  </span>
+  <a class="bar-cta" href="shred.html#join" data-track="Offer bar click">Get the app</a>
+  <button class="x" type="button" aria-label="Close">&times;</button>
+</div>
+
+<nav class="nav">
+  <div class="nav-in">
+    <button class="burger" type="button" aria-label="Menu" aria-expanded="false" aria-controls="links"><span></span></button>
+    <a class="brand" href="index.html"><svg width="18" height="15" viewBox="0 0 1220 1000" aria-hidden="true" class="mark"><path d="M110 890 L610 110 L1110 890" fill="none" stroke="#646A58" stroke-width="220" stroke-linecap="round" stroke-linejoin="round"/></svg><span>Alter You</span></a>
+    <div class="nav-links" id="links">
+      <a href="features.html">Features</a>
+      <a href="challenges.html">Challenges</a>
+      <a href="pricing.html">Pricing</a>
+      <a href="about.html">About</a>
+      <a class="on" href="blog.html">Blog</a>
+      <a href="faq.html">FAQ</a>
+      <a class="btn sm" href="pricing.html">Download</a>
+    </div>
+  </div>
+</nav>
+
+
+<section class="page-hero bg-bone">
+  <div class="wrap mid">
+    <p class="eyebrow">The blog</p>
+    <h1>Notes on<em>training</em></h1>
+    <p class="lede">
+      Short reads on lifting, eating enough, and the parts of this that nobody puts
+      on a poster.
+    </p>
+  </div>
+</section>
+
+<section class="sec sm bg-bone">
+  <div class="wrap">
+    <div class="posts" id="postList" data-reveal-group>
+      <a class="post-card" href="post.html">
+        <div class="body">
+          <span class="post-cat">Mindset</span>
+          <h3>Why the scale went up when you started lifting</h3>
+          <p>You did everything right and the number moved the wrong way. Here is what is actually happening.</p>
+          <span class="post-read">4 min read</span>
+        </div>
+      </a>
+      <a class="post-card" href="post.html">
+        <div class="body">
+          <span class="post-cat">Training</span>
+          <h3>Progressive overload: the only rule that matters</h3>
+          <p>Soreness is not a scorecard. The one principle behind every program that actually builds strength.</p>
+          <span class="post-read">6 min read</span>
+        </div>
+      </a>
+      <a class="post-card" href="post.html">
+        <div class="body">
+          <span class="post-cat">Support</span>
+          <h3>Never lifted before? Start here</h3>
+          <p>What to do in your first month, and what to ignore.</p>
+          <span class="post-read">5 min read</span>
+        </div>
+      </a>
+      <a class="post-card" href="post.html">
+        <div class="body">
+          <span class="post-cat">Training</span>
+          <h3>Training with your cycle, not against it</h3>
+          <p>Some weeks the same weight feels impossible. That is information, not failure.</p>
+          <span class="post-read">6 min read</span>
+        </div>
+      </a>
+      <a class="post-card" href="post.html">
+        <div class="body">
+          <span class="post-cat">Nutrition</span>
+          <h3>How much protein do you actually need?</h3>
+          <p>Not a flat number for everyone. How to work out a target that fits your body.</p>
+          <span class="post-read">5 min read</span>
+        </div>
+      </a>
+      <a class="post-card" href="post.html">
+        <div class="body">
+          <span class="post-cat">Nutrition</span>
+          <h3>Budget-friendly meal ideas that still hit protein</h3>
+          <p>Hitting your target without a specialty grocery bill.</p>
+          <span class="post-read">5 min read</span>
+        </div>
+      </a>
+      <a class="post-card" href="post.html">
+        <div class="body">
+          <span class="post-cat">Training</span>
+          <h3>Two days a week is enough</h3>
+          <p>Not a compromise. If you have two sessions in you, there is a real program for that.</p>
+          <span class="post-read">4 min read</span>
+        </div>
+      </a>
+      <a class="post-card" href="post.html">
+        <div class="body">
+          <span class="post-cat">Nutrition</span>
+          <h3>Creatine for women, explained</h3>
+          <p>What it does, what it does not do, and whether you need it.</p>
+          <span class="post-read">5 min read</span>
+        </div>
+      </a>
+      <a class="post-card" href="post.html">
+        <div class="body">
+          <span class="post-cat">Mindset</span>
+          <h3>What we mean by 'no war with your body'</h3>
+          <p>The line we keep coming back to, and what it changes about how the app is built.</p>
+          <span class="post-read">5 min read</span>
+        </div>
+      </a>
+      <a class="post-card" href="post.html">
+        <div class="body">
+          <span class="post-cat">Mindset</span>
+          <h3>The scale is not the headline</h3>
+          <p>Why one number on the floor is the least useful thing you can measure, and what to use instead.</p>
+          <span class="post-read">4 min read</span>
+        </div>
+      </a>
+      <a class="post-card" href="post.html">
+        <div class="body">
+          <span class="post-cat">Mindset</span>
+          <h3>How long it actually takes</h3>
+          <p>Not four weeks. A real timeline, so you know whether you are on track.</p>
+          <span class="post-read">5 min read</span>
+        </div>
+      </a>
+    </div>
+  </div>
+</section>
+
+<section class="sec bg-sage center" id="get">
+  <div class="wrap">
+    <p class="eyebrow">Ready</p>
+    <h2>Start training<em>this week</em></h2>
+    <div class="btns"><a class="btn paper" href="pricing.html">Start 3 days free</a></div>
+    <p class="fine">3 days free &middot; $14.17 a month on the annual plan &middot; Cancel in two taps</p>
+  </div>
+</section>
+
+
+
+<!-- a quiet way into the program finder from anywhere -->
+<div class="finder-tab" id="finderTab">
+  <a href="finder.html" data-track="Finder tab"><svg viewBox="0 0 26 9" aria-hidden="true" style="width:13px;height:13px;rotate:90deg;fill:none;stroke:currentColor;stroke-width:1.8"><path d="M5 12h14M13 6l6 6-6 6" stroke-linecap="round" stroke-linejoin="round"/></svg>Let's find your program</a>
+  <button class="x" type="button" aria-label="Hide this">&times;</button>
+</div>
+
+<button class="totop" id="toTop" type="button" aria-label="Back to top">
+  <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 19V5M5 12l7-7 7 7" stroke-linecap="round" stroke-linejoin="round"/></svg>
+</button>
+
+<div class="sticky">
+  <a class="btn" href="pricing.html" data-track="Sticky bar">Join ALTER YOU &middot; $14.17/mo</a>
+</div>
+
+<footer>
+  <div class="wrap">
+    <div class="fgrid">
+      <div>
+        <div class="flock"><svg width="17" height="14" viewBox="0 0 1220 1000" aria-hidden="true" class="mark"><path d="M110 890 L610 110 L1110 890" fill="none" stroke="#EDE8E0" stroke-width="220" stroke-linecap="round" stroke-linejoin="round"/></svg><span>Alter You</span></div>
+        <p>Strength training, nutrition and cycle syncing.<br>Made for women, by women.</p>
+      </div>
+      <div>
+        <h4>App</h4>
+        <ul>
+          <li><a href="features.html">Features</a></li>
+          <li><a href="shred.html">Summer Shred</a></li>
+          <li><a href="challenges.html">Challenges</a></li>
+        <li><a href="finder.html">Find your program</a></li>
+        <li><a href="programs.html">All programs</a></li>
+        <li><a href="calculator.html">Macro calculator</a></li>
+                  <li><a href="pricing.html">Pricing</a></li>
+          <li><a href="faq.html">FAQ</a></li>
+        </ul>
+      </div>
+      <div>
+        <h4>Company</h4>
+        <ul>
+          <li><a href="about.html">About</a></li>
+          <li><a href="blog.html">Blog</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="fbot">
+      <span>&copy; 2026 ALTER YOU. Australia.</span>
+      <nav class="fbot-links" aria-label="Legal">
+        <a href="privacy.html">Privacy</a><span aria-hidden="true">&middot;</span>
+        <a href="terms.html">Terms</a><span aria-hidden="true">&middot;</span>
+        <a href="support.html">Support</a><span aria-hidden="true">&middot;</span>
+        <a href="admin.html" rel="nofollow" class="fadmin">Admin</a>
+      </nav>
+    </div>
+  </div>
+</footer>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="alter.js?v=162"></script>
+<script>
+/* Posts from the admin. The article already written into the page stays
+   visible until the database returns something, so it is never empty. */
+(function () {
+  if (!window.supabase) return;
+  var list = document.getElementById('postList');
+  if (!list) return;
+  var sb = window.supabase.createClient(window.ALTER_SUPABASE.url, window.ALTER_SUPABASE.key);
+
+  function esc(s) {
+    return (s == null ? '' : String(s)).replace(/[&<>"']/g, function (c) {
+      return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c];
+    });
+  }
+
+  sb.from('posts').select('*').order('created_at', { ascending: false }).then(function (res) {
+    var rows = res.data || [];
+    if (!rows.length) return;
+    list.innerHTML = rows.map(function (p) {
+      var cat = p.category || 'training';
+      /* Text only cards. Add `cover` back below to show photos again. */
+      var excerpt = p.excerpt || ((p.body || '').slice(0, 150) + '...');
+      return '<a class="post-card in" href="post.html?id=' + encodeURIComponent(p.id) + '">'
+           + '<div class="body">'
+           + '<span class="post-cat">' + esc(cat.charAt(0).toUpperCase() + cat.slice(1)) + '</span>'
+           + '<h3>' + esc(p.title) + '</h3>'
+           + '<p>' + esc(excerpt) + '</p>'
+           + '<span class="post-read">' + esc(p.read_time || '') + '</span>'
+           + '</div></a>';
+    }).join('');
+  }).catch(function () {});
+})();
+</script>
+</body>
+</html>

@@ -1,0 +1,312 @@
+<!DOCTYPE html>
+<html lang="en-AU">
+<head>
+<script>
+/* The article in this page is the fallback. If the database is going to
+   replace it, showing this one first and swapping a moment later reads as
+   a glitch, so it is held back from the first paint. This sits inline and
+   not in alter.js deliberately: it must run before anything renders, and
+   the timeout must fire even if alter.js fails to load. */
+document.documentElement.className += ' article-wait';
+window.ALTER_REVEAL = function () {
+  document.documentElement.classList.remove('article-wait');
+  document.documentElement.classList.add('article-ready');
+};
+setTimeout(function () { window.ALTER_REVEAL(); }, 1500);
+</script>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+
+<title>Progressive overload: the only rule that matters | ALTER YOU Blog</title>
+<meta name="description" content="Soreness is not a scorecard. The one principle behind every program that actually builds strength, explained simply.">
+<link rel="canonical" href="https://alteryouapp.com/post.html">
+<meta name="theme-color" content="#F6F3ED">
+<meta name="author" content="Roxy Alterio">
+<meta name="geo.region" content="AU-QLD">
+<meta name="robots" content="index, follow, max-image-preview:large">
+
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="ALTER YOU">
+<meta property="og:locale" content="en_AU">
+<meta property="og:url" content="https://alteryouapp.com/post.html">
+<meta property="og:title" content="Progressive overload: the only rule that matters">
+<meta property="og:description" content="Soreness is not a scorecard. The one principle behind every program that actually builds strength, explained simply.">
+<!-- The share image is read by crawlers that never run JavaScript, so it has to
+     be a real URL. This one points at the admin's storage, where uploading
+     "Share image" overwrites it in place. -->
+<meta property="og:image" content="https://alteryouapp.com/og-image.jpg">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="ALTER YOU, a strength training and cycle syncing app for women">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:site" content="@alteryouapp">
+<meta name="apple-mobile-web-app-title" content="ALTER YOU">
+<!-- ROXY: once the app is live, put your App Store ID here and iPhone Safari
+     shows an "Open in the App Store" banner above the page:
+     <meta name="apple-itunes-app" content="app-id=0000000000"> -->
+<meta name="format-detection" content="telephone=no">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,wght@0,300;0,400;0,500;0,700;1,400&family=Instrument+Serif:ital@0;1&family=Jost:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="alter.css?v=162">
+<link rel="icon" href="favicon.png" id="fav">
+<link rel="apple-touch-icon" href="icon.png" id="appicon">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BlogPosting",
+  "headline": "Progressive overload: the only rule that matters",
+  "author": { "@type": "Person", "name": "Roxy Alterio" },
+  "publisher": { "@type": "Organization", "name": "ALTER YOU" },
+  "mainEntityOfPage": "https://alteryouapp.com/post.html"
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://alteryouapp.com/" },
+    { "@type": "ListItem", "position": 2, "name": "Blog", "item": "https://alteryouapp.com/blog.html" }
+  ]
+}
+</script>
+</head>
+<body>
+
+<div class="bar offer" id="offerBar"
+     data-launch="2026-09-19T09:00:00+10:00"
+     data-doors="2026-09-27T23:59:00+10:00"
+     data-starts="2026-09-28T05:00:00+10:00">
+  <span class="bar-txt">
+    <b id="barLabel">Summer Shred &middot; save 43%</b>
+    <span class="bar-count" id="barCount"></span>
+  </span>
+  <a class="bar-cta" href="shred.html#join" data-track="Offer bar click">Get the app</a>
+  <button class="x" type="button" aria-label="Close">&times;</button>
+</div>
+
+<nav class="nav">
+  <div class="nav-in">
+    <button class="burger" type="button" aria-label="Menu" aria-expanded="false" aria-controls="links"><span></span></button>
+    <a class="brand" href="index.html"><svg width="18" height="15" viewBox="0 0 1220 1000" aria-hidden="true" class="mark"><path d="M110 890 L610 110 L1110 890" fill="none" stroke="#646A58" stroke-width="220" stroke-linecap="round" stroke-linejoin="round"/></svg><span>Alter You</span></a>
+    <div class="nav-links" id="links">
+      <a href="features.html">Features</a>
+      <a href="challenges.html">Challenges</a>
+      <a href="pricing.html">Pricing</a>
+      <a href="about.html">About</a>
+      <a href="blog.html">Blog</a>
+      <a href="faq.html">FAQ</a>
+      <a class="btn sm" href="pricing.html">Download</a>
+    </div>
+  </div>
+</nav>
+
+
+<article>
+  <section class="page-hero bg-bone">
+    <div class="wrap mid">
+      <p class="eyebrow" id="aCat">Training</p>
+      <h1 id="aTitle">Progressive overload: the only rule that matters</h1>
+      <div class="article-meta">
+        <span>Roxy Alterio</span>
+        <i class="dot" aria-hidden="true"></i>
+        <span id="aRead">5 min read</span>
+        <i class="dot" aria-hidden="true"></i>
+        <span id="aDate"></span>
+      </div>
+    </div>
+  </section>
+
+  <div class="wrap mid" id="aCover">
+    <div class="ph wide" data-img="post_overload" data-alt="Progressive overload"></div>
+  </div>
+
+  <section class="sec sm bg-bone">
+    <div class="wrap mid prose" id="aBody">
+      <p>
+        If you take one thing from anything we ever write, take this. The reason a
+        program works isn’t that it left you wrecked, or that you sweated, or that
+        you could barely walk down the stairs the next day. It works because, week
+        over week, you asked your body to do a little more than it did last time.
+        That’s progressive overload, and it’s the entire game.
+      </p>
+
+      <p class="say">Soreness is feedback. It’s not a scorecard.</p>
+
+      <p>
+        Doing more can look like a lot of things. An extra rep at the same weight.
+        The same reps with two more kilos. One more set. A slower, more controlled
+        tempo on the way down. A fuller range of motion than you managed a month ago.
+        All of them are progress, and none of them require you to be destroyed by the
+        end of the session.
+      </p>
+
+      <h2>Why soreness fools everyone</h2>
+      <p>
+        Muscle soreness mostly tells you that you did something your body wasn’t used
+        to, not that you did something effective. A brand new movement will make you
+        sore whether or not it builds anything. And the movements you have done for
+        months, the ones actually driving your results, often stop making you sore at
+        all. If you chase the ache, you’ll keep swapping exercises to feel it, and
+        quietly never get stronger at any of them.
+      </p>
+
+      <h2>What to do instead</h2>
+      <p>
+        Pick a program and stay on it long enough to add load. Write down what you
+        lifted. Next time, try to beat it by something small and specific. When a
+        weight starts to feel easy for all your reps, that’s the signal to go up, not
+        to add another finisher. This is exactly why the app nudges you to go heavier
+        when your logged sets say you’re ready, and why every program tells you how
+        many weeks it needs before you begin.
+      </p>
+
+      <p>
+        Strength is built in boring, repeatable increments. That’s not the
+        disappointing part. That’s the reassuring part, because it means it doesn’t
+        depend on motivation, or a perfect week, or how sore you got. It depends on
+        showing up and adding a little. You can do that.
+      </p>
+    </div>
+  </section>
+</article>
+
+<section class="sec bg-sage center" id="get">
+  <div class="wrap">
+    <p class="eyebrow">Start training</p>
+    <h2>Put it into practice<em>this week</em></h2>
+    <div class="btns"><a class="btn paper" href="pricing.html">Start training with ALTER YOU</a></div>
+    <p class="fine">3 days free &middot; $14.17 a month on the annual plan &middot; Cancel in two taps</p>
+  </div>
+</section>
+
+
+
+<!-- a quiet way into the program finder from anywhere -->
+<div class="finder-tab" id="finderTab">
+  <a href="finder.html" data-track="Finder tab"><svg viewBox="0 0 26 9" aria-hidden="true" style="width:13px;height:13px;rotate:90deg;fill:none;stroke:currentColor;stroke-width:1.8"><path d="M5 12h14M13 6l6 6-6 6" stroke-linecap="round" stroke-linejoin="round"/></svg>Let's find your program</a>
+  <button class="x" type="button" aria-label="Hide this">&times;</button>
+</div>
+
+<button class="totop" id="toTop" type="button" aria-label="Back to top">
+  <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 19V5M5 12l7-7 7 7" stroke-linecap="round" stroke-linejoin="round"/></svg>
+</button>
+
+<div class="sticky">
+  <a class="btn" href="pricing.html" data-track="Sticky bar">Join ALTER YOU &middot; $14.17/mo</a>
+</div>
+
+<footer>
+  <div class="wrap">
+    <div class="fgrid">
+      <div>
+        <div class="flock"><svg width="17" height="14" viewBox="0 0 1220 1000" aria-hidden="true" class="mark"><path d="M110 890 L610 110 L1110 890" fill="none" stroke="#EDE8E0" stroke-width="220" stroke-linecap="round" stroke-linejoin="round"/></svg><span>Alter You</span></div>
+        <p>Strength training, nutrition and cycle syncing.<br>Made for women, by women.</p>
+      </div>
+      <div>
+        <h4>App</h4>
+        <ul>
+          <li><a href="features.html">Features</a></li>
+          <li><a href="shred.html">Summer Shred</a></li>
+          <li><a href="challenges.html">Challenges</a></li>
+        <li><a href="finder.html">Find your program</a></li>
+        <li><a href="programs.html">All programs</a></li>
+        <li><a href="calculator.html">Macro calculator</a></li>
+                  <li><a href="pricing.html">Pricing</a></li>
+          <li><a href="faq.html">FAQ</a></li>
+        </ul>
+      </div>
+      <div>
+        <h4>Company</h4>
+        <ul>
+          <li><a href="about.html">About</a></li>
+          <li><a href="blog.html">Blog</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="fbot">
+      <span>&copy; 2026 ALTER YOU. Australia.</span>
+      <nav class="fbot-links" aria-label="Legal">
+        <a href="privacy.html">Privacy</a><span aria-hidden="true">&middot;</span>
+        <a href="terms.html">Terms</a><span aria-hidden="true">&middot;</span>
+        <a href="support.html">Support</a><span aria-hidden="true">&middot;</span>
+        <a href="admin.html" rel="nofollow" class="fadmin">Admin</a>
+      </nav>
+    </div>
+  </div>
+</footer>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="alter.js?v=162"></script>
+<script>
+/* If the URL carries ?id=, the article is replaced with that post from the
+   admin. Without one, the article written into the page stays as it is. */
+(function () {
+  var id = new URLSearchParams(location.search).get('id');
+  if (!id || !window.supabase) return;
+  var sb = window.supabase.createClient(window.ALTER_SUPABASE.url, window.ALTER_SUPABASE.key);
+
+  function esc(s) {
+    return (s == null ? '' : String(s)).replace(/[&<>"']/g, function (c) {
+      return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c];
+    });
+  }
+  function fmt(s) { return esc(s).replace(/\*\*([^*]+)\*\*/g, '<strong>$1</strong>'); }
+
+  /* An image on its own line, written ![description](https://...), becomes a
+     full width picture in the article. Only http and https are accepted, so a
+     pasted javascript: URL can never run. */
+  var IMG = /^!\[([^\]]*)\]\((https?:\/\/[^)\s]+)\)$/;
+
+  function renderBody(text) {
+    return (text || '').split(/\n\s*\n/).map(function (block) {
+      var t = block.trim();
+      if (!t) return '';
+      var m = t.match(IMG);
+      if (m) {
+        return '<figure class="post-figure"><img src="' + esc(m[2]) + '" alt="' + esc(m[1])
+             + '" loading="lazy" decoding="async">'
+             + (m[1] ? '<figcaption>' + esc(m[1]) + '</figcaption>' : '')
+             + '</figure>';
+      }
+      if (t.indexOf('## ') === 0) return '<h2>' + fmt(t.slice(3)) + '</h2>';
+      if (t.indexOf('> ') === 0) return '<p class="say">' + fmt(t.slice(2)) + '</p>';
+      return '<p>' + fmt(t) + '</p>';
+    }).join('');
+  }
+
+  sb.from('posts').select('*').eq('id', id).maybeSingle().then(function (res) {
+    var p = res.data;
+    if (!p) return;
+    document.title = p.title + ' | The ALTER YOU Blog';
+    var cat = document.getElementById('aCat');
+    var title = document.getElementById('aTitle');
+    var read = document.getElementById('aRead');
+    var body = document.getElementById('aBody');
+    var cover = document.getElementById('aCover');
+    var date = document.getElementById('aDate');
+    var c = p.category || 'training';
+    if (cat) cat.textContent = c.charAt(0).toUpperCase() + c.slice(1);
+    if (title) title.textContent = p.title;
+    if (read) read.textContent = p.read_time || '';
+    if (body) body.innerHTML = renderBody(p.body);
+    if (date && p.created_at) {
+      date.textContent = new Date(p.created_at)
+        .toLocaleDateString('en-AU', { day: 'numeric', month: 'long', year: 'numeric' });
+    }
+    if (cover) {
+      if (p.cover_url) {
+        cover.innerHTML = '<div class="ph wide has-photo"><img src="' + esc(p.cover_url)
+                        + '" alt="" loading="lazy" decoding="async"></div>';
+        cover.hidden = false;
+      } else {
+        cover.hidden = true;   // no cover on this article, so show none
+      }
+    }
+  }).catch(function () {});
+})();
+</script>
+</body>
+</html>

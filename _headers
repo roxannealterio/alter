@@ -1,0 +1,66 @@
+/*
+  # ══════════════════════════════════════════════════════════════
+  #  SECURITY HEADERS
+  #
+  #  This file is read automatically by Netlify, Cloudflare Pages
+  #  and Vercel. If your host is Apache instead, use .htaccess in
+  #  this same folder, which says the same things.
+  #
+  #  What each one stops:
+  # ══════════════════════════════════════════════════════════════
+
+  # Forces https for two years, so nobody can be downgraded to an
+  # unencrypted connection and have their form details read.
+  Strict-Transport-Security: max-age=63072000; includeSubDomains; preload
+
+  # Stops your site being loaded inside a frame on someone else's
+  # page, which is how clickjacking works.
+  X-Frame-Options: DENY
+
+  # Stops a browser guessing that an uploaded file is something
+  # other than what it says it is, and running it.
+  X-Content-Type-Options: nosniff
+
+  # Other sites only see that traffic came from alteryouapp.com,
+  # not which page someone was reading.
+  Referrer-Policy: strict-origin-when-cross-origin
+
+  # Nothing on this site needs a camera, a microphone or a
+  # location, so no script can ask for them.
+  Permissions-Policy: camera=(), microphone=(), geolocation=(), payment=(), usb=(), magnetometer=()
+
+  # The big one. A script can only run if it came from one of these
+  # places, so an injected <script> from a comment field or a
+  # compromised third party will not execute.
+  #
+  #   'self'                your own files
+  #   esm.sh, jsdelivr      the Supabase client
+  #   fonts.googleapis      the two fonts
+  #   supabase.co           your database and image storage
+  #   formspree.io          the backup copy of form submissions
+  #
+  #  If you add a new tool later and it does not work, it is almost
+  #  always because its domain is not listed here yet.
+  Content-Security-Policy: default-src 'self'; script-src 'self' 'unsafe-inline' https://esm.sh https://cdn.jsdelivr.net; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com data:; img-src 'self' data: https://*.supabase.co; connect-src 'self' https://*.supabase.co https://formspree.io; form-action 'self' https://formspree.io; frame-ancestors 'none'; base-uri 'self'; object-src 'none'; upgrade-insecure-requests
+
+# The admin is yours alone, so it is never indexed or cached
+/admin.html
+  X-Robots-Tag: noindex, nofollow, noarchive
+  Cache-Control: no-store, max-age=0
+
+/check.html
+  X-Robots-Tag: noindex, nofollow
+
+# The stylesheet and script carry ?v= numbers, so they can be
+# cached hard. Bumping the number is what busts it.
+/alter.css
+  Cache-Control: public, max-age=31536000, immutable
+/alter.js
+  Cache-Control: public, max-age=31536000, immutable
+
+/app/*
+  Cache-Control: public, max-age=604800
+/recipes/*
+  Cache-Control: public, max-age=604800
+/results/*
+  Cache-Control: public, max-age=604800

@@ -1,0 +1,2258 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="robots" content="noindex, nofollow">
+<title>ALTER Admin</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@10..48,400;10..48,500;10..48,600;10..48,700&family=Hanken+Grotesk:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --sage:#8A9179; --sage-d:#5A6049; --cream:#EDE8E0; --bg:#F5F2EC;
+    --ink:#2B2D26; --ink2:#5A5F4E; --ink3:#8A8A80; --olive:#45493C;
+    --rose:#C9A6A0; --card:#FFFFFF; --line:#E4E0D6; --sand:#DDD8CC;
+    --ok:#4E7A51; --bad:#B0574F; --gold:#C79A3E;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{
+    font-family:'Hanken Grotesk',sans-serif; font-weight:400; line-height:1.55; background:var(--bg); color:var(--ink);
+    line-height:1.55; -webkit-font-smoothing:antialiased;
+  }
+  h1,h2,h3{font-family:'Bricolage Grotesque',sans-serif; font-weight:600; letter-spacing:-.02em}
+  .wrap{max-width:920px; margin:0 auto; padding:0 20px}
+
+  /* login */
+  .login-shell{min-height:100vh; display:flex; align-items:center; justify-content:center; padding:20px}
+  .login-card{background:var(--card); border:1px solid var(--line); border-radius:24px; padding:36px 30px; width:100%; max-width:400px}
+  .brandmark{display:flex; align-items:center; gap:10px; margin-bottom:8px}
+  .brandmark svg{width:24px; height:24px}
+  .brandmark span{font-family:'Bricolage Grotesque'; font-weight:600; letter-spacing:5px; font-size:15px; color:var(--ink)}
+  .login-card h1{font-size:22px; margin:14px 0 6px}
+  .login-card p{color:var(--ink2); font-size:14px; margin-bottom:22px}
+
+  label{display:block; font-size:12px; font-weight:600; letter-spacing:.08em; text-transform:uppercase; color:var(--ink3); margin-bottom:6px; margin-top:16px}
+  input, textarea, select{
+    width:100%; font-family:inherit; font-size:15px; color:var(--ink);
+    background:var(--bg); border:1px solid var(--line); border-radius:12px;
+    padding:12px 14px; outline:none; transition:border-color .15s;
+  }
+  input:focus, textarea:focus, select:focus{border-color:var(--sage)}
+  textarea{min-height:80px; resize:vertical}
+
+  .btn{
+    display:inline-flex; align-items:center; justify-content:center; gap:8px;
+    font-family:inherit; font-size:15px; font-weight:600; cursor:pointer;
+    background:var(--olive); color:#fff; border:none; border-radius:100px;
+    padding:13px 22px; transition:opacity .15s, transform .05s; width:100%;
+  }
+  .btn:hover{opacity:.92} .btn:active{transform:scale(.99)}
+  .btn.ghost{background:transparent; color:var(--ink2); border:1px solid var(--line)}
+  .btn.small{width:auto; padding:8px 16px; font-size:13px}
+  .btn.danger{background:var(--bad)}
+  .btn.gold{background:var(--gold)}
+  .btn:disabled{opacity:.5; cursor:default}
+
+  .err{color:var(--bad); font-size:13px; margin-top:12px; min-height:18px}
+  .hidden{display:none !important}
+
+  /* app shell */
+  header.top{
+    background:var(--olive); color:#fff; padding:14px 0;
+    position:sticky; top:0; z-index:20;
+  }
+  header.top .wrap{display:flex; align-items:center; justify-content:space-between}
+  header.top .brandmark span{color:#fff}
+  header.top .who{font-size:13px; color:var(--cream); display:flex; align-items:center; gap:14px}
+  .logout{color:var(--cream); cursor:pointer; text-decoration:underline; font-size:13px}
+
+  .tabs{display:flex; gap:6px; padding:16px 0 0; flex-wrap:wrap}
+  .tab{
+    font-family:inherit; font-size:14px; font-weight:600; cursor:pointer;
+    background:transparent; border:1px solid var(--line); color:var(--ink2);
+    border-radius:100px; padding:9px 18px;
+  }
+  .tab.on{background:var(--olive); color:#fff; border-color:var(--olive)}
+
+  section.page{padding:22px 0 60px}
+  .row-between{display:flex; align-items:center; justify-content:space-between; margin-bottom:18px; gap:12px; flex-wrap:wrap}
+  .row-between h2{font-size:20px}
+
+  .card{background:var(--card); border:1px solid var(--line); border-radius:18px; padding:20px; margin-bottom:14px}
+  .card h3{font-size:16px; margin-bottom:4px}
+  .meta{font-size:13px; color:var(--ink3)}
+  .card-actions{display:flex; gap:8px; margin-top:14px; flex-wrap:wrap}
+
+  .pill{display:inline-block; font-size:11px; font-weight:600; letter-spacing:.08em; text-transform:uppercase; padding:3px 10px; border-radius:100px; background:var(--cream); color:var(--sage-d)}
+  .pill.live{background:#E4EFE0; color:var(--ok)}
+  .pill.ended{background:var(--sand); color:var(--ink2)}
+  .pill.win{background:#F5EAD0; color:var(--gold)}
+
+  .empty{text-align:center; padding:50px 20px; color:var(--ink3)}
+  .empty svg{width:40px; height:40px; margin-bottom:12px; opacity:.5}
+
+  .grid2{display:grid; grid-template-columns:1fr 1fr; gap:12px}
+  @media(max-width:560px){.grid2{grid-template-columns:1fr}}
+
+  /* modal */
+  .modal-bg{position:fixed; inset:0; background:rgba(43,45,38,.55); display:flex; align-items:flex-end; justify-content:center; z-index:40; padding:0}
+  @media(min-width:560px){.modal-bg{align-items:center; padding:20px}}
+  .modal{background:var(--bg); border-radius:24px 24px 0 0; width:100%; max-width:520px; max-height:92vh; overflow-y:auto; padding:26px 22px 34px}
+  @media(min-width:560px){.modal{border-radius:24px}}
+  .modal h2{font-size:20px; margin-bottom:4px}
+  .modal .sub{color:var(--ink2); font-size:14px; margin-bottom:18px}
+
+  .entry{display:flex; align-items:center; gap:12px; padding:14px 0; border-bottom:1px solid var(--line)}
+  .entry:last-child{border-bottom:none}
+  .entry .av{width:40px; height:40px; border-radius:20px; background:var(--sand); display:flex; align-items:center; justify-content:center; font-weight:600; color:var(--olive); flex-shrink:0}
+  .entry .info{flex:1; min-width:0}
+  .entry .info .nm{font-weight:600; font-size:15px}
+  .entry .info .dt{font-size:12.5px; color:var(--ink3)}
+  .entry img.result{width:52px; height:52px; border-radius:10px; object-fit:cover; background:var(--sand)}
+
+  .toast{position:fixed; bottom:24px; left:50%; transform:translateX(-50%); background:var(--ink); color:#fff; padding:12px 20px; border-radius:100px; font-size:14px; z-index:60; opacity:0; transition:opacity .2s; pointer-events:none}
+  .toast.show{opacity:1}
+  .spin{display:inline-block; width:18px; height:18px; border:2px solid rgba(255,255,255,.4); border-top-color:#fff; border-radius:50%; animation:s .7s linear infinite}
+  @keyframes s{to{transform:rotate(360deg)}}
+  .loading{text-align:center; padding:40px; color:var(--ink3)}
+
+  /* dashboard + photos */
+  .stat-grid{display:grid; grid-template-columns:repeat(auto-fit,minmax(150px,1fr)); gap:12px; margin-bottom:18px}
+  .stat{background:var(--card); border:1px solid var(--line); border-radius:18px; padding:18px 20px}
+  .stat .n{font-family:'Bricolage Grotesque',sans-serif; font-weight:600; font-size:30px; line-height:1; letter-spacing:-.02em; color:var(--ink)}
+  .stat .l{font-size:12px; letter-spacing:.06em; text-transform:uppercase; color:var(--ink3); margin-top:9px}
+  .stat .s{font-size:12px; color:var(--sage-d); margin-top:4px}
+  .note{background:var(--cream); border:1px solid var(--line); border-radius:14px; padding:14px 16px; font-size:13px; line-height:1.55; color:var(--ink2); margin-bottom:16px}
+  .photo-grid{display:grid; grid-template-columns:repeat(auto-fill,minmax(150px,1fr)); gap:12px}
+  .photo{border:1px solid var(--line); border-radius:14px; overflow:hidden; background:var(--card)}
+  .photo img{width:100%; aspect-ratio:3/4; object-fit:cover; display:block; background:var(--sand)}
+  .photo .cap{padding:8px 10px; font-size:12px; color:var(--ink2)}
+  .photo .cap b{color:var(--ink); font-weight:600}
+  select.filter{max-width:300px}
+  table.tbl{width:100%; border-collapse:collapse; background:var(--card); border:1px solid var(--line); border-radius:14px; overflow:hidden}
+  table.tbl th{font-size:11px; letter-spacing:.07em; text-transform:uppercase; color:var(--ink3); text-align:left; padding:11px 12px; border-bottom:1px solid var(--line); background:var(--bg)}
+  table.tbl td{font-size:13px; color:var(--ink2); padding:11px 12px; border-bottom:1px solid var(--line)}
+  table.tbl tr:last-child td{border-bottom:0}
+  table.tbl td b{color:var(--ink); font-weight:600}
+  .tbl-wrap{overflow-x:auto}
+  .searchbar{width:100%; max-width:340px}
+  .drop{border:2px dashed var(--sand); border-radius:16px; padding:26px; text-align:center; color:var(--ink3); font-size:14px; background:var(--card); cursor:pointer; transition:.15s}
+  .drop:hover,.drop.over{border-color:var(--sage); color:var(--sage-d); background:var(--cream)}
+  .bar{height:6px; background:var(--sand); border-radius:100px; overflow:hidden; margin-top:10px}
+  .bar i{display:block; height:100%; background:var(--sage); width:0; transition:width .2s}
+  .thumb{width:54px; height:54px; border-radius:10px; object-fit:cover; background:var(--sand); flex:none}
+  .rrow{display:flex; align-items:center; gap:12px; padding:10px 0; border-bottom:1px solid var(--line)}
+  /* website images, grouped by the page they appear on */
+  .si-group{margin-bottom:6px}
+  .si-group:last-child{margin-bottom:0}
+  .si-head{display:flex; align-items:baseline; gap:10px; flex-wrap:wrap;
+    font-size:12px; font-weight:600; letter-spacing:.1em; text-transform:uppercase;
+    color:var(--ink3); margin:22px 0 2px; padding-top:14px; border-top:1px solid var(--line)}
+  .si-group:first-child .si-head{margin-top:0; padding-top:0; border-top:0}
+  .si-head .count{color:var(--sage-d); letter-spacing:0; text-transform:none; font-size:12px}
+  .si-head a{color:var(--sage-d); letter-spacing:0; text-transform:none; font-size:12px; margin-left:auto}
+  .si-thumb{width:60px; height:60px; border-radius:10px; flex:none; overflow:hidden;
+    background:var(--sand); display:flex; align-items:center; justify-content:center}
+  .si-thumb img{width:100%; height:100%; object-fit:cover; display:block}
+  .si-thumb.si-empty{border:1px dashed var(--line); background:var(--cream)}
+  .si-thumb.si-empty::after{content:''; width:20px; height:20px; opacity:.3;
+    background:no-repeat center/contain url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1024 1024'%3E%3Cpath d='M232 758 L512 306 L792 758' fill='none' stroke='%232B2D26' stroke-width='96' stroke-linejoin='round' stroke-linecap='round'/%3E%3C/svg%3E")}
+  .si-hint{font-size:12.5px; color:var(--ink3); line-height:1.5}
+  .si-actions{display:flex; gap:8px; flex:none}
+  @media(max-width:600px){
+    .rrow.si-row{flex-wrap:wrap}
+    .si-actions{width:100%; padding-left:72px}
+  }
+  .rrow:last-child{border-bottom:0}
+  .btn.danger{background:#B4544C; color:#fff; border:0}
+  .btn.danger:hover{background:#9C463F}
+
+  /* ─── DASHBOARD LAYOUT ───────────────────────────────────────── */
+  .shell{display:grid; grid-template-columns:230px minmax(0,1fr); gap:28px;
+    max-width:1280px; margin:0 auto; padding:24px 20px 60px}
+  .side{position:sticky; top:20px; align-self:start}
+  .navgroup{margin-bottom:20px}
+  .navlabel{font-size:10.5px; letter-spacing:.14em; text-transform:uppercase;
+    color:var(--ink3); margin:0 0 8px 10px}
+  .side .tab{display:flex; align-items:center; gap:10px; width:100%; text-align:left;
+    background:none; border:0; border-radius:10px; padding:9px 10px; cursor:pointer;
+    font-family:'Hanken Grotesk',sans-serif; font-size:14px; color:var(--ink2);
+    line-height:1.3; margin-bottom:1px; transition:background .12s, color .12s}
+  .side .tab:hover{background:rgba(138,145,121,.10); color:var(--ink)}
+  .side .tab.on{background:var(--olive); color:#fff; font-weight:500}
+  .side .tab .ico{font-size:9px; opacity:.55; width:12px; flex:none}
+  .side .tab.on .ico{opacity:.9}
+  .side .pill{margin-left:auto; font-size:11px; font-weight:400; background:var(--sand);
+    color:var(--ink2); border-radius:100px; padding:1px 7px; min-width:20px; text-align:center}
+  .side .tab.on .pill{background:rgba(255,255,255,.22); color:#fff}
+  .content{min-width:0}
+  .content .page.wrap{max-width:none; padding:0}
+
+  /* dashboard cards */
+  .statgrid{display:grid; grid-template-columns:repeat(auto-fit,minmax(150px,1fr)); gap:12px; margin-bottom:22px}
+  .todo{background:var(--card); border:1px solid var(--line); border-radius:14px; padding:16px 18px; margin-bottom:22px}
+  .todo h3{font-family:'Bricolage Grotesque',sans-serif; font-weight:600; font-size:15px; margin-bottom:4px}
+  .todo .trow{display:flex; align-items:center; gap:12px; padding:11px 0; border-top:1px solid var(--line)}
+  .todo .trow:first-of-type{border-top:0}
+  .todo .trow b{font-weight:500; font-size:14px}
+  .todo .trow .meta{font-size:12.5px; color:var(--ink3)}
+  .todo .go{margin-left:auto; font-size:12.5px; color:var(--sage-d); cursor:pointer; white-space:nowrap;
+    border:1px solid var(--line); border-radius:100px; padding:5px 12px; background:none}
+  .todo .go:hover{background:var(--bg)}
+  .done-note{font-size:13.5px; color:var(--ink2)}
+
+  /* category chips for long lists */
+  .chips{display:flex; flex-wrap:wrap; gap:7px; margin-bottom:14px}
+  .chip{border:1px solid var(--line); background:var(--card); border-radius:100px;
+    padding:6px 13px; font-size:12.5px; cursor:pointer; color:var(--ink2);
+    font-family:'Hanken Grotesk',sans-serif}
+  .chip:hover{border-color:var(--sage)}
+  .chip.on{background:var(--olive); border-color:var(--olive); color:#fff}
+
+  
+
+  /* ─── ADMIN POLISH ───────────────────────────────────────────── */
+  /* Pages sit inside .content now, so they must not carry their own
+     page-level width or padding. */
+  .content .page{max-width:none; padding:0; margin:0}
+  .content .page.hidden{display:none}
+
+  /* consistent heading rhythm across every tab */
+  .content h2{font-family:'Bricolage Grotesque',sans-serif; font-weight:600;
+    font-size:22px; letter-spacing:-0.01em; margin-bottom:2px}
+  .row-between{display:flex; align-items:center; justify-content:space-between;
+    gap:14px; flex-wrap:wrap; margin-bottom:18px}
+  .content .note{font-size:13px; color:var(--ink2); margin:-8px 0 16px}
+
+  /* the swap from placeholder text-glyph icons to something calmer */
+  .side .tab .ico{display:none}
+  .side .tab{padding-left:14px}
+
+  /* cards and tables share one look */
+  .card{background:var(--card); border:1px solid var(--line); border-radius:14px;
+    padding:16px 18px; margin-bottom:14px}
+  .stat-grid{display:grid; grid-template-columns:repeat(auto-fit,minmax(150px,1fr));
+    gap:12px; margin-bottom:20px}
+  .stat{background:var(--card); border:1px solid var(--line); border-radius:14px; padding:15px 16px}
+  .stat-l{font-size:11px; letter-spacing:.08em; text-transform:uppercase; color:var(--ink3)}
+  .stat-n{font-family:'Bricolage Grotesque',sans-serif; font-weight:600;
+    font-size:26px; color:var(--ink); margin-top:3px; line-height:1.1}
+
+  .searchbar{background:var(--card); border:1px solid var(--line); border-radius:100px;
+    padding:9px 16px; font-size:13.5px; font-family:'Hanken Grotesk',sans-serif;
+    min-width:220px; color:var(--ink)}
+  .searchbar:focus{outline:none; border-color:var(--sage)}
+
+  @media(max-width:900px){
+    .content h2{font-size:19px}
+    .shell{padding-top:14px}
+  }
+
+/* ── leads ─────────────────────────────────────────────────── */
+.lead-bar{display:flex;flex-wrap:wrap;gap:10px;margin:18px 0 14px;align-items:center}
+/* the global rule sets every input to width:100%, which would stack these
+   one per line, so the filter row sets its own widths */
+.lead-bar input[type="search"],.lead-bar select{
+  padding:11px 14px;border:1px solid var(--line);border-radius:10px;
+  font:inherit;background:#fff;color:inherit;width:auto;
+}
+.lead-bar input[type="search"]{flex:1 1 200px;min-width:0}
+.lead-bar select{flex:0 0 auto;min-width:150px}
+@media(max-width:600px){
+  .lead-bar{gap:8px}
+  .lead-bar input[type="search"]{flex:1 1 100%}
+  .lead-bar select{flex:1 1 calc(50% - 4px);min-width:0}
+}
+.lead-only{display:flex;align-items:center;gap:8px;font-size:.9rem;color:var(--soft)}
+.lead-only input{width:18px;height:18px;accent-color:var(--sage)}
+.lead-stats{display:flex;gap:22px;flex-wrap:wrap;margin-bottom:16px;font-size:.9rem;color:var(--soft)}
+.lead-stats b{color:var(--ink);font-size:1.35rem;display:block;font-weight:600}
+.lead{
+  display:grid;gap:4px 14px;padding:15px 16px;border:1px solid var(--line);
+  border-radius:12px;margin-bottom:9px;background:#fff;
+  grid-template-columns:1fr auto;align-items:start;
+}
+.lead h4{margin:0;font-size:1rem;font-weight:600}
+.lead .meta{font-size:.86rem;color:var(--soft);word-break:break-word}
+.lead .tags{display:flex;gap:6px;flex-wrap:wrap;margin-top:7px}
+.lead .tag{
+  font-size:.72rem;padding:3px 9px;border-radius:99px;
+  background:var(--wash);color:var(--soft);
+}
+.lead .tag.yes{background:#DDE2D3;color:#2B2D26}
+.lead .tag.no{background:#F2E3DE;color:#7A3F30}
+.lead-right{display:flex;flex-direction:column;gap:7px;align-items:flex-end}
+.lead select{padding:7px 10px;border:1px solid var(--line);border-radius:9px;font:inherit;font-size:.85rem}
+.lead .del{background:none;border:0;color:#9A5648;font-size:.8rem;cursor:pointer;padding:2px}
+@media(max-width:640px){
+  .lead{grid-template-columns:1fr}
+  .lead-right{align-items:flex-start;flex-direction:row}
+}
+
+/* ══════════════════════════════════════════════════════════════
+   APP SHELL
+   Rebuilt so it reads as a product rather than a page of links.
+   A fixed sidebar on a laptop; on a phone the nav collapses behind
+   a button, because sixteen buttons filling the screen before you
+   reach any content is not a menu, it is an obstacle.
+   ══════════════════════════════════════════════════════════════ */
+.top{
+  background:var(--olive);color:#fff;position:sticky;top:0;z-index:60;
+  padding:0;height:58px;display:flex;align-items:center;
+  box-shadow:0 1px 0 rgba(0,0,0,.08);
+}
+.top .wrap{max-width:none;padding:0 18px;width:100%;gap:14px}
+.topleft{display:flex;align-items:center;gap:13px;min-width:0}
+.menu-btn{
+  display:none;width:38px;height:38px;flex:none;border:0;border-radius:10px;
+  background:rgba(255,255,255,.13);color:#fff;cursor:pointer;
+  align-items:center;justify-content:center;padding:0;
+}
+.menu-btn svg{width:19px;height:19px;stroke:currentColor;stroke-width:1.9;fill:none}
+.who{display:flex;align-items:center;gap:14px;font-size:.86rem;white-space:nowrap}
+.who a{color:rgba(255,255,255,.82)}
+
+.shell{display:grid;grid-template-columns:236px 1fr;gap:0;align-items:start;min-height:calc(100vh - 58px)}
+.side{
+  position:sticky;top:58px;align-self:start;
+  height:calc(100vh - 58px);overflow-y:auto;
+  background:#fff;border-right:1px solid var(--line);
+  padding:18px 12px 40px;
+}
+.navgroup{margin-bottom:20px}
+.navlabel{
+  font-size:.66rem;text-transform:uppercase;letter-spacing:.15em;
+  color:var(--soft);padding:0 12px;margin-bottom:7px;opacity:.75;
+}
+.tab{
+  display:flex;align-items:center;gap:11px;width:100%;
+  padding:10px 12px;border:0;border-radius:9px;background:none;
+  font:inherit;font-size:.93rem;color:var(--ink);text-align:left;
+  cursor:pointer;margin-bottom:1px;transition:background .13s ease;
+}
+.tab:hover{background:var(--wash)}
+.tab.on{background:var(--olive);color:#fff}
+.tab .ico{
+  width:20px;flex:none;text-align:center;font-size:.72rem;opacity:.55;
+}
+.tab.on .ico{opacity:.85}
+.tab .pill{
+  margin-left:auto;background:var(--sage);color:#fff;
+  font-size:.7rem;font-weight:600;min-width:20px;height:20px;
+  border-radius:99px;display:none;align-items:center;justify-content:center;padding:0 6px;
+}
+.tab .pill:not(:empty){display:flex}
+.tab.on .pill{background:rgba(255,255,255,.24)}
+
+.main{padding:26px 26px 80px;max-width:1080px;min-width:0}
+.page > .row-between:first-child{margin-bottom:6px}
+.page h2{font-size:1.6rem;margin:0 0 4px}
+
+@media(max-width:900px){
+  .shell{grid-template-columns:1fr}
+  /* the email crushes the logo on a phone, and it is not information
+     you need while working, so only the way out stays */
+  #whoEmail{display:none}
+  .who{gap:0}
+  .menu-btn{display:flex}
+  .side{
+    position:fixed;top:58px;left:0;bottom:0;width:min(84vw,300px);
+    z-index:55;transform:translateX(-100%);
+    transition:transform .22s ease;box-shadow:0 0 40px rgba(0,0,0,.16);
+    display:block;grid-template-columns:none;
+  }
+  .side.open{transform:translateX(0)}
+  .scrim{
+    position:fixed;inset:58px 0 0;background:rgba(24,26,20,.42);
+    z-index:54;opacity:0;pointer-events:none;transition:opacity .22s ease;
+  }
+  .scrim.on{opacity:1;pointer-events:auto}
+  .main{padding:18px 16px 90px}
+  .page h2{font-size:1.35rem}
+}
+@media(prefers-reduced-motion:reduce){
+  .side,.scrim{transition:none}
+}
+
+/* ── stat cards ────────────────────────────────────────────── */
+.stat-grid{
+  display:grid;gap:12px;margin:20px 0 26px;
+  grid-template-columns:repeat(auto-fill,minmax(158px,1fr));
+}
+.stat{
+  background:#fff;border:1px solid var(--line);border-radius:14px;
+  padding:17px 18px;
+}
+.stat .n{
+  font-size:1.85rem;font-weight:600;line-height:1.05;letter-spacing:-.02em;
+  color:var(--ink);display:block;
+}
+.stat .lab{
+  font-size:.78rem;text-transform:uppercase;letter-spacing:.11em;
+  color:var(--soft);margin-top:8px;display:block;
+}
+.stat .sub{font-size:.8rem;color:var(--soft);margin-top:3px;display:block;opacity:.85}
+@media(max-width:560px){
+  .stat-grid{grid-template-columns:1fr 1fr;gap:9px}
+  .stat{padding:14px 14px;border-radius:12px}
+  .stat .n{font-size:1.5rem}
+}
+</style>
+</head>
+<body>
+
+<!-- ══ LOGIN ══ -->
+<div id="login" class="login-shell">
+  <div class="login-card">
+    <div class="brandmark">
+      <svg viewBox="0 0 1024 1024" aria-hidden="true"><path d="M232 758 L512 306 L792 758" fill="none" stroke="#8A9179" stroke-width="96" stroke-linejoin="round" stroke-linecap="round"/></svg>
+      <span>ALTER</span>
+    </div>
+    <h1>Admin sign in</h1>
+    <p>Manage your events, challenges and winners.</p>
+    <label>Email</label>
+    <input id="email" type="email" autocomplete="email" value="info@alteryouapp.com" placeholder="info@alteryouapp.com">
+    <label>Password</label>
+    <input id="password" type="password" autocomplete="current-password" placeholder="Your password">
+    <div class="err" id="loginErr"></div>
+    <button class="btn" id="loginBtn" style="margin-top:20px">Sign in</button>
+  </div>
+</div>
+
+<!-- ══ APP ══ -->
+<div id="app" class="hidden">
+  <header class="top">
+    <div class="wrap">
+      <div class="topleft">
+        <button class="menu-btn" id="menuBtn" type="button" aria-label="Menu" aria-expanded="false">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 7h16M4 12h16M4 17h16" stroke-linecap="round"/></svg>
+        </button>
+        <div class="brandmark">
+          <svg viewBox="0 0 1024 1024" aria-hidden="true"><path d="M232 758 L512 306 L792 758" fill="none" stroke="#EDE8E0" stroke-width="96" stroke-linejoin="round" stroke-linecap="round"/></svg>
+          <span>ALTER</span>
+        </div>
+      </div>
+      <div class="who">
+        <span id="whoEmail"></span>
+        <span class="logout" id="logout">Sign out</span>
+      </div>
+    </div>
+  </header>
+
+  <div class="scrim" id="scrim"></div>
+  <div class="shell">
+    <nav class="side" id="side">
+      <div class="navgroup">
+        <div class="navlabel">Overview</div>
+        <button class="tab on" data-tab="dashboard"><span class="ico">&#9632;</span>Dashboard</button>
+      </div>
+      <div class="navgroup">
+        <div class="navlabel">People</div>
+        <button class="tab" data-tab="members"><span class="ico">&#9679;</span>Members</button>
+        <button class="tab" data-tab="leads"><span class="ico">&#9788;</span>Leads <b class="pill" id="n-leads"></b></button>
+        <button class="tab" data-tab="photos"><span class="ico">&#9633;</span>Progress photos</button>
+      </div>
+      <div class="navgroup">
+        <div class="navlabel">Content</div>
+        <button class="tab" data-tab="forms"><span class="ico">&#9650;</span>Form guides <b class="pill" id="n-forms"></b></button>
+        <button class="tab" data-tab="videos"><span class="ico">&#9654;</span>Exercise videos <b class="pill" id="n-videos"></b></button>
+        <button class="tab" data-tab="recipes"><span class="ico">&#9670;</span>Recipe photos <b class="pill" id="n-recipes"></b></button>
+        <button class="tab" data-tab="blog"><span class="ico">&#9644;</span>Blog</button>
+      </div>
+      <div class="navgroup">
+        <div class="navlabel">Website</div>
+        <button class="tab" data-tab="siteimg"><span class="ico">&#9635;</span>Website images <b class="pill" id="n-siteimg"></b></button>
+        <button class="tab" data-tab="transform"><span class="ico">&#9645;</span>Transformations</button>
+        <button class="tab" data-tab="homehero"><span class="ico">&#9650;</span>App home image</button>
+      </div>
+      <div class="navgroup">
+        <div class="navlabel">Community</div>
+        <button class="tab" data-tab="announce"><span class="ico">&#9993;</span>Announcements</button>
+        <button class="tab" data-tab="events"><span class="ico">&#9673;</span>Events</button>
+        <button class="tab" data-tab="challenges"><span class="ico">&#9733;</span>Challenges</button>
+        <button class="tab" data-tab="reports"><span class="ico">&#9873;</span>Reports <span class="badge" id="n-reports"></span></button>
+      </div>
+      <div class="navgroup">
+        <div class="navlabel">Growth</div>
+        <button class="tab" data-tab="ambassadors"><span class="ico">&#9788;</span>Ambassadors</button>
+      </div>
+    </nav>
+    <div class="content">
+
+  <!-- DASHBOARD PAGE -->
+  <section class="page wrap" id="page-dashboard">
+    <div class="row-between"><h2>Dashboard</h2><button class="btn ghost small" id="refreshDash">Refresh</button></div>
+    <div id="statGrid" class="stat-grid"><div class="loading"><span class="spin" style="border-color:rgba(0,0,0,.15);border-top-color:var(--sage)"></span></div></div>
+    <div id="todoBox"></div>
+    <div class="note" id="subNote"></div>
+  </section>
+
+  <!-- EVENTS PAGE -->
+  <section class="page wrap hidden" id="page-events">
+    <div class="row-between">
+      <h2>Events</h2>
+      <button class="btn small" id="newEvent">Add event</button>
+    </div>
+    <div id="eventsList"><div class="loading"><span class="spin" style="border-color:rgba(0,0,0,.15);border-top-color:var(--sage)"></span></div></div>
+  </section>
+
+  <!-- CHALLENGES PAGE -->
+  <section class="page wrap hidden" id="page-challenges">
+    <div class="row-between">
+      <h2>Challenges</h2>
+      <button class="btn small" id="newChallenge">Add challenge</button>
+    </div>
+    <div id="challengesList"><div class="loading"><span class="spin" style="border-color:rgba(0,0,0,.15);border-top-color:var(--sage)"></span></div></div>
+  </section>
+
+  <!-- REPORTS PAGE -->
+  <section class="page wrap hidden" id="page-reports">
+    <div class="row-between">
+      <h2>Reports</h2>
+      <p class="note" style="margin:0">Posts and people reported by members. Hide a post or dismiss the report.</p>
+    </div>
+    <div id="reportsList"><div class="loading"><span class="spin" style="border-color:rgba(0,0,0,.15);border-top-color:var(--sage)"></span></div></div>
+  </section>
+
+  <!-- AMBASSADORS PAGE -->
+  <section class="page wrap hidden" id="page-ambassadors">
+    <div class="row-between">
+      <h2>Ambassadors</h2>
+      <button class="btn small" id="newAmbassador">Add ambassador</button>
+    </div>
+    <p class="note" style="margin:4px 0 16px">
+      Influencers who run challenges for a cut of the signups they bring in.
+      The "owed" figure is what you pay them. Payments are made outside the app.
+    </p>
+    <div id="ambassadorsList"><div class="loading"><span class="spin" style="border-color:rgba(0,0,0,.15);border-top-color:var(--sage)"></span></div></div>
+  </section>
+
+  <!-- MEMBERS PAGE -->
+  <section class="page wrap hidden" id="page-members">
+    <div class="row-between">
+      <h2>Members</h2>
+      <input class="searchbar" id="memberSearch" placeholder="Search name, email or goal" style="margin:0">
+    </div>
+    <div id="membersBox"><div class="loading"><span class="spin" style="border-color:rgba(0,0,0,.15);border-top-color:var(--sage)"></span></div></div>
+  </section>
+
+  <!-- ANNOUNCEMENTS PAGE -->
+  
+<!-- ═══ LEADS ═══════════════════════════════════════════════════ -->
+<section class="page wrap hidden" id="page-leads">
+  <div class="row-between">
+    <h2>Leads</h2>
+    <button class="btn small" id="exportLeads">Export CSV</button>
+  </div>
+  <div class="note">
+    Everyone who has filled in a form on the website. Yours to keep, and
+    yours to export. The consent column is the one that matters before you
+    send anything: a tick means they agreed to hear from you generally, and
+    a blank means you may only contact them about the thing they signed up
+    for.
+  </div>
+
+  <div class="lead-bar">
+    <input type="search" id="leadSearch" placeholder="Search name or email">
+    <select id="leadSource"><option value="">Every form</option></select>
+    <select id="leadStatus">
+      <option value="">Every status</option>
+      <option value="new">New</option>
+      <option value="contacted">Contacted</option>
+      <option value="joined">Joined</option>
+      <option value="not now">Not now</option>
+    </select>
+    <label class="lead-only">
+      <input type="checkbox" id="leadConsent"> Consented only
+    </label>
+  </div>
+
+  <div class="lead-stats" id="leadStats"></div>
+  <div id="leadList"></div>
+</section>
+
+<section class="page wrap hidden" id="page-announce">
+    <div class="row-between">
+      <h2>Announcements</h2>
+      <button class="btn small" id="newAnnounce">New announcement</button>
+    </div>
+    <div class="note">Announcements appear in the app and members get a notification next time they open it. Good for "Bikini Build starts Monday", or anything else you want members to see.</div>
+    <div id="announceList"><div class="loading"><span class="spin" style="border-color:rgba(0,0,0,.15);border-top-color:var(--sage)"></span></div></div>
+  </section>
+
+  <!-- TRANSFORMATIONS PAGE -->
+  <section class="page wrap hidden" id="page-transform">
+    <div class="row-between">
+      <h2>Transformations</h2>
+      <button class="btn small" id="newTf">Add transformation</button>
+    </div>
+    <div class="note">Client before and after photos for the homepage and glute page. Always get written permission before you put someone's photo up.</div>
+    <div class="card" id="tfList"><div class="loading"><span class="spin" style="border-color:rgba(0,0,0,.15);border-top-color:var(--sage)"></span></div></div>
+    <input type="file" id="tf_file" accept="image/*" style="display:none">
+  </section>
+
+  <!-- WEBSITE IMAGES PAGE -->
+  <section class="page wrap hidden" id="page-homehero">
+    <div class="row-between"><h2>App home image</h2></div>
+    <p class="note" style="margin:4px 0 16px">
+      The photo behind the greeting on the app home screen. Upload one and it
+      updates for everyone. A darker or sage-toned landscape image reads best
+      behind the text. Leave it empty to use the plain gradient.
+    </p>
+    <div id="homeHeroPreview" style="margin-bottom:14px"></div>
+    <input type="file" id="homehero_file" accept="image/*" style="display:none">
+    <button class="btn" id="homeHeroUpload">Upload home image</button>
+    <button class="btn ghost" id="homeHeroClear" style="margin-left:8px">Remove image</button>
+  </section>
+
+  <section class="page wrap hidden" id="page-siteimg">
+    <div class="row-between"><h2>Website Images</h2></div>
+    <div class="note">Every photo spot on the website, grouped by the page it appears on. Upload one and it replaces the placeholder on the live site straight away, no republishing needed. The size note under each one is the shape it gets cropped to, so pick a photo that suits it.<br>If this list is empty, run <b>SITE_IMAGES.sql</b> in Supabase once.</div>
+    <div class="card" id="siteImgList"><div class="loading"><span class="spin" style="border-color:rgba(0,0,0,.15);border-top-color:var(--sage)"></span></div></div>
+    <input type="file" id="si_file" accept="image/*" style="display:none">
+  </section>
+
+  <!-- BLOG PAGE -->
+  <section class="page wrap hidden" id="page-blog">
+    <div class="row-between">
+      <h2>Blog</h2>
+      <button class="btn small" id="newPost">New article</button>
+    </div>
+    <div class="note">Articles you publish here appear on the website blog straight away. Add a cover image and it shows on the card and at the top of the article.</div>
+    <div id="postList"><div class="loading"><span class="spin" style="border-color:rgba(0,0,0,.15);border-top-color:var(--sage)"></span></div></div>
+    <input type="file" id="p_file" accept="image/*" style="display:none">
+  </section>
+
+  <!-- EXERCISE VIDEOS PAGE -->
+  <section class="page wrap hidden" id="page-videos">
+    <div class="row-between">
+      <h2>Exercise Videos</h2>
+      <input class="searchbar" id="exSearch" placeholder="Search exercises" style="margin:0">
+    </div>
+    <div class="note">Every exercise in your programs is listed here. Click an exercise to upload its demo video, and it plays in the app straight away.</div>
+    <div class="card" id="exList"><div class="loading"><span class="spin" style="border-color:rgba(0,0,0,.15);border-top-color:var(--sage)"></span></div></div>
+    <input type="file" id="ex_file" accept="video/*" style="display:none">
+  </section>
+
+  <!-- FORM GUIDES PAGE -->
+  <section class="page wrap hidden" id="page-forms">
+    <div class="row-between">
+      <h2>Form Guides</h2>
+      <input class="searchbar" id="fgSearch" placeholder="Search form guides" style="margin:0">
+    </div>
+    <div class="note">Every exercise and warm up already has its set up, movement, mistakes and cues written. Click one to upload its video.</div>
+    <div class="chips" id="fgChips"></div>
+    <div class="card" id="fgList"><div class="loading"><span class="spin" style="border-color:rgba(0,0,0,.15);border-top-color:var(--sage)"></span></div></div>
+    <input type="file" id="fg_file" accept="video/*" style="display:none">
+  </section>
+
+  <!-- RECIPE PHOTOS PAGE -->
+  <section class="page wrap hidden" id="page-recipes">
+    <div class="row-between">
+      <h2>Recipe Photos</h2>
+      <input class="searchbar" id="recipeSearch" placeholder="Search recipes" style="margin:0">
+    </div>
+    <div class="note">Click a photo to upload or replace it. It updates in the app straight away.</div>
+    <div class="card" id="recipeList"><div class="loading"><span class="spin" style="border-color:rgba(0,0,0,.15);border-top-color:var(--sage)"></span></div></div>
+    <input type="file" id="r_file" accept="image/*" style="display:none">
+  </section>
+
+  <!-- PROGRESS PHOTOS PAGE -->
+  <section class="page wrap hidden" id="page-photos">
+    <div class="row-between">
+      <h2>Progress Photos</h2>
+      <select class="filter" id="photoChallenge"><option value="all">All photos</option></select>
+    </div>
+    <div class="note">These are private client photos. They load through secure, expiring links and are only visible to you here. Filter by a challenge to see just that round's submissions.</div>
+    <div id="photoGrid" class="photo-grid"><div class="loading"><span class="spin" style="border-color:rgba(0,0,0,.15);border-top-color:var(--sage)"></span></div></div>
+  </section>
+
+    </div><!-- /.content -->
+  </div><!-- /.shell -->
+</div><!-- /#app -->
+
+<div class="toast" id="toast"></div>
+
+<script type="module">
+import { createClient } from 'https://esm.sh/@supabase/supabase-js@2';
+
+// ── CONNECTION ─────────────────────────────────────────────
+// These are safe to sit in the page: the anon key only grants what your
+// row-level-security policies allow, and admin writes are gated on is_admin.
+const SUPABASE_URL = 'https://ghubvckcfcclzhbaafjh.supabase.co';
+const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImdodWJ2Y2tjZmNjbHpoYmFhZmpoIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODM5OTU3NTEsImV4cCI6MjA5OTU3MTc1MX0.O3P4jfXbBSBKpiKX8De8DiN36aLmZpjiZof9TORto68';
+
+const sb = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+// ── helpers ────────────────────────────────────────────────
+const $ = (id) => document.getElementById(id);
+const esc = (s) => (s == null ? '' : String(s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c])));
+let toastTimer;
+function toast(msg){
+  const t = $('toast'); t.textContent = msg; t.classList.add('show');
+  clearTimeout(toastTimer); toastTimer = setTimeout(() => t.classList.remove('show'), 2400);
+}
+function prettyDate(d){
+  if(!d) return '';
+  try { return new Date(d+'T12:00:00').toLocaleDateString('en-AU',{weekday:'short',day:'numeric',month:'long',year:'numeric'}); }
+  catch(e){ return d; }
+}
+const todayStr = () => new Date().toISOString().slice(0,10);
+
+// ── AUTH ───────────────────────────────────────────────────
+$('loginBtn').addEventListener('click', signIn);
+$('password').addEventListener('keydown', e => { if(e.key === 'Enter') signIn(); });
+
+async function signIn(){
+  const email = $('email').value.trim();
+  const password = $('password').value;
+  const btn = $('loginBtn'); const err = $('loginErr');
+  err.textContent = '';
+  if(!email || !password){ err.textContent = 'Enter your email and password.'; return; }
+  btn.disabled = true; btn.innerHTML = '<span class="spin"></span>';
+  try {
+    const { data, error } = await sb.auth.signInWithPassword({ email, password });
+    if(error) throw error;
+    // check admin flag
+    const { data: prof } = await sb.from('profiles_alter').select('is_admin').eq('id', data.user.id).maybeSingle();
+    if(!prof || !prof.is_admin){
+      await sb.auth.signOut();
+      err.textContent = 'This account is not an admin.';
+      btn.disabled = false; btn.textContent = 'Sign in';
+      return;
+    }
+    enterApp(data.user);
+  } catch(e){
+    err.textContent = e.message || 'Could not sign in.';
+    btn.disabled = false; btn.textContent = 'Sign in';
+  }
+}
+
+$('logout').addEventListener('click', async () => {
+  await sb.auth.signOut();
+  location.reload();
+});
+
+async function enterApp(user){
+  $('login').classList.add('hidden');
+  $('app').classList.remove('hidden');
+  $('whoEmail').textContent = user.email;
+  loadDashboard();
+  loadTodo();
+  loadEvents();
+  loadChallenges();
+}
+$('refreshDash')?.addEventListener('click', loadDashboard);
+
+// restore an existing session on load
+(async () => {
+  const { data } = await sb.auth.getSession();
+  if(data.session){
+    const { data: prof } = await sb.from('profiles_alter').select('is_admin').eq('id', data.session.user.id).maybeSingle();
+    if(prof && prof.is_admin) enterApp(data.session.user);
+  }
+})();
+
+// ── TABS ───────────────────────────────────────────────────
+document.querySelectorAll('.tab').forEach(t => {
+  t.addEventListener('click', () => {
+    document.querySelectorAll('.tab').forEach(x => x.classList.remove('on'));
+    t.classList.add('on');
+    const tab = t.dataset.tab;
+    document.querySelectorAll('.page').forEach(p => p.classList.add('hidden'));
+    $('page-' + tab).classList.remove('hidden');
+    if(tab === 'dashboard'){ loadDashboard(); loadTodo(); }
+    if(tab === 'photos') loadPhotos();
+    if(tab === 'members') loadMembers();
+      if(tab === 'leads') loadLeads();
+    if(tab === 'announce') loadAnnouncements();
+    if(tab === 'blog') loadPosts();
+    if(tab === 'siteimg') loadSiteImages();
+    if(tab === 'homehero') loadHomeHero();
+    if(tab === 'transform') loadTransformations();
+    if(tab === 'videos') loadExercises();
+    if(tab === 'forms') loadFormGuides();
+    if(tab === 'recipes') loadRecipes();
+    if(tab === 'reports') loadReports();
+    if(tab === 'ambassadors') loadAmbassadors();
+  });
+});
+
+// ── APP HOME HERO IMAGE ────────────────────────────────────
+async function loadHomeHero(){
+  const box = $('homeHeroPreview');
+  // read the current value from any profile that has it set
+  const { data } = await sb.from('profiles_alter').select('home_hero_url').not('home_hero_url','is',null).limit(1);
+  const url = data && data[0] && data[0].home_hero_url;
+  box.innerHTML = url
+    ? `<img src="${esc(url)}" style="width:100%;max-width:360px;border-radius:16px;display:block">`
+    : '<p class="note">No image set. The app shows the gradient.</p>';
+}
+$('homeHeroUpload')?.addEventListener('click', () => $('homehero_file').click());
+$('homehero_file')?.addEventListener('change', async e => {
+  const file = e.target.files[0];
+  if(!file) return;
+  try {
+    toast('Uploading...');
+    const path = `home-hero-${Date.now()}.${(file.name.split('.').pop()||'jpg')}`;
+    const { error: upErr } = await sb.storage.from('site-images').upload(path, file, { upsert:true, contentType:file.type });
+    if(upErr) throw upErr;
+    const { data: pub } = sb.storage.from('site-images').getPublicUrl(path);
+    // set it for every member
+    const { error } = await sb.from('profiles_alter').update({ home_hero_url: pub.publicUrl }).neq('id','00000000-0000-0000-0000-000000000000');
+    if(error) throw error;
+    toast('Home image updated for everyone');
+    loadHomeHero();
+  } catch(err){ toast('Upload failed: ' + (err.message||'')); }
+});
+$('homeHeroClear')?.addEventListener('click', async () => {
+  if(!confirm('Remove the home image and go back to the gradient?')) return;
+  const { error } = await sb.from('profiles_alter').update({ home_hero_url: null }).neq('id','00000000-0000-0000-0000-000000000000');
+  if(error){ toast('Could not clear'); return; }
+  toast('Back to the gradient'); loadHomeHero();
+});
+
+// ── AMBASSADORS / GROWTH ───────────────────────────────────
+async function loadAmbassadors(){
+  const box = $('ambassadorsList');
+  box.innerHTML = '<div class="loading"><span class="spin" style="border-color:rgba(0,0,0,.15);border-top-color:var(--sage)"></span></div>';
+  // the earnings view does the maths: signups, paying, revenue, owed
+  const { data: rows, error } = await sb.from('ambassador_earnings').select('*').order('owed', { ascending: false });
+  if(error){
+    box.innerHTML = '<p class="note">Could not load ambassadors. Run INFLUENCER.sql if you have not yet.</p>';
+    return;
+  }
+  if(!rows.length){
+    box.innerHTML = '<p class="note">No ambassadors yet. Add your first with the button above.</p>';
+    return;
+  }
+  let totalOwed = 0;
+  rows.forEach(r => totalOwed += Number(r.owed) || 0);
+  box.innerHTML = `
+    <div class="card" style="margin-bottom:14px;background:var(--olive);color:#fff">
+      <div class="meta" style="color:rgba(255,255,255,.7)">TOTAL OWED THIS PERIOD</div>
+      <div style="font-size:26px;font-weight:700;margin-top:4px">$${totalOwed.toLocaleString()}</div>
+    </div>
+    <table class="tbl">
+      <thead><tr><th>Ambassador</th><th>Code</th><th>Cut</th><th>Signups</th><th>Paying</th><th>Revenue</th><th>Owed</th></tr></thead>
+      <tbody>
+        ${rows.map(r => `<tr>
+          <td><b>${esc(r.name)}</b></td>
+          <td><code>${esc(r.code)}</code></td>
+          <td>${r.cut_percent}%</td>
+          <td>${r.total_signups}</td>
+          <td>${r.paying_signups}</td>
+          <td>$${Number(r.revenue_driven||0).toLocaleString()}</td>
+          <td><b>$${Number(r.owed||0).toLocaleString()}</b></td>
+        </tr>`).join('')}
+      </tbody>
+    </table>`;
+}
+
+async function addAmbassador(){
+  const name = prompt('Ambassador name (e.g. Kayla Smith)');
+  if(!name) return;
+  let code = prompt('Their referral code (letters and numbers, e.g. KAYLA)');
+  if(!code) return;
+  code = code.toUpperCase().replace(/[^A-Z0-9_]/g,'');
+  const cut = prompt('Their cut of the first payment, as a number (e.g. 30 for 30%)', '30');
+  const userId = prompt('Their ALTER account user ID (optional - leave blank if they do not have the app yet). This links their in-app dashboard.') || null;
+  const { error } = await sb.from('ambassadors').insert({
+    name, code, cut_percent: Number(cut) || 30, user_id: userId || null, active: true,
+  });
+  if(error){ toast(error.message.includes('duplicate') ? 'That code is taken' : 'Could not add'); return; }
+  toast('Ambassador added'); loadAmbassadors();
+}
+$('newAmbassador')?.addEventListener('click', addAmbassador);
+
+// ── REPORTS / MODERATION ───────────────────────────────────
+async function loadReports(){
+  const box = $('reportsList');
+  box.innerHTML = '<div class="loading"><span class="spin" style="border-color:rgba(0,0,0,.15);border-top-color:var(--sage)"></span></div>';
+  // open reports first
+  const { data: reports, error } = await sb.from('reports')
+    .select('*').eq('resolved', false).order('created_at', { ascending: false });
+  if(error){ box.innerHTML = '<p class="note">Could not load reports.</p>'; return; }
+  if(!reports.length){ box.innerHTML = '<p class="note">No open reports. All clear.</p>'; return; }
+
+  // pull the reported posts and reporters for context
+  const postIds = [...new Set(reports.map(r => r.post_id).filter(Boolean))];
+  let posts = {};
+  if(postIds.length){
+    const { data: p } = await sb.from('posts_community').select('*').in('id', postIds);
+    (p||[]).forEach(x => posts[x.id] = x);
+  }
+
+  box.innerHTML = reports.map(r => {
+    const post = posts[r.post_id];
+    const caption = post ? (post.caption || '(photo, no caption)') : '(post deleted)';
+    const hidden = post && post.hidden;
+    return `<div class="card" style="margin-bottom:12px">
+      <div class="row-between">
+        <div>
+          <b>Reported post</b>
+          <div class="meta">${esc(r.reason || 'No reason given')} &middot; ${new Date(r.created_at).toLocaleDateString()}</div>
+        </div>
+        <div style="display:flex;gap:8px">
+          ${post ? (hidden
+            ? `<button class="btn small ghost" onclick="unhidePost('${post.id}','${r.id}')">Unhide</button>`
+            : `<button class="btn small" onclick="hidePost('${post.id}','${r.id}')">Hide post</button>`) : ''}
+          <button class="btn small ghost" onclick="dismissReport('${r.id}')">Dismiss</button>
+        </div>
+      </div>
+      <div style="margin-top:8px;padding:10px;background:var(--bg);border-radius:8px;font-size:13px">
+        ${esc(caption)} ${hidden ? '<span style="color:#B04A3F">(currently hidden)</span>' : ''}
+      </div>
+    </div>`;
+  }).join('');
+}
+
+async function hidePost(postId, reportId){
+  await sb.from('posts_community').update({ hidden: true }).eq('id', postId);
+  await sb.from('reports').update({ resolved: true }).eq('id', reportId);
+  toast('Post hidden'); loadReports();
+}
+async function unhidePost(postId, reportId){
+  await sb.from('posts_community').update({ hidden: false }).eq('id', postId);
+  toast('Post visible again'); loadReports();
+}
+async function dismissReport(reportId){
+  await sb.from('reports').update({ resolved: true }).eq('id', reportId);
+  toast('Report dismissed'); loadReports();
+}
+window.hidePost = hidePost;
+window.unhidePost = unhidePost;
+window.dismissReport = dismissReport;
+
+// ── DASHBOARD ──────────────────────────────────────────────
+function statCard(n, l, s){
+  return `<div class="stat"><div class="n">${n}</div><div class="l">${esc(l)}</div>${s ? `<div class="s">${esc(s)}</div>` : ''}</div>`;
+}
+async function countRows(table, mutate){
+  let q = sb.from(table).select('id', { count: 'exact', head: true });
+  if(mutate) q = mutate(q);
+  const { count, error } = await q;
+  if(error) throw error;
+  return count ?? 0;
+}
+async function loadDashboard(){
+  const grid = $('statGrid');
+  grid.innerHTML = '<div class="loading"><span class="spin" style="border-color:rgba(0,0,0,.15);border-top-color:var(--sage)"></span></div>';
+  try {
+    const members = await countRows('profiles_alter');
+      /* leads are the number that actually needs your attention, so they
+         sit on the dashboard rather than only inside their own page */
+      let leadsNew = 0, leadsTotal = 0;
+      try {
+        const { data: ld } = await sb.from('leads').select('status');
+        leadsTotal = (ld || []).length;
+        leadsNew = (ld || []).filter(l => (l.status || 'new') === 'new').length;
+      } catch(e){}
+    const iso = (d) => new Date(Date.now() - d*864e5).toISOString();
+    let newWeek = '—', newMonth = '—';
+    try { newWeek  = '+' + await countRows('profiles_alter', q => q.gte('created_at', iso(7))); } catch(e){}
+    try { newMonth = '+' + await countRows('profiles_alter', q => q.gte('created_at', iso(30))); } catch(e){}
+
+    const today = new Date().toISOString().slice(0,10);
+    const { data: live } = await sb.from('challenges').select('id,title').lte('starts_on', today).gte('ends_on', today).limit(1);
+    let participants = 0, liveTitle = 'No live challenge';
+    if(live && live[0]){
+      liveTitle = live[0].title;
+      participants = await countRows('challenge_entries', q => q.eq('challenge_id', live[0].id));
+    }
+    let photos = '—';
+    try { photos = await countRows('progress_photos'); } catch(e){}
+    // engagement: workouts completed in the last 7 days, and how many members did them
+    let active = '—', sessions = '—';
+    try {
+      const since = new Date(Date.now() - 7*864e5).toISOString().slice(0,10);
+      const { data: recent } = await sb.from('workouts').select('user_id').eq('completed', true).gte('date', since).limit(5000);
+      sessions = (recent || []).length;
+      active = new Set((recent || []).map(r => r.user_id)).size;
+    } catch(e){}
+
+    /* Who is actually paying. This only has anything in it once the
+       RevenueCat webhook is connected, so if the table is empty or
+       missing the cards are left out rather than showing a false zero. */
+    let paying = null, trialing = null, cancelling = null, mrr = null;
+    try {
+      const { data: subs, error: subErr } = await sb
+        .from('subscriptions').select('status,price_cents,product_id');
+      if(!subErr && subs && subs.length){
+        paying     = subs.filter(s => s.status === 'active').length;
+        trialing   = subs.filter(s => s.status === 'trial').length;
+        cancelling = subs.filter(s => s.status === 'cancelled').length;
+        /* annual plans spread across twelve months so the figure means
+           the same thing whichever plan someone is on */
+        const cents = subs.filter(s => s.status === 'active').reduce((t, s) => {
+          if(!s.price_cents) return t;
+          const yearly = /year|annual/i.test(s.product_id || '');
+          return t + (yearly ? s.price_cents / 12 : s.price_cents);
+        }, 0);
+        mrr = '$' + Math.round(cents / 100).toLocaleString();
+      }
+    } catch(e){}
+
+        grid.innerHTML =
+      statCard(members, 'Members', 'total sign-ups')
+      + (paying !== null ? statCard(paying, 'Paying', mrr + ' a month') : '')
+      + (trialing !== null ? statCard(trialing, 'On trial', 'not charged yet') : '')
+      + statCard(leadsNew, 'New leads', leadsTotal + ' on the list')
+      + statCard(newWeek, 'New this week')
+      + statCard(participants, 'In the challenge', liveTitle)
+      + statCard(active, 'Active this week', 'trained in last 7 days')
+      + statCard(sessions, 'Sessions done', 'last 7 days')
+      + statCard(photos, 'Progress photos', 'submitted')
+      + statCard(newMonth, 'New this month');
+
+    $('subNote').innerHTML = paying !== null
+      ? '<b>About these numbers:</b> everything here is live from the app. <b>Members</b> is everyone with an account, <b>Paying</b> is those on an active paid subscription, sent over by RevenueCat. The monthly figure is indicative, not accounting: it does not know about refunds, Apple\'s cut or currency conversion. Use RevenueCat for anything that has to be exact.'
+      : '<b>About "Members":</b> that is everyone who has created an account. Everything on this dashboard is live from the app except one thing: whether someone is <i>paying</i>, which App Store billing tracks in RevenueCat rather than here. Ten minutes of setup connects it, and <b>_setup/REVENUECAT.md</b> walks through it.';
+  } catch(e){
+    grid.innerHTML = `<div class="note">Could not load stats: ${esc(e.message || String(e))}.<br>If it mentions permission, run <b>_setup/SETUP.sql</b> in Supabase once, then refresh.</div>`;
+  }
+}
+
+// ── MEMBERS ────────────────────────────────────────────────
+let allMembers = [];
+function renderMembers(list){
+  const box = $('membersBox');
+  if(!list.length){ box.innerHTML = '<div class="note">No members match that search.</div>'; return; }
+  box.innerHTML = `<div class="tbl-wrap"><table class="tbl">
+    <thead><tr><th>Name</th><th>Email</th><th>Goal</th><th>Coach</th><th>Days</th><th>Joined</th><th></th></tr></thead>
+    <tbody>${list.map(m => `<tr>
+      <td><b>${esc(m.name || 'Member')}</b></td>
+      <td>${esc(m.email || '')}</td>
+      <td>${esc(m.goal || '')}</td>
+      <td>${esc(m.coach || '')}</td>
+      <td>${esc(m.days_per_week || '')}</td>
+      <td>${m.created_at ? esc(String(m.created_at).slice(0,10)) : ''}</td>
+      <td style="text-align:right;white-space:nowrap"><button class="btn ghost small" data-view-member="${m.id}">View</button></td>
+    </tr>`).join('')}</tbody></table></div>
+    <div class="meta" style="margin-top:10px">${list.length} member${list.length===1?'':'s'}</div>`;
+  document.querySelectorAll('[data-view-member]').forEach(b =>
+    b.addEventListener('click', () => viewMember(b.dataset.viewMember)));
+}
+
+// ── MEMBER DETAIL + DELETE ─────────────────────────────────
+async function viewMember(id){
+  const m = allMembers.find(x => x.id === id);
+  if(!m) return;
+  showModal(`<h2>${esc(m.name || 'Member')}</h2>
+    <div class="sub">${esc(m.email || '')}</div>
+    <div id="mDetail"><div class="loading"><span class="spin" style="border-color:rgba(0,0,0,.15);border-top-color:var(--sage)"></span></div></div>
+    <div style="display:flex;gap:10px;margin-top:18px;flex-wrap:wrap">
+      <button class="btn ghost" id="m_close">Close</button>
+      <button class="btn danger" id="m_del" style="margin-left:auto">Delete member</button>
+    </div>`);
+  $('m_close').addEventListener('click', closeModal);
+
+  // load a quick snapshot of their activity
+  let sessions = '—', photos = '—', last = '—';
+  try {
+    const { count } = await sb.from('workouts').select('id',{count:'exact',head:true}).eq('user_id', id).eq('completed', true);
+    sessions = count ?? 0;
+  } catch(e){}
+  try {
+    const { count } = await sb.from('progress_photos').select('id',{count:'exact',head:true}).eq('user_id', id);
+    photos = count ?? 0;
+  } catch(e){}
+  try {
+    const { data } = await sb.from('workouts').select('date').eq('user_id', id).eq('completed', true).order('date',{ascending:false}).limit(1);
+    if(data && data[0]) last = data[0].date;
+  } catch(e){}
+
+  $('mDetail').innerHTML = `<div class="stat-grid" style="margin-top:16px">
+      ${statCard(sessions,'Sessions done')}
+      ${statCard(photos,'Photos')}
+      ${statCard(last,'Last trained')}
+    </div>
+    <div class="tbl-wrap"><table class="tbl"><tbody>
+      <tr><td>Goal</td><td><b>${esc(m.goal || '')}</b></td></tr>
+      <tr><td>Coach</td><td><b>${esc(m.coach || '')}</b></td></tr>
+      <tr><td>Days per week</td><td><b>${esc(m.days_per_week || '')}</b></td></tr>
+      <tr><td>Joined</td><td><b>${m.created_at ? esc(String(m.created_at).slice(0,10)) : ''}</b></td></tr>
+    </tbody></table></div>`;
+
+  $('m_del').addEventListener('click', async () => {
+    const name = m.name || m.email || 'this member';
+    if(!confirm(`Permanently delete ${name}?\n\nThis removes their account, all logged data and progress photos. It cannot be undone.`)) return;
+    if(prompt('Type DELETE to confirm') !== 'DELETE') return toast('Cancelled');
+    const { error } = await sb.rpc('admin_delete_member', { target: id });
+    if(error) return toast(error.message);
+    closeModal(); toast('Member deleted'); loadMembers(); loadDashboard();
+  });
+}
+async function loadMembers(){
+  const box = $('membersBox');
+  box.innerHTML = '<div class="loading"><span class="spin" style="border-color:rgba(0,0,0,.15);border-top-color:var(--sage)"></span></div>';
+  try {
+    const { data, error } = await sb.from('profiles_alter')
+      .select('id,name,email,goal,coach,days_per_week,created_at')
+      .order('created_at', { ascending: false }).limit(1000);
+    if(error) throw error;
+    allMembers = data || [];
+    renderMembers(allMembers);
+  } catch(e){
+    box.innerHTML = `<div class="note">Could not load members: ${esc(e.message || String(e))}.<br>If it mentions permission, run <b>_setup/SETUP.sql</b>, then refresh.</div>`;
+  }
+}
+$('memberSearch')?.addEventListener('input', (e) => {
+  const q = e.target.value.trim().toLowerCase();
+  renderMembers(!q ? allMembers : allMembers.filter(m =>
+    [m.name, m.email, m.goal, m.coach].some(v => String(v||'').toLowerCase().includes(q))));
+});
+
+// ── ANNOUNCEMENTS ──────────────────────────────────────────
+async function loadAnnouncements(){
+  const box = $('announceList');
+  box.innerHTML = '<div class="loading"><span class="spin" style="border-color:rgba(0,0,0,.15);border-top-color:var(--sage)"></span></div>';
+  try {
+    const { data, error } = await sb.from('announcements').select('*').order('created_at', { ascending: false });
+    if(error) throw error;
+    if(!data || !data.length){ box.innerHTML = '<div class="note">No announcements yet. Tap “New announcement” to send your first.</div>'; return; }
+    box.innerHTML = data.map(a => `<div class="card">
+      <div class="row-between" style="margin-bottom:6px">
+        <b>${esc(a.title)}</b>
+        <button class="btn ghost small" data-del-ann="${a.id}">Delete</button>
+      </div>
+      <div style="font-size:14px;color:var(--ink2);line-height:1.55">${esc(a.body || '')}</div>
+      <div class="meta" style="margin-top:8px">${a.created_at ? esc(String(a.created_at).slice(0,10)) : ''}</div>
+    </div>`).join('');
+    document.querySelectorAll('[data-del-ann]').forEach(b => b.addEventListener('click', async () => {
+      if(!confirm('Delete this announcement?')) return;
+      await sb.from('announcements').delete().eq('id', b.dataset.delAnn);
+      toast('Announcement deleted'); loadAnnouncements();
+    }));
+  } catch(e){
+    box.innerHTML = `<div class="note">Could not load announcements: ${esc(e.message || String(e))}.<br>If the table is missing, run <b>ANNOUNCEMENTS.sql</b> in Supabase once.</div>`;
+  }
+}
+$('newAnnounce')?.addEventListener('click', () => {
+  showModal(`<h2>New announcement</h2>
+    <label>Title</label><input id="an_title" placeholder="Bikini Build starts Monday">
+    <label>Message</label><textarea id="an_body" rows="4" placeholder="Eight weeks, starting Monday. Get your before photo in and lock your spot."></textarea>
+    <div style="display:flex;gap:10px;margin-top:18px">
+      <button class="btn" id="an_save">Send</button>
+      <button class="btn ghost" id="an_cancel">Cancel</button>
+    </div>`);
+  $('an_cancel').addEventListener('click', closeModal);
+  $('an_save').addEventListener('click', async () => {
+    const title = $('an_title').value.trim(), body = $('an_body').value.trim();
+    if(!title) return toast('Give it a title');
+    const { error } = await sb.from('announcements').insert({ title, body });
+    if(error) return toast(error.message);
+    closeModal(); toast('Announcement sent'); loadAnnouncements();
+  });
+});
+
+
+// ── WHAT STILL NEEDS DOING ─────────────────────────────────────
+// The dashboard should tell her what is outstanding without her having
+// to click through eleven tabs to find out.
+async function loadTodo(){
+  const box = $('todoBox');
+  if(!box) return;
+  const jobs = [];
+  const count = async (table, col) => {
+    try {
+      const total = await sb.from(table).select('*', { count:'exact', head:true });
+      const filled = await sb.from(table).select('*', { count:'exact', head:true }).not(col, 'is', null);
+      return { total: total.count || 0, filled: filled.count || 0 };
+    } catch(e){ return null; }
+  };
+
+  const fg = await count('form_guides','video_url');
+  if(fg && fg.total) jobs.push({ n: fg.total - fg.filled, of: fg.total, label:'form guide videos', tab:'forms' });
+
+  const rc = await count('recipes','image_url');
+  if(rc && rc.total) jobs.push({ n: rc.total - rc.filled, of: rc.total, label:'recipe photos', tab:'recipes' });
+
+  const si = await count('site_images','url');
+  if(si && si.total) jobs.push({ n: si.total - si.filled, of: si.total, label:'website photos', tab:'siteimg' });
+
+  try {
+    const ex = await sb.from('exercise_library').select('name');
+    const vid = await sb.from('videos').select('exercise_name');
+    if(ex.data){
+      const have = new Set((vid.data||[]).map(v => v.exercise_name));
+      const missing = ex.data.filter(e => !have.has(e.name)).length;
+      jobs.push({ n: missing, of: ex.data.length, label:'exercise videos', tab:'videos' });
+    }
+  } catch(e){}
+
+  // sidebar counters
+  jobs.forEach(j => {
+    const el = $('n-' + j.tab);
+    if(el) el.textContent = j.n > 0 ? j.n : '';
+  });
+
+  const open = jobs.filter(j => j.n > 0);
+  if(!open.length){
+    box.innerHTML = '<div class="todo"><h3>All caught up</h3><p class="done-note">Every guide, photo and video has been uploaded. Nice work.</p></div>';
+    return;
+  }
+  box.innerHTML = '<div class="todo"><h3>Still to upload</h3>' +
+    '<p class="done-note" style="margin-bottom:6px">Everything else is set up and running. These just need your content.</p>' +
+    open.map(j => `<div class="trow">
+        <div><b>${j.n} ${esc(j.label)}</b>
+          <div class="meta">${j.of - j.n} of ${j.of} done</div></div>
+        <button class="go" data-goto="${j.tab}">Open</button>
+      </div>`).join('') + '</div>';
+  box.querySelectorAll('[data-goto]').forEach(b => b.addEventListener('click', () => {
+    const t = document.querySelector(`.side .tab[data-tab="${b.dataset.goto}"]`);
+    if(t) t.click();
+  }));
+}
+
+// ── TRANSFORMATIONS ────────────────────────────────────────
+let allTf = [], tfMode = null;   // tfMode: 'new' or an id when replacing
+async function loadTransformations(){
+  const box = $('tfList');
+  box.innerHTML = '<div class="loading"><span class="spin" style="border-color:rgba(0,0,0,.15);border-top-color:var(--sage)"></span></div>';
+  try {
+    const { data, error } = await sb.from('transformations').select('*').order('sort_order');
+    if(error) throw error;
+    allTf = data || [];
+    if(!allTf.length){ box.innerHTML = '<div class="note">No transformations yet. Tap “Add transformation”.</div>'; return; }
+    box.innerHTML = allTf.map((t, i) => `<div class="rrow">
+        <img class="thumb" src="${esc(t.image_url || '')}" alt="">
+        <div style="flex:1">
+          <b>${esc(t.caption || 'No caption')}</b>
+          <div class="meta">${t.published ? 'Showing on the site' : 'Hidden'}</div>
+        </div>
+        <button class="btn ghost small" data-tf-up="${t.id}" ${i===0?'disabled':''}>↑</button>
+        <button class="btn ghost small" data-tf-edit="${t.id}">Edit</button>
+      </div>`).join('');
+    document.querySelectorAll('[data-tf-edit]').forEach(b => b.addEventListener('click', () => tfForm(allTf.find(x => String(x.id)===b.dataset.tfEdit))));
+    document.querySelectorAll('[data-tf-up]').forEach(b => b.addEventListener('click', async () => {
+      const i = allTf.findIndex(x => String(x.id)===b.dataset.tfUp);
+      if(i<1) return;
+      const a = allTf[i], c = allTf[i-1];
+      await sb.from('transformations').update({ sort_order: c.sort_order }).eq('id', a.id);
+      await sb.from('transformations').update({ sort_order: a.sort_order }).eq('id', c.id);
+      loadTransformations();
+    }));
+  } catch(e){
+    box.innerHTML = `<div class="note">Could not load: ${esc(e.message || String(e))}.<br>If the table is missing, run <b>TRANSFORMATIONS.sql</b> once.</div>`;
+  }
+}
+
+function tfForm(t){
+  const isNew = !t;
+  t = t || { caption:'', alt:'', published:true, image_url:'' };
+  showModal(`<h2>${isNew ? 'Add transformation' : 'Edit transformation'}</h2>
+    ${t.image_url ? `<img src="${esc(t.image_url)}" style="width:100%;max-height:260px;object-fit:contain;border-radius:12px;margin-bottom:14px">` : ''}
+    <label>Caption (how long it took)</label><input id="tf_cap" value="${esc(t.caption||'')}" placeholder="16 weeks">
+    <label>Photo description (for screen readers)</label><input id="tf_alt" value="${esc(t.alt||'')}" placeholder="Client transformation after 16 weeks of strength training">
+    <label style="display:flex;align-items:center;gap:8px;margin-top:14px;text-transform:none;letter-spacing:0;font-size:14px">
+      <input type="checkbox" id="tf_pub" ${t.published?'checked':''} style="width:auto;margin:0"> Show on the website
+    </label>
+    <div style="display:flex;gap:10px;margin-top:18px;flex-wrap:wrap">
+      <button class="btn" id="tf_save">Save</button>
+      <button class="btn ghost" id="tf_photo">${t.image_url ? 'Replace photo' : 'Choose photo'}</button>
+      <button class="btn ghost" id="tf_cancel">Cancel</button>
+      ${isNew ? '' : '<button class="btn danger" id="tf_del" style="margin-left:auto">Delete</button>'}
+    </div>`);
+  $('tf_cancel').addEventListener('click', closeModal);
+  $('tf_photo').addEventListener('click', () => { tfMode = isNew ? 'new' : t.id; $('tf_file').click(); });
+  $('tf_save').addEventListener('click', async () => {
+    const row = { caption: $('tf_cap').value.trim(), alt: $('tf_alt').value.trim(), published: $('tf_pub').checked };
+    try {
+      if(isNew){
+        if(!t.image_url) return toast('Choose a photo first');
+        row.image_url = t.image_url;
+        row.sort_order = allTf.length;
+        const { error } = await sb.from('transformations').insert(row);
+        if(error) throw error;
+      } else {
+        const { error } = await sb.from('transformations').update(row).eq('id', t.id);
+        if(error) throw error;
+      }
+      closeModal(); toast('Saved'); loadTransformations();
+    } catch(e){ toast(e.message || 'Could not save'); }
+  });
+  if(!isNew) $('tf_del').addEventListener('click', async () => {
+    if(!confirm('Remove this transformation from the website?')) return;
+    await sb.from('transformations').delete().eq('id', t.id);
+    closeModal(); toast('Removed'); loadTransformations();
+  });
+}
+$('newTf')?.addEventListener('click', () => tfForm(null));
+
+$('tf_file')?.addEventListener('change', async e => {
+  const file = e.target.files[0];
+  if(!file || !tfMode) return;
+  try {
+    toast('Uploading photo...');
+    const path = `tf-${Date.now()}.${(file.name.split('.').pop()||'jpg')}`;
+    const { error: upErr } = await sb.storage.from('site-images').upload(path, file, { upsert:true, contentType:file.type });
+    if(upErr) throw upErr;
+    const { data: pub } = sb.storage.from('site-images').getPublicUrl(path);
+    if(tfMode === 'new'){
+      const { error } = await sb.from('transformations').insert({ image_url: pub.publicUrl, sort_order: allTf.length, published: true });
+      if(error) throw error;
+      toast('Photo added, now add a caption');
+    } else {
+      const { error } = await sb.from('transformations').update({ image_url: pub.publicUrl }).eq('id', tfMode);
+      if(error) throw error;
+      toast('Photo replaced');
+    }
+    closeModal(); loadTransformations();
+  } catch(err){ toast(err.message || 'Upload failed'); }
+  finally { tfMode = null; e.target.value = ''; }
+});
+
+// ── WEBSITE IMAGES ─────────────────────────────────────────
+let pendingSiteKey = null;
+
+// which website page each group of photos lives on, so you can go and look
+const SITE_PAGES = {
+  'Home':'index.html', 'App screens':'features.html', 'Challenges':'challenges.html',
+  'About':'about.html', 'Blog':'blog.html', 'Features':'features.html'
+};
+
+async function loadSiteImages(){
+  const box = $('siteImgList');
+  box.innerHTML = '<div class="loading"><span class="spin" style="border-color:rgba(0,0,0,.15);border-top-color:var(--sage)"></span></div>';
+  try {
+    // sort_order, page and hint only exist once SITE_IMAGES.sql has been run.
+    // If the column is not there yet, fall back to ordering by key so the tab
+    // still works instead of showing an error.
+    let res = await sb.from('site_images').select('*').order('sort_order').order('key');
+    if(res.error) res = await sb.from('site_images').select('*').order('key');
+    if(res.error) throw res.error;
+    const rows = res.data || [];
+    if(!rows.length){
+      box.innerHTML = '<div class="note">No image slots yet. Run <b>SITE_IMAGES.sql</b> in Supabase once, then come back.</div>';
+      return;
+    }
+
+    const missing = rows.filter(r => !r.url).length;
+    const groups = {};
+    rows.forEach(r => { const g = r.page || 'Website'; (groups[g] = groups[g] || []).push(r); });
+
+    box.innerHTML =
+      `<div class="meta" style="padding-bottom:6px">${rows.length} photo spots &middot; ` +
+      (missing ? `<b>${missing}</b> still need a photo` : 'all filled in, nice work') + `</div>` +
+      Object.keys(groups).map(g => {
+        const list = groups[g];
+        const filled = list.filter(r => r.url).length;
+        const link = SITE_PAGES[g] ? `<a href="${SITE_PAGES[g]}" target="_blank" rel="noopener">View page &rsaquo;</a>` : '';
+        return `<div class="si-group">
+          <h3 class="si-head">${esc(g)} <span class="count">${filled} of ${list.length}</span> ${link}</h3>
+          ${list.map(r => `<div class="rrow si-row">
+            <div class="si-thumb${r.url ? '' : ' si-empty'}">${r.url ? `<img src="${esc(r.url)}" alt="" loading="lazy">` : ''}</div>
+            <div style="flex:1; min-width:160px">
+              <b>${esc(r.label || r.key)}</b>
+              <div class="si-hint">${esc(r.hint || (r.url ? 'Photo uploaded' : 'No photo yet'))}</div>
+            </div>
+            <div class="si-actions">
+              <button class="btn ghost small" data-siteimg="${esc(r.key)}">${r.url ? 'Replace' : 'Upload'}</button>
+              ${r.url ? `<button class="btn ghost small" data-siterm="${esc(r.key)}">Remove</button>` : ''}
+            </div>
+          </div>`).join('')}
+        </div>`;
+      }).join('');
+
+    document.querySelectorAll('[data-siteimg]').forEach(b => b.addEventListener('click', () => {
+      pendingSiteKey = b.dataset.siteimg; $('si_file').click();
+    }));
+    document.querySelectorAll('[data-siterm]').forEach(b => b.addEventListener('click', () => removeSiteImage(b.dataset.siterm)));
+  } catch(e){
+    box.innerHTML = `<div class="note">Could not load: ${esc(e.message || String(e))}.<br>If the table is missing, run <b>SITE_IMAGES.sql</b> once.</div>`;
+  }
+}
+
+async function removeSiteImage(key){
+  if(!confirm('Remove this photo from the website?\n\nThe placeholder comes back until you upload another one.')) return;
+  const { error } = await sb.from('site_images')
+    .update({ url: null, updated_at: new Date().toISOString() }).eq('key', key);
+  if(error){ toast(error.message || 'Could not remove'); return; }
+  toast('Photo removed from the website');
+  loadSiteImages();
+}
+
+$('si_file')?.addEventListener('change', async e => {
+  const file = e.target.files[0];
+  if(!file || !pendingSiteKey) return;
+  if(file.size > 10 * 1024 * 1024){
+    toast('That image is over 10MB. Please use a smaller one.');
+    pendingSiteKey = null; e.target.value = ''; return;
+  }
+  try {
+    toast('Uploading photo...');
+    const ext  = (file.name.split('.').pop() || 'jpg').toLowerCase();
+    const path = `${pendingSiteKey}-${Date.now()}.${ext}`;
+    const { error: upErr } = await sb.storage.from('site-images')
+      .upload(path, file, { upsert: true, contentType: file.type, cacheControl: '3600' });
+    if(upErr) throw upErr;
+    const { data: pub } = sb.storage.from('site-images').getPublicUrl(path);
+    if(!pub || !pub.publicUrl) throw new Error('Could not get a public link for that file');
+    const { error } = await sb.from('site_images')
+      .update({ url: pub.publicUrl, updated_at: new Date().toISOString() })
+      .eq('key', pendingSiteKey);
+    if(error) throw error;
+    toast('Photo is live on the website');
+    loadSiteImages();
+  } catch(err){ toast(err.message || 'Upload failed'); }
+  finally { pendingSiteKey = null; e.target.value = ''; }
+});
+
+// ── BLOG ───────────────────────────────────────────────────
+let allPosts = [], pendingPost = null;
+
+async function loadPosts(){
+  const box = $('postList');
+  box.innerHTML = '<div class="loading"><span class="spin" style="border-color:rgba(0,0,0,.15);border-top-color:var(--sage)"></span></div>';
+  try {
+    const { data, error } = await sb.from('posts').select('*').order('created_at', { ascending: false });
+    if(error) throw error;
+    allPosts = data || [];
+    if(!allPosts.length){ box.innerHTML = '<div class="note">No articles yet. Tap “New article” to write your first.</div>'; return; }
+    box.innerHTML = `<div class="card">${allPosts.map(p => `<div class="rrow">
+        ${p.cover_url ? `<img class="thumb" src="${esc(p.cover_url)}" alt="" loading="lazy">` : '<div class="thumb"></div>'}
+        <div style="flex:1">
+          <b>${esc(p.title)}</b>
+          <div class="meta">${esc(p.category || '')}${p.featured ? ' · featured' : ''}${p.published ? '' : ' · draft'}${p.read_time ? ' · ' + esc(p.read_time) : ''}</div>
+        </div>
+        <button class="btn ghost small" data-cover="${p.id}">${p.cover_url ? 'Change image' : 'Add image'}</button>
+        <button class="btn ghost small" data-edit-post="${p.id}">Edit</button>
+      </div>`).join('')}</div>`;
+    document.querySelectorAll('[data-cover]').forEach(b => b.addEventListener('click', () => {
+      pendingPost = b.dataset.cover; $('p_file').click();
+    }));
+    document.querySelectorAll('[data-edit-post]').forEach(b => b.addEventListener('click', () => editPost(b.dataset.editPost)));
+  } catch(e){
+    box.innerHTML = `<div class="note">Could not load articles: ${esc(e.message || String(e))}.<br>If the table is missing, run <b>BLOG.sql</b> in Supabase once.</div>`;
+  }
+}
+
+function postForm(p){
+  const isNew = !p;
+  p = p || { title:'', category:'training', excerpt:'', read_time:'', body:'', featured:false, published:true };
+  showModal(`<h2>${isNew ? 'New article' : 'Edit article'}</h2>
+    <label>Title</label><input id="p_title" value="${esc(p.title)}" placeholder="Creatine for women, explained">
+    <label>Category</label>
+    <select id="p_cat">
+      ${['training','nutrition','mindset','support'].map(c =>
+        `<option value="${c}"${p.category===c?' selected':''}>${c.charAt(0).toUpperCase()+c.slice(1)}</option>`).join('')}
+    </select>
+    <label>Short excerpt (shows on the card)</label><textarea id="p_excerpt" rows="2">${esc(p.excerpt||'')}</textarea>
+    <label>Read time</label><input id="p_read" value="${esc(p.read_time||'')}" placeholder="4 min read">
+    <label>Article</label>
+    <textarea id="p_body" rows="12" placeholder="Write here. Leave a blank line between paragraphs.&#10;&#10;## starts a heading&#10;&gt; starts a pull quote&#10;**bold** makes text bold&#10;![description](https://link-to-image.jpg) puts a picture in, on its own line">${esc(p.body||'')}</textarea>
+    <div style="display:flex;gap:18px;margin-top:14px;flex-wrap:wrap">
+      <label style="display:flex;align-items:center;gap:8px;margin:0;text-transform:none;letter-spacing:0;font-size:14px">
+        <input type="checkbox" id="p_featured" ${p.featured?'checked':''} style="width:auto;margin:0"> Featured
+      </label>
+      <label style="display:flex;align-items:center;gap:8px;margin:0;text-transform:none;letter-spacing:0;font-size:14px">
+        <input type="checkbox" id="p_published" ${p.published?'checked':''} style="width:auto;margin:0"> Published
+      </label>
+    </div>
+    <div style="display:flex;gap:10px;margin-top:18px;flex-wrap:wrap">
+      <button class="btn" id="p_save">Save</button>
+      <button class="btn ghost" id="p_cancel">Cancel</button>
+      ${isNew ? '' : '<button class="btn danger" id="p_del" style="margin-left:auto">Delete</button>'}
+    </div>`);
+  $('p_cancel').addEventListener('click', closeModal);
+  $('p_save').addEventListener('click', async () => {
+    const row = {
+      title: $('p_title').value.trim(),
+      category: $('p_cat').value,
+      excerpt: $('p_excerpt').value.trim(),
+      read_time: $('p_read').value.trim(),
+      body: $('p_body').value,
+      featured: $('p_featured').checked,
+      published: $('p_published').checked,
+    };
+    if(!row.title) return toast('Give it a title');
+    try {
+      // only one featured article at a time
+      if(row.featured) await sb.from('posts').update({ featured:false }).neq('id', p.id || '00000000-0000-0000-0000-000000000000');
+      const { error } = isNew
+        ? await sb.from('posts').insert(row)
+        : await sb.from('posts').update(row).eq('id', p.id);
+      if(error) throw error;
+      closeModal(); toast(isNew ? 'Article published' : 'Article saved'); loadPosts();
+    } catch(e){ toast(e.message || 'Could not save'); }
+  });
+  if(!isNew) $('p_del').addEventListener('click', async () => {
+    if(!confirm('Delete this article?')) return;
+    await sb.from('posts').delete().eq('id', p.id);
+    closeModal(); toast('Article deleted'); loadPosts();
+  });
+}
+$('newPost')?.addEventListener('click', () => postForm(null));
+function editPost(id){ postForm(allPosts.find(x => String(x.id) === String(id))); }
+
+$('p_file')?.addEventListener('change', async e => {
+  const file = e.target.files[0];
+  if(!file || !pendingPost) return;
+  try {
+    toast('Uploading image...');
+    const path = `${pendingPost}-${Date.now()}.${(file.name.split('.').pop()||'jpg')}`;
+    const { error: upErr } = await sb.storage.from('blog-images').upload(path, file, { upsert:true, contentType:file.type });
+    if(upErr) throw upErr;
+    const { data: pub } = sb.storage.from('blog-images').getPublicUrl(path);
+    const { error } = await sb.from('posts').update({ cover_url: pub.publicUrl }).eq('id', pendingPost);
+    if(error) throw error;
+    toast('Image added'); loadPosts();
+  } catch(err){ toast(err.message || 'Upload failed'); }
+  finally { pendingPost = null; e.target.value = ''; }
+});
+
+// ── EXERCISE VIDEOS ────────────────────────────────────────
+const slug = (s) => String(s||'file').toLowerCase().replace(/[^a-z0-9]+/g,'-').replace(/^-|-$/g,'');
+let allExercises = [], pendingExercise = null;
+
+function renderExercises(list){
+  const box = $('exList');
+  if(!list.length){ box.innerHTML = '<div class="note">No exercises match.</div>'; return; }
+  const missing = list.filter(x => !x.url).length;
+  box.innerHTML = `<div class="meta" style="padding-bottom:10px">${list.length} exercises · ${missing} still need a video</div>` + list.map(x => `<div class="rrow">
+      <div style="flex:1">
+        <b>${esc(x.name)}</b>
+        <div class="meta">${x.category ? esc(x.category) + ' · ' : ''}${x.url ? 'Video uploaded' : 'No video yet'}</div>
+      </div>
+      ${x.url ? `<a class="btn ghost small" href="${esc(x.url)}" target="_blank">Play</a>` : ''}
+      <button class="btn ghost small" data-exvid="${esc(x.name)}">${x.url ? 'Replace' : 'Add video'}</button>
+    </div>`).join('');
+  document.querySelectorAll('[data-exvid]').forEach(b => b.addEventListener('click', () => {
+    pendingExercise = b.dataset.exvid; $('ex_file').click();
+  }));
+}
+
+async function loadExercises(){
+  const box = $('exList');
+  box.innerHTML = '<div class="loading"><span class="spin" style="border-color:rgba(0,0,0,.15);border-top-color:var(--sage)"></span></div>';
+  try {
+    // The master library (every exercise the app can program), plus anything
+    // already in a real workout, plus anything that already has a video.
+    const [libRes, exRes, vidRes] = await Promise.all([
+      sb.from('exercise_library').select('name,category').limit(2000),
+      sb.from('exercises').select('name').limit(5000),
+      sb.from('videos').select('id,exercise_name,url,video_url').limit(2000),
+    ]);
+    const vidBy = {};
+    (vidRes.data || []).forEach(v => { if(v.exercise_name) vidBy[v.exercise_name] = v; });
+    const catBy = {};
+    (libRes.data || []).forEach(r => { catBy[r.name] = r.category; });
+    const names = new Set((libRes.data || []).map(r => r.name).filter(Boolean));
+    (exRes.data || []).forEach(r => { if(r.name) names.add(r.name); });
+    Object.keys(vidBy).forEach(n => names.add(n));
+    allExercises = [...names].sort((a,b) => a.localeCompare(b)).map(name => ({
+      name,
+      category: catBy[name] || '',
+      id:  vidBy[name]?.id || null,
+      url: vidBy[name]?.url || vidBy[name]?.video_url || null,
+    }));
+    renderExercises(allExercises);
+  } catch(e){
+    box.innerHTML = `<div class="note">Could not load exercises: ${esc(e.message || String(e))}.<br>If it mentions permission or bucket, run <b>MEDIA_LIBRARY.sql</b> once.</div>`;
+  }
+}
+
+$('exSearch')?.addEventListener('input', e => {
+  const q = e.target.value.trim().toLowerCase();
+  renderExercises(!q ? allExercises : allExercises.filter(x => (x.name + ' ' + (x.category||'')).toLowerCase().includes(q)));
+});
+
+$('ex_file')?.addEventListener('change', async e => {
+  const file = e.target.files[0];
+  if(!file || !pendingExercise) return;
+  const name = pendingExercise;
+  try {
+    toast(`Uploading ${name}...`);
+    const path = `${slug(name)}-${Date.now()}.${(file.name.split('.').pop()||'mp4')}`;
+    const { error: upErr } = await sb.storage.from('videos').upload(path, file, { upsert: true, contentType: file.type });
+    if(upErr) throw upErr;
+    const { data: pub } = sb.storage.from('videos').getPublicUrl(path);
+    const existing = allExercises.find(x => x.name === name);
+    if(existing && existing.id){
+      const { error } = await sb.from('videos').update({ url: pub.publicUrl, video_url: pub.publicUrl }).eq('id', existing.id);
+      if(error) throw error;
+    } else {
+      const { error } = await sb.from('videos').insert({ title: name, exercise_name: name, url: pub.publicUrl, video_url: pub.publicUrl });
+      if(error) throw error;
+    }
+    toast('Video uploaded'); loadExercises();
+  } catch(err){
+    toast(err.message || 'Upload failed');
+  } finally {
+    pendingExercise = null; e.target.value = '';
+  }
+});
+
+// ── FORM GUIDES ────────────────────────────────────────────
+let allGuides = [], pendingGuide = null;
+
+function renderGuides(list){
+  const box = $('fgList');
+  if(!list.length){ box.innerHTML = '<div class="note">No form guides match.</div>'; return; }
+  box.innerHTML = list.map(g => `<div class="rrow">
+      <div style="flex:1">
+        <b>${esc(g.exercise_name || 'Guide')}</b>
+        <div class="meta">${esc(g.category || '')}${g.video_url ? ' · video uploaded' : ' · no video yet'}</div>
+      </div>
+      ${g.video_url ? `<a class="btn ghost small" href="${esc(g.video_url)}" target="_blank">Play</a>` : ''}
+      <button class="btn ghost small" data-fgvid="${g.id}">${g.video_url ? 'Replace' : 'Add video'}</button>
+    </div>`).join('');
+  document.querySelectorAll('[data-fgvid]').forEach(b => b.addEventListener('click', () => {
+    pendingGuide = b.dataset.fgvid; $('fg_file').click();
+  }));
+}
+
+let fgCat = 'All';
+function buildGuideChips(){
+  const box = $('fgChips');
+  if(!box) return;
+  const cats = ['All', ...Array.from(new Set(allGuides.map(g => g.category).filter(Boolean))).sort()];
+  box.innerHTML = cats.map(c => {
+    const n = c === 'All' ? allGuides.length : allGuides.filter(g => g.category === c).length;
+    const missing = (c === 'All' ? allGuides : allGuides.filter(g => g.category === c)).filter(g => !g.video_url).length;
+    return `<button class="chip${c === fgCat ? ' on' : ''}" data-fgcat="${esc(c)}">${esc(c)} ${n}${missing ? ' &middot; ' + missing + ' to film' : ''}</button>`;
+  }).join('');
+  box.querySelectorAll('[data-fgcat]').forEach(b => b.addEventListener('click', () => {
+    fgCat = b.dataset.fgcat; buildGuideChips(); applyGuideFilter();
+  }));
+}
+function applyGuideFilter(){
+  const q = ($('fgSearch')?.value || '').trim().toLowerCase();
+  renderGuides(allGuides.filter(g =>
+    (fgCat === 'All' || g.category === fgCat) &&
+    (!q || String(g.exercise_name||'').toLowerCase().includes(q))));
+}
+
+async function loadFormGuides(){
+  const box = $('fgList');
+  box.innerHTML = '<div class="loading"><span class="spin" style="border-color:rgba(0,0,0,.15);border-top-color:var(--sage)"></span></div>';
+  try {
+    const { data, error } = await sb.from('form_guides').select('*').order('sort_order', { ascending: true }).limit(1000);
+    if(error) throw error;
+    allGuides = data || [];
+    if(!allGuides.length){ box.innerHTML = '<div class="note">No form guides in the database yet.</div>'; return; }
+    buildGuideChips();
+    applyGuideFilter();
+  } catch(e){
+    box.innerHTML = `<div class="note">Could not load form guides: ${esc(e.message || String(e))}.<br>If it mentions permission, run <b>MEDIA_LIBRARY.sql</b> once.</div>`;
+  }
+}
+
+$('fgSearch')?.addEventListener('input', () => applyGuideFilter());
+
+$('fg_file')?.addEventListener('change', async e => {
+  const file = e.target.files[0];
+  if(!file || !pendingGuide) return;
+  const g = allGuides.find(x => String(x.id) === String(pendingGuide));
+  try {
+    toast('Uploading video...');
+    const path = `form-${slug(g?.exercise_name || 'guide')}-${Date.now()}.${(file.name.split('.').pop()||'mp4')}`;
+    const { error: upErr } = await sb.storage.from('videos').upload(path, file, { upsert: true, contentType: file.type });
+    if(upErr) throw upErr;
+    const { data: pub } = sb.storage.from('videos').getPublicUrl(path);
+    const { error } = await sb.from('form_guides').update({ video_url: pub.publicUrl }).eq('id', pendingGuide);
+    if(error) throw error;
+    toast('Video uploaded'); loadFormGuides();
+  } catch(err){
+    toast(err.message || 'Upload failed');
+  } finally {
+    pendingGuide = null; e.target.value = '';
+  }
+});
+
+// ── RECIPE PHOTOS ──────────────────────────────────────────
+let allRecipes = [], pendingRecipeId = null;
+function renderRecipes(list){
+  const box = $('recipeList');
+  if(!list.length){ box.innerHTML = '<div class="note">No recipes match.</div>'; return; }
+  box.innerHTML = list.map(r => `<div class="rrow">
+      <img class="thumb" src="${esc(r.image_url || '')}" alt="">
+      <div style="flex:1"><b>${esc(r.title || r.name || 'Recipe')}</b>
+        <div class="meta">${r.image_url ? 'Has photo' : 'No photo yet'}</div></div>
+      <button class="btn ghost small" data-photo="${r.id}">${r.image_url ? 'Replace' : 'Add photo'}</button>
+    </div>`).join('');
+  document.querySelectorAll('[data-photo]').forEach(b => b.addEventListener('click', () => {
+    pendingRecipeId = b.dataset.photo; $('r_file').click();
+  }));
+}
+async function loadRecipes(){
+  const box = $('recipeList');
+  box.innerHTML = '<div class="loading"><span class="spin" style="border-color:rgba(0,0,0,.15);border-top-color:var(--sage)"></span></div>';
+  try {
+    const { data, error } = await sb.from('recipes').select('*').order('sort_order', { ascending: true }).limit(500);
+    if(error) throw error;
+    allRecipes = data || [];
+    renderRecipes(allRecipes);
+  } catch(e){
+    box.innerHTML = `<div class="note">Could not load recipes: ${esc(e.message || String(e))}.<br>If it mentions permission, run <b>MEDIA_LIBRARY.sql</b> once.</div>`;
+  }
+}
+$('recipeSearch')?.addEventListener('input', e => {
+  const q = e.target.value.trim().toLowerCase();
+  renderRecipes(!q ? allRecipes : allRecipes.filter(r => String(r.title || r.name || '').toLowerCase().includes(q)));
+});
+$('r_file')?.addEventListener('change', async e => {
+  const file = e.target.files[0];
+  if(!file || !pendingRecipeId) return;
+  try {
+    toast('Uploading photo...');
+    const path = `${pendingRecipeId}-${Date.now()}.${(file.name.split('.').pop()||'jpg')}`;
+    const { error: upErr } = await sb.storage.from('recipe-photos').upload(path, file, { upsert: true, contentType: file.type });
+    if(upErr) throw upErr;
+    const { data: pub } = sb.storage.from('recipe-photos').getPublicUrl(path);
+    const { error } = await sb.from('recipes').update({ image_url: pub.publicUrl }).eq('id', pendingRecipeId);
+    if(error) throw error;
+    toast('Photo added'); loadRecipes();
+  } catch(err){
+    toast(err.message || 'Upload failed');
+  } finally {
+    pendingRecipeId = null; e.target.value = '';
+  }
+});
+
+// ── PROGRESS PHOTOS ────────────────────────────────────────
+let photoFilterReady = false;
+async function loadPhotos(){
+  const grid = $('photoGrid');
+  const sel = $('photoChallenge');
+  grid.innerHTML = '<div class="loading"><span class="spin" style="border-color:rgba(0,0,0,.15);border-top-color:var(--sage)"></span></div>';
+  if(!photoFilterReady){
+    try {
+      const { data: chs } = await sb.from('challenges').select('id,title,starts_on,ends_on').order('starts_on', { ascending: false });
+      (chs || []).forEach(c => {
+        const o = document.createElement('option');
+        o.value = c.id; o.textContent = `${c.title} (${c.starts_on})`;
+        o.dataset.start = c.starts_on; o.dataset.end = c.ends_on;
+        sel.appendChild(o);
+      });
+    } catch(e){}
+    sel.addEventListener('change', loadPhotos);
+    photoFilterReady = true;
+  }
+  try {
+    let q = sb.from('progress_photos').select('id,user_id,date,path,pose,weight_kg').order('date', { ascending: false }).limit(300);
+    const opt = sel.selectedOptions[0];
+    if(sel.value !== 'all' && opt && opt.dataset.start){
+      q = q.gte('date', opt.dataset.start).lte('date', opt.dataset.end);
+    }
+    const { data: photos, error } = await q;
+    if(error) throw error;
+    if(!photos || !photos.length){
+      grid.innerHTML = '<div class="note">No progress photos for this selection yet.</div>';
+      return;
+    }
+    const ids = [...new Set(photos.map(p => p.user_id))];
+    let nameById = {};
+    try {
+      const { data: profs } = await sb.from('profiles_alter').select('id,name').in('id', ids);
+      (profs || []).forEach(p => { nameById[p.id] = p.name || 'Member'; });
+    } catch(e){}
+    // batch-sign all the private image paths in one call
+    let urlByPath = {};
+    try {
+      const { data: signed } = await sb.storage.from('progress').createSignedUrls(photos.map(p => p.path), 3600);
+      (signed || []).forEach(s => { if(s.signedUrl) urlByPath[s.path] = s.signedUrl; });
+    } catch(e){}
+    grid.innerHTML = photos.map(p => `
+      <div class="photo">
+        <img src="${urlByPath[p.path] || ''}" alt="" loading="lazy">
+        <div class="cap"><b>${esc(nameById[p.user_id] || 'Member')}</b><br>${esc(p.date)}${p.pose ? ' · ' + esc(p.pose) : ''}${p.weight_kg ? ' · ' + esc(p.weight_kg) + 'kg' : ''}</div>
+      </div>`).join('');
+  } catch(e){
+    grid.innerHTML = `<div class="note">Could not load photos: ${esc(e.message || String(e))}.<br>If it mentions permission, run <b>_setup/SETUP.sql</b>, then refresh.</div>`;
+  }
+}
+
+// ══ EVENTS ═════════════════════════════════════════════════
+async function loadEvents(){
+  const list = $('eventsList');
+  try {
+    const { data, error } = await sb.from('events').select('*').order('starts_on', { ascending: true });
+    if(error) throw error;
+    if(!data || !data.length){
+      list.innerHTML = emptyState('calendar', 'No events yet', 'Add your first event and it will show in the app.');
+      return;
+    }
+    list.innerHTML = data.map(ev => {
+      const past = ev.ends_on && ev.ends_on < todayStr();
+      return `<div class="card">
+        <div style="display:flex; justify-content:space-between; align-items:flex-start; gap:12px">
+          <div>
+            <h3>${esc(ev.title)}</h3>
+            <div class="meta">${prettyDate(ev.starts_on)}${ev.location ? ' · ' + esc(ev.location) : ''}</div>
+          </div>
+          <span class="pill ${past ? 'ended' : 'live'}">${past ? 'Past' : 'Upcoming'}</span>
+        </div>
+        ${ev.description ? `<p style="margin-top:10px; color:var(--ink2); font-size:14px">${esc(ev.description)}</p>` : ''}
+        <div class="card-actions">
+          <button class="btn ghost small" data-edit-event='${esc(ev.id)}'>Edit</button>
+          <button class="btn danger small" data-del-event='${esc(ev.id)}'>Delete</button>
+        </div>
+      </div>`;
+    }).join('');
+    list.querySelectorAll('[data-edit-event]').forEach(b => b.addEventListener('click', () => openEvent(data.find(e => e.id === b.dataset.editEvent))));
+    list.querySelectorAll('[data-del-event]').forEach(b => b.addEventListener('click', () => delEvent(b.dataset.delEvent)));
+  } catch(e){
+    list.innerHTML = emptyState('alert', 'Could not load', e.message);
+  }
+}
+
+$('newEvent').addEventListener('click', () => openEvent(null));
+
+function openEvent(ev){
+  const isNew = !ev;
+  showModal(`
+    <h2>${isNew ? 'Add event' : 'Edit event'}</h2>
+    <div class="sub">This shows in the app, and everyone gets a notification when a new one is added.</div>
+    <label>Title</label>
+    <input id="ev_title" value="${esc(ev?.title || '')}" placeholder="Pilates in the Park">
+    <label>Date</label>
+    <input id="ev_starts" type="date" value="${esc(ev?.starts_on || '')}">
+    <label>End date (optional, for multi-day)</label>
+    <input id="ev_ends" type="date" value="${esc(ev?.ends_on || '')}">
+    <label>Location</label>
+    <input id="ev_location" value="${esc(ev?.location || '')}" placeholder="New Farm Park, Brisbane">
+    <label>Description</label>
+    <textarea id="ev_desc" placeholder="Free class, 40 spots. Bring a mat.">${esc(ev?.description || '')}</textarea>
+    <label>Photo URL (optional)</label>
+    <input id="ev_image" value="${esc(ev?.image_url || '')}" placeholder="https://...">
+    <label>Sign up link (optional)</label>
+    <input id="ev_signup" value="${esc(ev?.signup_url || '')}" placeholder="https://...">
+    <label>Sign up button text (optional)</label>
+    <input id="ev_signuplabel" value="${esc(ev?.signup_label || '')}" placeholder="Save my spot">
+    <button class="btn" id="ev_save" style="margin-top:22px">${isNew ? 'Add event' : 'Save changes'}</button>
+    <button class="btn ghost" id="ev_cancel" style="margin-top:10px">Cancel</button>
+  `);
+  $('ev_cancel').addEventListener('click', closeModal);
+  $('ev_save').addEventListener('click', async () => {
+    const payload = {
+      title: $('ev_title').value.trim(),
+      starts_on: $('ev_starts').value || null,
+      ends_on: $('ev_ends').value || null,
+      location: $('ev_location').value.trim() || null,
+      description: $('ev_desc').value.trim() || null,
+      image_url: $('ev_image').value.trim() || null,
+      signup_url: $('ev_signup').value.trim() || null,
+      signup_label: $('ev_signuplabel').value.trim() || null,
+    };
+    if(!payload.title){ toast('Give it a title.'); return; }
+    if(!payload.starts_on){ toast('Pick a date.'); return; }
+    const btn = $('ev_save'); btn.disabled = true; btn.innerHTML = '<span class="spin"></span>';
+    try {
+      if(isNew){
+        const { error } = await sb.from('events').insert(payload);
+        if(error) throw error;
+        toast('Event added');
+      } else {
+        const { error } = await sb.from('events').update(payload).eq('id', ev.id);
+        if(error) throw error;
+        toast('Event saved');
+      }
+      closeModal(); loadEvents();
+    } catch(e){
+      toast(e.message || 'Could not save');
+      btn.disabled = false; btn.textContent = isNew ? 'Add event' : 'Save changes';
+    }
+  });
+}
+
+async function delEvent(id){
+  if(!confirm('Delete this event? This cannot be undone.')) return;
+  try {
+    const { error } = await sb.from('events').delete().eq('id', id);
+    if(error) throw error;
+    toast('Event deleted'); loadEvents();
+  } catch(e){ toast(e.message || 'Could not delete'); }
+}
+
+// ══ CHALLENGES ═════════════════════════════════════════════
+async function loadChallenges(){
+  const list = $('challengesList');
+  try {
+    const { data, error } = await sb.from('challenges').select('*').order('starts_on', { ascending: false });
+    if(error) throw error;
+    if(!data || !data.length){
+      list.innerHTML = emptyState('trophy', 'No challenges yet', 'Create your first challenge.');
+      return;
+    }
+    list.innerHTML = data.map(ch => {
+      const now = todayStr();
+      const live = ch.starts_on <= now && ch.ends_on >= now;
+      const ended = ch.ends_on < now;
+      const status = live ? '<span class="pill live">Live</span>' : ended ? '<span class="pill ended">Ended</span>' : '<span class="pill">Upcoming</span>';
+      return `<div class="card">
+        <div style="display:flex; justify-content:space-between; align-items:flex-start; gap:12px">
+          <div>
+            <h3>${esc(ch.title)}</h3>
+            <div class="meta">${prettyDate(ch.starts_on)} to ${prettyDate(ch.ends_on)}</div>
+            ${ch.prize ? `<div class="meta" style="margin-top:2px">Prize: ${esc(ch.prize)}</div>` : ''}
+          </div>
+          ${status}
+        </div>
+        <div class="card-actions">
+          <button class="btn small" data-entries='${esc(ch.id)}'>See entries and pick winner</button>
+          <button class="btn ghost small" data-edit-ch='${esc(ch.id)}'>Edit</button>
+          <button class="btn danger small" data-del-ch='${esc(ch.id)}'>Delete</button>
+        </div>
+      </div>`;
+    }).join('');
+    list.querySelectorAll('[data-edit-ch]').forEach(b => b.addEventListener('click', () => openChallenge(data.find(c => c.id === b.dataset.editCh))));
+    list.querySelectorAll('[data-del-ch]').forEach(b => b.addEventListener('click', () => delChallenge(b.dataset.delCh)));
+    list.querySelectorAll('[data-entries]').forEach(b => b.addEventListener('click', () => openEntries(data.find(c => c.id === b.dataset.entries))));
+  } catch(e){
+    list.innerHTML = emptyState('alert', 'Could not load', e.message);
+  }
+}
+
+$('newChallenge').addEventListener('click', () => openChallenge(null));
+
+function openChallenge(ch){
+  const isNew = !ch;
+  showModal(`
+    <h2>${isNew ? 'Add challenge' : 'Edit challenge'}</h2>
+    <div class="sub">One a month works well. The prize goes to real work, never a random draw.</div>
+    <label>Title</label>
+    <input id="ch_title" value="${esc(ch?.title || '')}" placeholder="August strength challenge">
+    <label>Subtitle (optional)</label>
+    <input id="ch_subtitle" value="${esc(ch?.subtitle || '')}" placeholder="Build your base">
+    <label>Description</label>
+    <textarea id="ch_desc" placeholder="Complete 12 sessions this month.">${esc(ch?.description || '')}</textarea>
+    <label>Prize</label>
+    <input id="ch_prize" value="${esc(ch?.prize || '')}" placeholder="A free month, or ALTER merch">
+    <label>Coach name (optional)</label>
+    <input id="ch_coach" value="${esc(ch?.coach_name || '')}" placeholder="Coach Kayla">
+    <label>Coach photo URL (optional)</label>
+    <input id="ch_coachphoto" value="${esc(ch?.coach_photo || '')}" placeholder="https://.../coach.jpg">
+    <label>Challenge goal (optional, sets members' macros)</label>
+    <select id="ch_goal">
+      <option value="">Leave members' goal unchanged</option>
+      ${['Build muscle','Lose fat','Tone up','Feel stronger','Improve fitness','Build healthy habits'].map(g => `<option value="${g}"${ch?.goal===g?' selected':''}>${g}</option>`).join('')}
+    </select>
+    <label>Training focus (optional, shapes the program built on join)</label>
+    <select id="ch_focus">
+      <option value="">Balanced (no special focus)</option>
+      ${['Glutes & legs','Upper body','Core','Full body'].map(f => `<option value="${f}"${ch?.focus===f?' selected':''}>${f}</option>`).join('')}
+    </select>
+    <div class="grid2">
+      <div>
+        <label>Goal type</label>
+        <select id="ch_goaltype">
+          <option value="workouts"${ch?.goal_type==='workouts'?' selected':''}>Workouts completed</option>
+          <option value="habits"${ch?.goal_type==='habits'?' selected':''}>Habits kept</option>
+          <option value="volume"${ch?.goal_type==='volume'?' selected':''}>Total volume</option>
+        </select>
+      </div>
+      <div>
+        <label>Goal target</label>
+        <input id="ch_target" type="number" value="${esc(ch?.goal_target ?? '')}" placeholder="12">
+      </div>
+    </div>
+    <div class="grid2">
+      <div><label>Starts</label><input id="ch_starts" type="date" value="${esc(ch?.starts_on || '')}"></div>
+      <div><label>Ends</label><input id="ch_ends" type="date" value="${esc(ch?.ends_on || '')}"></div>
+    </div>
+    <button class="btn" id="ch_save" style="margin-top:22px">${isNew ? 'Add challenge' : 'Save changes'}</button>
+    <button class="btn ghost" id="ch_cancel" style="margin-top:10px">Cancel</button>
+  `);
+  $('ch_cancel').addEventListener('click', closeModal);
+  $('ch_save').addEventListener('click', async () => {
+    const payload = {
+      title: $('ch_title').value.trim(),
+      subtitle: $('ch_subtitle').value.trim() || null,
+      description: $('ch_desc').value.trim() || null,
+      prize: $('ch_prize').value.trim() || null,
+      coach_name: $('ch_coach').value.trim() || null,
+      coach_photo: $('ch_coachphoto').value.trim() || null,
+      goal: $('ch_goal').value || null,
+      focus: $('ch_focus').value || null,
+      goal_type: $('ch_goaltype').value,
+      goal_target: Number($('ch_target').value) || 1,
+      starts_on: $('ch_starts').value || null,
+      ends_on: $('ch_ends').value || null,
+      active: true,
+    };
+    if(!payload.title){ toast('Give it a title.'); return; }
+    if(!payload.starts_on || !payload.ends_on){ toast('Set the start and end dates.'); return; }
+    const btn = $('ch_save'); btn.disabled = true; btn.innerHTML = '<span class="spin"></span>';
+    try {
+      if(isNew){
+        const { error } = await sb.from('challenges').insert(payload);
+        if(error) throw error;
+        toast('Challenge added');
+      } else {
+        const { error } = await sb.from('challenges').update(payload).eq('id', ch.id);
+        if(error) throw error;
+        toast('Challenge saved');
+      }
+      closeModal(); loadChallenges();
+    } catch(e){
+      toast(e.message || 'Could not save');
+      btn.disabled = false; btn.textContent = isNew ? 'Add challenge' : 'Save changes';
+    }
+  });
+}
+
+async function delChallenge(id){
+  if(!confirm('Delete this challenge and all its entries? This cannot be undone.')) return;
+  try {
+    const { error } = await sb.from('challenges').delete().eq('id', id);
+    if(error) throw error;
+    toast('Challenge deleted'); loadChallenges();
+  } catch(e){ toast(e.message || 'Could not delete'); }
+}
+
+// ── ENTRIES + PICK WINNER ──────────────────────────────────
+async function openEntries(ch){
+  showModal(`<h2>${esc(ch.title)}</h2><div class="sub">Everyone who entered. Pick a winner from the ones who submitted a result.</div><div id="entriesBox"><div class="loading"><span class="spin" style="border-color:rgba(0,0,0,.15);border-top-color:var(--sage)"></span></div></div><button class="btn ghost" id="en_close" style="margin-top:18px">Close</button>`);
+  $('en_close').addEventListener('click', closeModal);
+  try {
+    const { data, error } = await sb.from('challenge_entries').select('*').eq('challenge_id', ch.id).order('submitted_at', { ascending: false, nullsFirst: false });
+    if(error) throw error;
+    const box = $('entriesBox');
+    if(!data || !data.length){ box.innerHTML = `<p style="color:var(--ink3); padding:20px 0">Nobody has entered yet.</p>`; return; }
+    box.innerHTML = data.map(en => {
+      const initials = (en.display_name || '?').trim().slice(0,1).toUpperCase();
+      const submitted = en.submitted_at;
+      return `<div class="entry">
+        <div class="av">${esc(initials)}</div>
+        <div class="info">
+          <div class="nm">${esc(en.display_name || 'Member')} ${en.is_winner ? '<span class="pill win">Winner</span>' : ''}</div>
+          <div class="dt">${submitted ? 'Submitted a result' : (en.completed ? 'Completed' : 'Progress: ' + (en.progress ?? 0))}</div>
+          ${en.result_note ? `<div style="font-size:13.5px; color:var(--ink2); margin-top:4px">${esc(en.result_note)}</div>` : ''}
+        </div>
+        ${en.result_photo_url ? `<img class="result" src="${esc(en.result_photo_url)}" alt="Result">` : ''}
+        <button class="btn ${en.is_winner ? 'gold' : 'ghost'} small" data-win='${esc(en.id)}'>${en.is_winner ? 'Winner' : 'Pick'}</button>
+      </div>`;
+    }).join('');
+    box.querySelectorAll('[data-win]').forEach(b => b.addEventListener('click', () => pickWinner(ch.id, b.dataset.win)));
+  } catch(e){
+    $('entriesBox').innerHTML = `<p style="color:var(--bad); padding:20px 0">${esc(e.message)}</p>`;
+  }
+}
+
+async function pickWinner(challengeId, entryId){
+  try {
+    // clear any existing winner for this challenge, then set the new one
+    await sb.from('challenge_entries').update({ is_winner: false }).eq('challenge_id', challengeId);
+    const { error } = await sb.from('challenge_entries').update({ is_winner: true }).eq('id', entryId);
+    if(error) throw error;
+    toast('Winner picked');
+    // refresh the entries view
+    const { data: ch } = await sb.from('challenges').select('*').eq('id', challengeId).maybeSingle();
+    if(ch) openEntries(ch);
+  } catch(e){ toast(e.message || 'Could not set winner'); }
+}
+
+// ── MODAL + EMPTY ──────────────────────────────────────────
+function showModal(html){
+  closeModal();
+  const bg = document.createElement('div');
+  bg.className = 'modal-bg'; bg.id = 'modalBg';
+  bg.innerHTML = `<div class="modal">${html}</div>`;
+  bg.addEventListener('click', e => { if(e.target === bg) closeModal(); });
+  document.body.appendChild(bg);
+}
+function closeModal(){ const m = $('modalBg'); if(m) m.remove(); }
+
+function emptyState(icon, title, sub){
+  const paths = {
+    calendar: '<rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/>',
+    trophy: '<path d="M8 21h8M12 17v4M7 4h10v5a5 5 0 0 1-10 0V4zM7 4H4v2a3 3 0 0 0 3 3M17 4h3v2a3 3 0 0 1-3 3"/>',
+    alert: '<circle cx="12" cy="12" r="10"/><path d="M12 8v4M12 16h.01"/>',
+  };
+  return `<div class="empty"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">${paths[icon]||''}</svg><h3 style="color:var(--ink2); margin-bottom:4px">${esc(title)}</h3><p>${esc(sub)}</p></div>`;
+}
+
+/* ══ LEADS ═══════════════════════════════════════════════════
+   The list of everyone who filled in a form on the website, and
+   the CSV export that lets you take it into a mail tool.
+
+   Consent is shown on every row because it decides what you may
+   send. A tick means they agreed to hear from you generally. A
+   blank means the Spam Act only lets you contact them about the
+   thing they actually signed up for.
+   ═══════════════════════════════════════════════════════════ */
+let LEADS = [];
+
+const LEAD_SOURCES = {
+  summer_shred:          'Summer Shred',
+  bikini_build_waitlist: 'Bikini Build waitlist',
+  pilates:               'Launch event',
+  calculator:            'Macro calculator',
+  waitlist:              'App waitlist',
+  website:               'Website'
+};
+
+function leadName(s){ return LEAD_SOURCES[s] || s || 'Website'; }
+
+async function loadLeads(){
+  const box = $('leadList');
+  box.innerHTML = '<div class="loading"><span class="spin" style="border-color:rgba(0,0,0,.15);border-top-color:var(--sage)"></span></div>';
+  try {
+    const { data, error } = await sb.from('leads').select('*').order('created_at', { ascending:false });
+    if(error) throw error;
+    LEADS = data || [];
+
+    const sel = $('leadSource');
+    const seen = [...new Set(LEADS.map(l => l.source).filter(Boolean))];
+    sel.innerHTML = '<option value="">Every form</option>' +
+      seen.map(s => `<option value="${esc(s)}">${esc(leadName(s))}</option>`).join('');
+
+    renderLeads();
+  } catch(e){
+    box.innerHTML = `<div class="note">Could not load the leads: ${esc(e.message || e)}<br><br>
+      If this says the table does not exist, run <code>_setup/SETUP.sql</code> in Supabase once.</div>`;
+  }
+}
+
+function filteredLeads(){
+  const q  = ($('leadSearch').value || '').toLowerCase().trim();
+  const s  = $('leadSource').value;
+  const st = $('leadStatus').value;
+  const c  = $('leadConsent').checked;
+  return LEADS.filter(l => {
+    if(s  && l.source !== s) return false;
+    if(st && (l.status || 'new') !== st) return false;
+    if(c  && !l.consent) return false;
+    if(q){
+      const hay = ((l.name||'') + ' ' + (l.email||'') + ' ' + (l.phone||'')).toLowerCase();
+      if(!hay.includes(q)) return false;
+    }
+    return true;
+  });
+}
+
+function renderLeads(){
+  const rows = filteredLeads();
+  const consented = LEADS.filter(l => l.consent && !l.unsubscribed).length;
+  const week = LEADS.filter(l => new Date(l.created_at) > new Date(Date.now() - 7*864e5)).length;
+
+  $('leadStats').innerHTML =
+    `<div><b>${LEADS.length}</b>total</div>
+     <div><b>${consented}</b>you may email</div>
+     <div><b>${week}</b>this week</div>
+     <div><b>${rows.length}</b>showing</div>`;
+
+  const badge = $('n-leads');
+  const fresh = LEADS.filter(l => (l.status || 'new') === 'new').length;
+  if(badge) badge.textContent = fresh > 0 ? fresh : '';
+
+  if(!rows.length){
+    $('leadList').innerHTML = `<div class="note">${LEADS.length
+      ? 'Nothing matches those filters.'
+      : 'No leads yet. They appear here the moment someone fills in a form on the website.'}</div>`;
+    return;
+  }
+
+  $('leadList').innerHTML = rows.map(l => {
+    const when = new Date(l.created_at).toLocaleDateString('en-AU',{day:'numeric',month:'short',year:'numeric'});
+    const st = l.status || 'new';
+    return `<div class="lead">
+      <div>
+        <h4>${esc(l.name || 'No name given')}</h4>
+        <div class="meta">${esc(l.email || '')}${l.phone ? ' &middot; ' + esc(l.phone) : ''}</div>
+        <div class="tags">
+          <span class="tag">${esc(leadName(l.source))}</span>
+          <span class="tag">${esc(when)}</span>
+          ${l.days ? `<span class="tag">${esc(l.days)} days</span>` : ''}
+          ${l.where_train ? `<span class="tag">${esc(l.where_train)}</span>` : ''}
+          ${l.unsubscribed
+            ? '<span class="tag no">Unsubscribed</span>'
+            : l.consent ? '<span class="tag yes">Can email</span>'
+                        : '<span class="tag">Signup only</span>'}
+        </div>
+      </div>
+      <div class="lead-right">
+        <select data-lead="${esc(l.id)}">
+          ${['new','contacted','joined','not now'].map(v =>
+            `<option value="${v}"${st===v?' selected':''}>${v[0].toUpperCase()+v.slice(1)}</option>`).join('')}
+        </select>
+        <button class="del" data-del="${esc(l.id)}">Delete</button>
+      </div>
+    </div>`;
+  }).join('');
+
+  $('leadList').querySelectorAll('select[data-lead]').forEach(s => {
+    s.addEventListener('change', async () => {
+      const id = s.dataset.lead;
+      await sb.from('leads').update({ status: s.value }).eq('id', id);
+      const row = LEADS.find(l => l.id === id); if(row) row.status = s.value;
+      renderLeads();
+    });
+  });
+  $('leadList').querySelectorAll('button[data-del]').forEach(b => {
+    b.addEventListener('click', async () => {
+      if(!confirm('Delete this lead? This cannot be undone.')) return;
+      await sb.from('leads').delete().eq('id', b.dataset.del);
+      LEADS = LEADS.filter(l => l.id !== b.dataset.del);
+      renderLeads();
+    });
+  });
+}
+
+/* CSV, in the shape Mailchimp, Klaviyo and the rest expect. Only what
+   is on screen is exported, so filtering to "consented only" and then
+   exporting gives you a list you may actually send to. */
+function exportLeads(){
+  const rows = filteredLeads();
+  if(!rows.length){ alert('Nothing to export with those filters.'); return; }
+
+  const cols = ['name','email','phone','source','days','where_train','status','consent','unsubscribed','created_at'];
+  const head = ['Name','Email','Phone','Signed up for','Days','Trains at','Status','Can email','Unsubscribed','Date'];
+  const cell = v => {
+    if(v === null || v === undefined) return '';
+    const s = String(v);
+    /* a leading =, +, - or @ makes Excel treat the value as a formula, so
+       it is prefixed with a quote to keep it as text */
+    const safe = /^[=+\-@]/.test(s) ? "'" + s : s;
+    return /[",\n]/.test(safe) ? '"' + safe.replace(/"/g,'""') + '"' : safe;
+  };
+
+  const csv = [head.join(',')].concat(
+    rows.map(r => cols.map(c => cell(
+      c === 'created_at' ? new Date(r[c]).toISOString().slice(0,10) : r[c]
+    )).join(','))
+  ).join('\r\n');
+
+  /* the BOM makes Excel open it as UTF-8, so names with accents survive */
+  const blob = new Blob(['\ufeff' + csv], { type:'text/csv;charset=utf-8' });
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = 'alteryou-leads-' + new Date().toISOString().slice(0,10) + '.csv';
+  document.body.appendChild(a); a.click();
+  setTimeout(() => { URL.revokeObjectURL(a.href); a.remove(); }, 0);
+}
+
+['leadSearch','leadSource','leadStatus','leadConsent'].forEach(id => {
+  const el = $(id);
+  if(el) el.addEventListener('input', renderLeads);
+});
+if($('exportLeads')) $('exportLeads').addEventListener('click', exportLeads);
+
+
+/* ══ MOBILE NAV ══════════════════════════════════════════════
+   On a phone the sidebar is a drawer. It closes when you pick
+   something, when you tap outside it, and on Escape, because a
+   menu you cannot get out of is worse than no menu.
+   ═══════════════════════════════════════════════════════════ */
+(function(){
+  const side = $('side'), scrim = $('scrim'), btn = $('menuBtn');
+  if(!side || !btn) return;
+  const setOpen = (on) => {
+    side.classList.toggle('open', on);
+    if(scrim) scrim.classList.toggle('on', on);
+    btn.setAttribute('aria-expanded', on ? 'true' : 'false');
+    document.body.style.overflow = on && innerWidth <= 900 ? 'hidden' : '';
+  };
+  btn.addEventListener('click', () => setOpen(!side.classList.contains('open')));
+  if(scrim) scrim.addEventListener('click', () => setOpen(false));
+  document.addEventListener('keydown', e => { if(e.key === 'Escape') setOpen(false); });
+  side.addEventListener('click', e => { if(e.target.closest('.tab')) setOpen(false); });
+  addEventListener('resize', () => { if(innerWidth > 900) setOpen(false); });
+})();
+
+</script>
+</body>
+</html>

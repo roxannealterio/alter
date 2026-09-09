@@ -1,0 +1,1987 @@
+/* ══════════════════════════════════════════════════════════════
+   ALTER — site stylesheet
+   Type:  Jost (geometric sans, everything) + Instrument Serif
+          (italic accents only). Two families, used with discipline.
+   Colour: warm bone and linen, deep sage, a dusty blue lift, clay
+          for small type and accents.
+   ══════════════════════════════════════════════════════════════ */
+
+:root{
+  /* Straight from the app's own palette so the site and the app are the
+     same product. bone/linen/sand/ink/soft are the app's bg, cream, sand,
+     ink and ink2. olive and moss are its --olive and --sage. */
+  --bone:#F5F2EC;
+  --linen:#EDE8E0;
+  --sand:#DDD8CC;
+  --line:#E4E0D6;
+  --white:#FFFFFF;
+  --ink:#2B2D26;
+  --soft:#5A5F4E;
+
+  --sage:#646A58;
+  --mark-mask:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1220 1000'%3E%3Cpath d='M110 890 L610 110 L1110 890' fill='none' stroke='%23000' stroke-width='220' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+  --sage-dk:#4B5042;   /* footer, so it reads as the end of the page */      /* blocks and footer. Lightest green that keeps cream
+                          text at 4.6:1, so it passes AA. */
+  --sage-lt:#6E7462;   /* ticks and small confirmations */
+  --clay:#5A6049;      /* eyebrows, pills and accent type */
+  --moss:#8B907B;      /* the logo background exactly, for rings and dots */
+  --mist:#DDE2D3;      /* the soft lift block */
+
+  --r:22px;
+  --r-sm:14px;
+  --gut:clamp(20px,5vw,44px);
+  --sec:clamp(52px,7.5vw,98px);
+
+  /* DM Sans, to match the app. Change this one line to change the whole site. */
+  --f:'DM Sans',ui-sans-serif,system-ui,-apple-system,'Segoe UI',sans-serif;
+  /* The wordmark is set separately from body text, because the A in the
+     logo is a pure geometric triangle and DM Sans is not. Change this one
+     line to match whatever the logo is drawn in. */
+  --f-mark:'Jost','Century Gothic','Futura',var(--f);
+  --f-accent:'Instrument Serif',Georgia,'Times New Roman',serif;
+}
+
+*,*::before,*::after{box-sizing:border-box}
+
+html{-webkit-text-size-adjust:100%;scroll-behavior:smooth}
+body{
+  margin:0;background:var(--bone);color:var(--ink);
+  font-family:var(--f);font-weight:400;font-size:17px;line-height:1.72;
+  letter-spacing:.005em;-webkit-font-smoothing:antialiased;
+}
+body.locked{overflow:hidden}
+img{max-width:100%;display:block}
+a{color:inherit}
+:focus-visible{outline:2px solid var(--clay);outline-offset:3px;border-radius:4px}
+
+/* ── layout ─────────────────────────────────────────────────── */
+.wrap{max-width:1180px;margin:0 auto;padding-inline:var(--gut)}
+.wrap.narrow{max-width:760px}
+.wrap.mid{max-width:960px}
+.sec{padding-block:var(--sec)}
+/* two sections of the same colour back to back read as one big empty gap,
+   so the join between them is pulled in */
+.bg-bone + .bg-bone,.bg-linen + .bg-linen,
+.bg-bone + [hidden] + .bg-bone,.bg-linen + [hidden] + .bg-linen{padding-top:0}
+/* and the bottom of the first one, or the two paddings still stack up into
+   a gap. :has() is not everywhere yet, so the rule above stays as the
+   fallback and this only tightens it further where supported. */
+.bg-bone:has(+ .bg-bone),.bg-linen:has(+ .bg-linen),
+.bg-bone:has(+ [hidden] + .bg-bone),.bg-linen:has(+ [hidden] + .bg-linen){
+  padding-bottom:clamp(18px,2.6vw,30px);
+}
+.sec + .sec.sm{padding-top:0}
+.sec.sm{padding-block:clamp(40px,6vw,72px)}
+.center{text-align:center}
+.bg-bone{background:var(--bone)}
+.bg-linen{background:var(--linen)}
+.bg-white{background:var(--white)}
+.bg-sage{background:var(--sage);color:#EDE8E0}
+.bg-mist{background:var(--mist);color:#1F2E2B}
+
+/* ── type ───────────────────────────────────────────────────── */
+.eyebrow{
+  font-size:.7rem;font-weight:500;text-transform:uppercase;
+  letter-spacing:.3em;color:var(--clay);margin:0 0 20px;
+}
+.bg-sage .eyebrow{color:rgba(237,232,224,.66)}
+
+h1,h2,h3,h4{font-weight:400;margin:0;letter-spacing:.02em}
+h1,h2{text-transform:uppercase;line-height:1.02}
+h1{font-size:clamp(2.3rem,7.4vw,4.4rem);font-weight:400}
+h2{font-size:clamp(1.75rem,4.6vw,2.9rem);font-weight:400}
+h3{font-size:1.06rem;font-weight:500;letter-spacing:.01em;line-height:1.35}
+h1 em,h2 em{
+  font-family:var(--f-accent);font-style:italic;font-weight:400;
+  text-transform:none;letter-spacing:0;display:block;
+  font-size:1.12em;line-height:1;
+}
+.bg-sage h1,.bg-sage h2{color:#EDE8E0}
+
+.lede{font-size:1.06rem;line-height:1.72;color:var(--soft);max-width:58ch;margin:22px 0 0}
+.center .lede,.lede.mid{margin-inline:auto}
+.bg-sage .lede{color:rgba(237,232,224,.8)}
+.bg-mist .lede{color:#33443F}
+.fine{font-size:.85rem;line-height:1.6;color:var(--soft);margin:22px 0 0}
+.center .fine{margin-inline:auto;max-width:54ch}
+.bg-sage .fine{color:rgba(237,232,224,.62)}
+.head{margin-bottom:clamp(34px,5vw,56px)}
+
+.prose p{color:var(--soft);margin:0 0 20px}
+.prose p strong{color:var(--ink);font-weight:500}
+.prose h2{margin:44px 0 22px}
+.prose h2:first-child{margin-top:0}
+.prose a{color:var(--ink);text-decoration-thickness:1px;text-underline-offset:3px}
+.pull{
+  font-family:var(--f-accent);font-style:italic;font-size:clamp(1.3rem,3.4vw,1.75rem);
+  line-height:1.32;color:var(--ink);border-left:2px solid var(--moss);
+  padding-left:24px;margin:32px 0;
+}
+
+/* ── buttons ────────────────────────────────────────────────── */
+.btn{
+  display:inline-flex;align-items:center;justify-content:center;gap:10px;
+  font-family:var(--f);font-size:.76rem;font-weight:500;
+  text-transform:uppercase;letter-spacing:.22em;
+  padding:18px 36px;border-radius:999px;text-decoration:none;
+  border:1px solid transparent;cursor:pointer;white-space:nowrap;
+  background:var(--ink);color:var(--bone);
+  transition:transform .18s ease,background .18s ease,color .18s ease,border-color .18s ease;
+}
+.btn:hover{transform:translateY(-2px);background:#14160F}
+.btn.clay{background:var(--sage)}
+.btn.clay:hover{background:#565C4B}
+.btn.paper{background:var(--white);color:var(--ink)}
+.btn.paper:hover{background:#F1EDE5}
+.btn.line{background:transparent;color:var(--ink);border-color:var(--sand)}
+.btn.line:hover{background:var(--white)}
+.bg-sage .btn.line{color:#EDE8E0;border-color:rgba(237,232,224,.34)}
+.bg-sage .btn.line:hover{background:rgba(237,232,224,.1)}
+.btn.sm{padding:12px 22px;font-size:.68rem;letter-spacing:.18em}
+.btn.block{width:100%}
+.btn svg{flex:none}
+.btns{display:flex;flex-wrap:wrap;gap:14px;margin-top:34px}
+.center .btns{justify-content:center}
+
+.tlink{
+  display:inline-block;font-size:.74rem;font-weight:500;text-transform:uppercase;
+  letter-spacing:.22em;text-decoration:none;color:var(--ink);
+  border-bottom:1px solid var(--sand);padding-bottom:6px;
+}
+.tlink:hover{border-color:var(--ink)}
+
+/* ── announcement bar ───────────────────────────────────────── */
+.bar{
+  position:relative;background:var(--sage);color:#EDE8E0;
+  font-size:.82rem;line-height:1.5;text-align:center;
+  padding:11px calc(var(--gut) + 22px);
+}
+.bar strong{font-weight:500}
+.bar a{color:#EDE8E0;text-underline-offset:3px}
+.bar .x{
+  position:absolute;right:10px;top:50%;transform:translateY(-50%);
+  background:none;border:0;color:inherit;font-size:1.1rem;
+  line-height:1;padding:6px 10px;cursor:pointer;opacity:.7;
+}
+.bar .x:hover{opacity:1}
+
+/* ── nav ────────────────────────────────────────────────────── */
+nav.nav{
+  position:sticky;top:0;z-index:60;
+  background:rgba(245,242,236,.9);backdrop-filter:blur(14px);
+  border-bottom:1px solid var(--sand);
+}
+.nav-in{
+  max-width:1180px;margin:0 auto;padding:0 var(--gut);
+  display:grid;grid-template-columns:44px 1fr 44px;align-items:center;
+  min-height:66px;
+}
+.brand{
+  display:flex;align-items:center;justify-content:center;gap:9px;
+  font-family:var(--f-mark);
+  text-decoration:none;color:var(--sage);
+  font-size:.98rem;font-weight:500;letter-spacing:.22em;
+  text-transform:uppercase;padding-left:.22em;
+}
+/* the mark sits on the wordmark's baseline, not centred on its box */
+.brand .mark,.flock .mark{flex:none;position:relative;top:-1px}
+.burger{
+  grid-column:1;grid-row:1;justify-self:start;
+  width:40px;height:40px;display:flex;align-items:center;justify-content:center;
+  background:none;border:0;cursor:pointer;color:var(--ink);
+}
+.burger span{display:block;width:19px;height:1.5px;background:currentColor;position:relative}
+.burger span::before,.burger span::after{
+  content:"";position:absolute;left:0;width:19px;height:1.5px;background:currentColor;
+}
+.burger span::before{top:-6px}
+.burger span::after{top:6px}
+
+.nav-links{
+  grid-column:1/-1;display:none;flex-direction:column;gap:2px;
+  padding:14px 0 22px;border-top:1px solid var(--sand);margin-top:6px;
+}
+.nav-links.open{display:flex}
+.nav-links a{
+  text-decoration:none;color:var(--ink);padding:11px 2px;
+  font-size:.78rem;font-weight:400;text-transform:uppercase;letter-spacing:.2em;
+}
+.nav-links a.on{color:var(--clay)}
+.nav-links a.btn{color:var(--bone)}
+.nav-links a.btn.line{color:var(--ink)}
+.nav-links .btn{margin-top:12px;align-self:flex-start}
+
+@media(min-width:1000px){
+  .nav-in{grid-template-columns:auto 1fr;min-height:74px}
+  .brand{justify-content:flex-start;grid-column:1}
+  .burger{display:none}
+  .nav-links{
+    grid-column:2;display:flex;flex-direction:row;align-items:center;
+    justify-content:flex-end;gap:26px;padding:0;border:0;margin:0;
+  }
+  .nav-links a{padding:0;font-size:.72rem;letter-spacing:.18em}
+  .nav-links a:hover{color:var(--clay)}
+  .nav-links .btn{margin:0;align-self:auto}
+}
+
+/* ── image placeholders + photos ────────────────────────────── */
+.ph{
+  position:relative;overflow:hidden;border-radius:var(--r);
+  background:
+    radial-gradient(120% 100% at 50% 0%,rgba(255,255,255,.5),transparent 60%),
+    var(--linen);
+  display:flex;align-items:center;justify-content:center;
+}
+/* empty slots are a soft wash, with no mark in them */
+.ph>img{
+  position:absolute;inset:0;width:100%;height:100%;object-fit:cover;
+  animation:fade .5s ease both;
+}
+@keyframes fade{from{opacity:0}to{opacity:1}}
+.ph.sq{aspect-ratio:1/1}
+.ph.portrait{aspect-ratio:3/4}
+.ph.tall{aspect-ratio:4/5}
+.ph.wide{aspect-ratio:16/10}
+.ph.dark{background:#2E3129}
+
+/* ── home hero ──────────────────────────────────────────────
+   A 2x2 grid of photos with the type centred across the seam. On a
+   laptop it opens out to four across so the faces are not cropped.
+   ─────────────────────────────────────────────────────────── */
+.hero{
+  position:relative;isolation:isolate;overflow:hidden;background:#2A2C25;
+  min-height:min(92svh,860px);
+  display:flex;flex-direction:column;justify-content:center;
+  /* More room above than below, so the block sits well below the middle
+     of the photo rather than dead centre on top of the subject. */
+  padding:clamp(210px,33vh,360px) var(--gut) clamp(80px,12vh,130px);
+}
+.hero-bg{
+  position:absolute;inset:0;z-index:-2;
+  display:grid;grid-template-columns:1fr 1fr;grid-template-rows:1fr 1fr;
+}
+.hero-bg .ph{border-radius:0;background:#2A2C25;min-height:0}
+.hero-bg .ph::after{display:none}
+@media(min-width:900px){
+  .hero-bg{grid-template-columns:repeat(4,1fr);grid-template-rows:1fr}
+}
+/* Two photos instead of four: side by side, one row, at every width.
+   Two class names beats the one above, so this wins regardless of the
+   media query. Add the other two .ph back and drop "two" from the div
+   to return to the grid. */
+.hero-bg.two{grid-template-columns:1fr 1fr;grid-template-rows:1fr}
+/* One photo at a time, full width, fading from one to the next. Every
+   .ph is stacked in the same cell and only the one carrying "on" is
+   visible. alter.js moves that class along on a timer. */
+.hero-bg.solo{grid-template-columns:1fr;grid-template-rows:1fr}
+.hero-bg.solo > .ph{
+  grid-area:1/1;opacity:0;transition:opacity .5s ease;
+}
+.hero-bg.solo > .ph.on{opacity:1}
+@media(prefers-reduced-motion:reduce){
+  /* no fading for anyone who has asked for less movement: the first
+     photo simply stays put */
+  .hero-bg.solo > .ph{transition:none}
+  .hero-bg.solo > .ph:not(:first-child){display:none}
+  .hero-bg.solo > .ph:first-child{opacity:1}
+}
+.hero-scrim{
+  position:absolute;inset:0;z-index:-1;
+  background:
+    linear-gradient(180deg,rgba(14,16,12,.42) 0%,rgba(14,16,12,.18) 30%,rgba(14,16,12,.18) 70%,rgba(14,16,12,.55) 100%),
+    radial-gradient(120% 65% at 50% 50%,rgba(14,16,12,.55) 0%,rgba(14,16,12,.12) 70%);
+}
+.hero-in{
+  max-width:760px;margin:0 auto;text-align:center;color:#fff;
+  display:flex;flex-direction:column;align-items:center;
+}
+.hero-kicker{
+  margin:0;font-size:.72rem;font-weight:500;text-transform:uppercase;
+  letter-spacing:.34em;padding-left:.34em;color:rgba(255,255,255,.9);
+  text-shadow:0 1px 16px rgba(0,0,0,.5);
+}
+.hero h1{
+  margin:.42em 0 0;color:#fff;font-weight:700;
+  font-size:clamp(1.9rem,7vw,3.7rem);line-height:1.04;
+  letter-spacing:.035em;padding-left:.035em;
+  text-shadow:0 2px 30px rgba(0,0,0,.55);
+}
+.hero-status{
+  margin:1em 0 0;font-size:.72rem;font-weight:500;text-transform:uppercase;
+  letter-spacing:.32em;padding-left:.32em;color:rgba(255,255,255,.86);
+  text-shadow:0 1px 16px rgba(0,0,0,.5);
+}
+.hero-cta{
+  margin-top:clamp(26px,4vh,38px);
+  width:auto;border-radius:999px;
+  padding:18px 40px;font-size:.74rem;font-weight:500;
+  letter-spacing:.2em;padding-left:calc(40px + .2em);
+  background:var(--bone);color:var(--ink);
+  box-shadow:0 16px 40px -20px rgba(0,0,0,.6);
+}
+.hero-cta:hover{background:#fff}
+.hero-alt{
+  margin-top:20px;font-size:.72rem;font-weight:500;letter-spacing:.24em;
+  padding-left:.24em;color:#fff;border-bottom-color:rgba(255,255,255,.45);
+  padding-bottom:6px;text-shadow:0 1px 16px rgba(0,0,0,.5);
+}
+.hero-alt:hover{color:#fff;border-bottom-color:#fff}
+@media(max-width:819px){
+  .hero{min-height:min(88svh,780px)}
+}
+
+/* ── inner page hero ────────────────────────────────────────── */
+.page-hero{padding-block:clamp(48px,8vw,92px) clamp(34px,5vw,60px)}
+.page-hero .lede{font-size:1.1rem}
+
+/* ── stat rail ──────────────────────────────────────────────── */
+.stats-sec{background:var(--linen);padding-block:clamp(32px,5vw,46px)}
+.stats{display:flex;overflow-x:auto;scroll-snap-type:x mandatory;scrollbar-width:none}
+.stats::-webkit-scrollbar{display:none}
+.stat{
+  flex:0 0 100%;scroll-snap-align:center;text-align:center;
+  display:flex;flex-direction:column;align-items:center;gap:9px;padding:6px 14px;
+}
+.stat svg{width:25px;height:25px;fill:none;stroke:var(--moss);stroke-width:1.3}
+.stat b{font-size:1.3rem;font-weight:500;letter-spacing:.12em}
+.stat span{font-size:.88rem;color:var(--soft);line-height:1.45}
+.dots{display:flex;justify-content:center;gap:8px;margin-top:20px}
+.dots button{
+  width:7px;height:7px;padding:0;border:0;border-radius:50%;
+  background:var(--sand);cursor:pointer;transition:background .2s;
+}
+.dots button.on{background:var(--clay)}
+@media(min-width:820px){
+  .stats{overflow:visible;scroll-snap-type:none}
+  .stat{flex:1 1 0}
+  .stat+.stat{border-left:1px solid var(--sand)}
+  .stats-sec .dots{display:none}
+}
+
+/* ── slabs ──────────────────────────────────────────────────── */
+.slab{border-radius:var(--r);padding:clamp(34px,6vw,64px)}
+.slab+.slab{margin-top:18px}
+.slab-italic{
+  font-family:var(--f-accent);font-style:italic;
+  font-size:clamp(1.2rem,3.2vw,1.6rem);line-height:1.4;
+  color:rgba(237,232,224,.82);margin:24px 0 0;
+}
+.slab.bg-mist p.big{
+  font-size:clamp(1.3rem,4vw,1.9rem);line-height:1.34;font-weight:400;
+  margin:0 0 30px;max-width:24ch;
+}
+
+/* ── tiles ──────────────────────────────────────────────────── */
+.tiles{display:grid;grid-template-columns:repeat(2,1fr);gap:11px}
+@media(min-width:900px){ .tiles{grid-template-columns:repeat(4,1fr)} }
+/* Six tiles sit as two rows of three rather than four then a stray two.
+   Two class names, so it wins over the rule above whatever the order. */
+@media(min-width:900px){ .tiles.six{grid-template-columns:repeat(3,1fr)} }
+.tile{
+  background:var(--white);border:1px solid var(--sand);border-radius:var(--r);
+  padding:clamp(22px,3.4vw,30px) 18px;text-align:center;text-decoration:none;
+  display:flex;flex-direction:column;align-items:center;gap:11px;color:var(--ink);
+  transition:background .2s ease,transform .2s ease;
+}
+.tile:hover{background:var(--bone);transform:translateY(-3px)}
+.tile svg{width:29px;height:29px;fill:none;stroke:var(--moss);stroke-width:1.3}
+.tile b{font-weight:500;font-size:1.02rem}
+.tile span{font-size:.86rem;color:var(--soft);line-height:1.5}
+
+/* ── rails ──────────────────────────────────────────────────── */
+.rail{
+  display:flex;gap:14px;overflow-x:auto;scroll-snap-type:x mandatory;
+  padding-inline:var(--gut);padding-bottom:6px;scrollbar-width:none;
+}
+.rail::-webkit-scrollbar{display:none}
+.rail>*{scroll-snap-align:center;flex:0 0 78%;max-width:340px}
+@media(min-width:760px){ .rail>*{flex:0 0 42%} }
+@media(min-width:1100px){
+  .rail{display:grid;gap:18px;overflow:visible;scroll-snap-type:none;max-width:1180px;margin:0 auto}
+  .rail>*{flex:none;max-width:none}
+  .rail.cols-3{grid-template-columns:repeat(3,1fr)}
+  .rail.cols-4{grid-template-columns:repeat(4,1fr)}
+  .rail.cols-5{grid-template-columns:repeat(5,1fr)}
+}
+
+/* program card */
+.prog{position:relative;display:block;text-decoration:none;border-radius:var(--r);overflow:hidden}
+.prog .ph{aspect-ratio:3/4;border-radius:var(--r)}
+/* The pills are white on a pale studio backdrop, which is white on
+   near white. This darkens the top and bottom of the photo so they have
+   something to sit on, and leaves the middle of the shot alone. Only on
+   cards that have a photo, or the empty placeholder wash goes muddy. */
+.prog .ph.has-photo::after,.prog .ph:has(img)::after{
+  content:"";position:absolute;inset:0;z-index:1;pointer-events:none;
+  background:linear-gradient(180deg,
+    rgba(20,22,17,.46) 0%,rgba(20,22,17,.14) 26%,
+    rgba(20,22,17,0) 52%,rgba(20,22,17,.40) 100%);
+}
+.pill{
+  position:absolute;z-index:2;font-size:.78rem;font-weight:500;
+  background:rgba(255,255,255,.95);color:var(--ink);
+  padding:9px 18px;border-radius:999px;
+}
+.pill.top{top:14px;left:14px}
+.pill.bottom{bottom:14px;left:14px;font-weight:400;font-size:.74rem;background:rgba(255,255,255,.88)}
+
+/* phone card */
+.phone-card{text-align:center}
+.phone-card{position:relative;text-align:left}
+/* A phone screenshot is about 1:2. Forcing it into a 3:4 card and
+   cropping meant half the screen was cut off, which is the opposite of
+   showing someone the app. The card is phone shaped now, so the whole
+   screen is visible. */
+.phone{
+  aspect-ratio:1320/2688;border-radius:var(--r);overflow:hidden;
+  background:var(--white);border:1px solid var(--sand);
+}
+.phone img{object-fit:cover;object-position:top center}
+.phone-card b{
+  position:absolute;z-index:2;top:14px;left:14px;
+  font-size:.78rem;font-weight:500;letter-spacing:0;text-transform:none;
+  background:rgba(255,255,255,.95);color:var(--ink);
+  padding:9px 18px;border-radius:999px;
+}
+.phone-card small{
+  display:block;margin-top:12px;font-size:.88rem;color:var(--soft);
+  line-height:1.5;padding-inline:2px;
+}
+
+/* recipe card */
+.recipe{background:var(--linen);border-radius:var(--r);overflow:hidden}
+.recipe .ph{border-radius:0;background:var(--sand)}
+.recipe h3{
+  font-size:.84rem;font-weight:500;text-transform:uppercase;letter-spacing:.12em;
+  color:var(--clay);text-align:center;margin:22px 18px 18px;line-height:1.45;
+}
+.macros{display:flex;justify-content:center;gap:6px;padding:0 12px 26px}
+.macro{text-align:center;flex:1}
+.macro i{
+  display:flex;align-items:center;justify-content:center;
+  width:38px;height:38px;margin:0 auto 8px;border-radius:50%;border:1px solid var(--moss);
+}
+.macro i svg{width:15px;height:15px;fill:none;stroke:var(--moss);stroke-width:1.4}
+.macro span,.macro b{display:block;font-size:.68rem;line-height:1.4}
+.macro span{color:var(--soft)}
+.macro b{font-weight:500}
+
+/* ── feature rows ───────────────────────────────────────────── */
+.feat{display:grid;gap:clamp(28px,5vw,64px);align-items:center}
+@media(min-width:900px){
+  .feat{grid-template-columns:1fr .8fr}
+  .feat.rev>.feat-media{order:-1}
+}
+.feat+.feat{margin-top:clamp(56px,9vw,110px)}
+.feat-n{
+  display:block;font-family:var(--f-accent);font-style:italic;
+  font-size:2.2rem;line-height:1;color:var(--clay);margin-bottom:14px;
+}
+.feat h2{font-size:clamp(1.5rem,3.6vw,2.2rem);margin-bottom:22px}
+.feat p{color:var(--soft);margin:0 0 18px}
+.feat-media .phone{max-width:290px;margin:0 auto}
+.ticks{list-style:none;margin:24px 0 0;padding:0;display:grid;gap:12px}
+.ticks li{position:relative;padding-left:28px;color:var(--soft);font-size:.97rem;line-height:1.55}
+.ticks li::before{content:"\2713";position:absolute;left:0;color:var(--sage-lt)}
+.crosses{list-style:none;margin:0;padding:0;display:grid;gap:14px}
+.crosses li{position:relative;padding-left:28px;color:var(--soft);font-size:.97rem;line-height:1.55}
+.crosses li::before{content:"\2715";position:absolute;left:0;color:#8C6F63}
+
+/* progressive overload proof panel */
+.proof{
+  background:var(--white);border:1px solid var(--sand);border-radius:var(--r);
+  padding:26px;margin-top:28px;
+}
+.proof .lab{font-size:.74rem;text-transform:uppercase;letter-spacing:.24em;color:var(--clay)}
+.proof .msg{margin-top:10px;color:var(--soft);font-size:.95rem}
+.proof .big{font-family:var(--f-accent);font-size:2.6rem;line-height:1.1;margin-top:6px}
+.proof .sets{display:flex;flex-wrap:wrap;gap:8px;margin-top:14px}
+.proof .sets span{
+  font-size:.74rem;background:var(--linen);color:var(--soft);
+  padding:7px 14px;border-radius:999px;
+}
+
+/* ── spec grid ──────────────────────────────────────────────── */
+.specs{display:grid;gap:14px;grid-template-columns:1fr}
+@media(min-width:640px){ .specs{grid-template-columns:1fr 1fr} }
+@media(min-width:1000px){ .specs{grid-template-columns:repeat(3,1fr)} }
+.spec{background:var(--white);border-radius:var(--r-sm);padding:26px}
+.bg-linen .spec{background:var(--white)}
+.spec .n{
+  display:block;font-family:var(--f-accent);font-size:1.7rem;line-height:1;
+  color:var(--clay);margin-bottom:12px;
+}
+.spec h3{margin-bottom:9px}
+.spec p{margin:0;color:var(--soft);font-size:.92rem;line-height:1.6}
+
+/* ── numbered steps / rules ─────────────────────────────────── */
+.steps{list-style:none;margin:0;padding:0;display:grid;gap:14px;counter-reset:s}
+@media(min-width:820px){ .steps.four{grid-template-columns:repeat(2,1fr)} }
+.steps li{
+  background:var(--white);border-radius:var(--r-sm);padding:28px;
+  display:grid;grid-template-columns:auto 1fr;gap:18px;align-items:start;
+}
+.bg-linen .steps li,.bg-bone .steps li{background:var(--white)}
+.steps .n{font-family:var(--f-accent);font-style:italic;font-size:1.6rem;line-height:1;color:var(--clay)}
+.steps h3{margin-bottom:8px}
+.steps p{margin:0;color:var(--soft);font-size:.94rem;line-height:1.62}
+
+/* ── qualifier ──────────────────────────────────────────────── */
+.qual{display:grid;gap:16px}
+@media(min-width:820px){ .qual{grid-template-columns:1fr 1fr} }
+.qcol{background:var(--white);border-radius:var(--r);padding:clamp(26px,4vw,38px)}
+.qcol.no{background:var(--linen)}
+.qcol h3{font-size:.74rem;text-transform:uppercase;letter-spacing:.22em;margin-bottom:24px}
+.qcol a{color:var(--ink)}
+
+/* ── plans ──────────────────────────────────────────────────── */
+.plans{display:grid;gap:18px;max-width:780px;margin:0 auto}
+@media(min-width:760px){ .plans{grid-template-columns:1fr 1fr} }
+.plan{
+  position:relative;background:var(--white);border:1px solid var(--sand);
+  border-radius:var(--r);padding:clamp(28px,4vw,36px);
+  display:flex;flex-direction:column;
+}
+.plan.best{border-color:var(--clay)}
+.flag{
+  position:absolute;top:-13px;left:50%;transform:translateX(-50%);
+  background:var(--sage);color:#fff;white-space:nowrap;
+  font-size:.64rem;font-weight:500;text-transform:uppercase;letter-spacing:.18em;
+  padding:7px 18px;border-radius:999px;
+}
+.plan .term{font-size:.68rem;text-transform:uppercase;letter-spacing:.24em;color:var(--clay);margin:0 0 14px}
+.plan .amt{font-family:var(--f-accent);font-size:clamp(2.4rem,7vw,3rem);line-height:1}
+.plan .per{font-size:.9rem;color:var(--soft);margin:10px 0 24px}
+.plan .ticks{flex:1;align-content:start;margin:0 0 28px}
+.plan .btn{width:100%}
+
+/* comparison strip */
+.compare{display:grid;gap:14px;margin-top:40px}
+@media(min-width:760px){ .compare{grid-template-columns:repeat(3,1fr);align-items:end} }
+.cmp{background:var(--white);border-radius:var(--r);padding:30px 22px;text-align:center}
+.cmp.on{background:var(--sage);color:#EDE8E0;padding-block:44px}
+.cmp .p{font-family:var(--f-accent);font-size:2.2rem;line-height:1}
+.cmp .l{font-size:.86rem;color:var(--soft);margin-top:10px;line-height:1.5}
+.cmp.on .l{color:rgba(237,232,224,.76)}
+.cmp .tag{
+  display:inline-block;font-size:.7rem;text-transform:uppercase;letter-spacing:.18em;
+  background:rgba(237,232,224,.16);padding:6px 14px;border-radius:999px;margin-bottom:14px;
+}
+
+/* ── challenge cards ────────────────────────────────────────── */
+.cal{display:grid;gap:18px}
+@media(min-width:760px){ .cal{grid-template-columns:1fr 1fr} }
+@media(min-width:1060px){ .cal{grid-template-columns:repeat(3,1fr)} }
+.cal-card{
+  background:var(--white);border-radius:var(--r);overflow:hidden;
+  display:flex;flex-direction:column;border:1px solid var(--sand);
+}
+.cal-card.featured{border-color:var(--clay)}
+@media(min-width:760px){ .cal-card.featured{grid-column:span 2} }
+@media(min-width:1060px){ .cal-card.featured{grid-column:span 1} }
+.cal-card .ph{border-radius:0;aspect-ratio:16/10}
+.cal-body{padding:26px;display:flex;flex-direction:column;gap:12px;flex:1}
+/* The cards sit side by side and stretch to the same height, so a card
+   with less copy than its neighbour would leave its button floating
+   mid air. This drops every button to the bottom edge instead. */
+.cal-body > .btn{margin-top:auto}
+.cal-tag{
+  align-self:flex-start;font-size:.62rem;text-transform:uppercase;letter-spacing:.2em;
+  background:var(--sage);color:#EDE8E0;padding:6px 14px;border-radius:999px;
+}
+.cal-when{font-size:.68rem;text-transform:uppercase;letter-spacing:.22em;color:var(--clay)}
+.cal-name{font-size:1.5rem;text-transform:uppercase;letter-spacing:.03em;font-weight:300;line-height:1.1}
+.cal-focus{margin:0;color:var(--soft);font-size:.94rem;line-height:1.62;flex:1}
+.cal-amb{display:flex;align-items:center;gap:12px;padding-top:6px}
+.cal-amb .ph{width:42px;height:42px;border-radius:50%;flex:none}
+.cal-amb-label{display:block;font-size:.62rem;text-transform:uppercase;letter-spacing:.2em;color:var(--clay)}
+.cal-amb-name{display:block;font-size:.92rem}
+.cal-access{font-size:.8rem;color:var(--soft)}
+
+/* ── media row (copy + photo) ───────────────────────────────── */
+.media{display:grid;gap:clamp(28px,5vw,60px);align-items:center}
+@media(min-width:900px){ .media{grid-template-columns:1fr .78fr} }
+.media.rev>.ph{order:-1}
+
+/* ── founder ────────────────────────────────────────────────── */
+.founder{display:grid;gap:clamp(28px,5vw,56px);align-items:start}
+@media(min-width:900px){ .founder{grid-template-columns:.82fr 1.18fr} }
+/* No photo beside it, so the story runs on its own. Capped so the lines
+   do not stretch the full width of a laptop and become hard to read.
+   Drop "solo" and put the photo column back to return to two up. */
+.founder.solo{grid-template-columns:1fr;max-width:760px;margin-inline:auto}
+.founder-name{
+  position:absolute;left:0;right:0;bottom:0;z-index:2;
+  padding:22px;color:#fff;
+  background:linear-gradient(180deg,transparent,rgba(18,20,16,.75));
+}
+.founder-name h3{font-size:1.2rem;text-transform:uppercase;letter-spacing:.08em;font-weight:400}
+.founder-name span{font-size:.74rem;text-transform:uppercase;letter-spacing:.2em;opacity:.8}
+.open-line{font-family:var(--f-accent);font-style:italic;font-size:1.5rem;line-height:1.3;color:var(--ink);margin:0 0 22px}
+
+/* ── faq ────────────────────────────────────────────────────── */
+.faq{display:grid;gap:2px;border-top:1px solid var(--sand)}
+.faq details{border-bottom:1px solid var(--sand)}
+.faq summary{
+  list-style:none;cursor:pointer;padding:24px 44px 24px 0;position:relative;
+  font-size:1.02rem;font-weight:400;
+}
+.faq summary::-webkit-details-marker{display:none}
+.faq summary::after{
+  content:"";position:absolute;right:8px;top:50%;width:11px;height:11px;
+  border-right:1.5px solid var(--clay);border-bottom:1.5px solid var(--clay);
+  transform:translateY(-70%) rotate(45deg);transition:transform .25s ease;
+}
+.faq details[open] summary::after{transform:translateY(-30%) rotate(-135deg)}
+.faq p{margin:0 0 26px;color:var(--soft);max-width:70ch}
+
+/* ── quotes ─────────────────────────────────────────────────── */
+.quote{background:var(--white);border-radius:var(--r);padding:clamp(26px,4vw,34px)}
+.quote p{font-family:var(--f-accent);font-size:1.2rem;line-height:1.5;margin:0 0 18px}
+.quote footer{font-size:.72rem;font-weight:500;text-transform:uppercase;letter-spacing:.18em;color:var(--clay)}
+
+/* ── swipe carousel ─────────────────────────────────────────── */
+.swipe{overflow-x:auto;scroll-snap-type:x mandatory;scrollbar-width:none;padding-inline:var(--gut)}
+.swipe::-webkit-scrollbar{display:none}
+.swipe .track{display:flex;gap:14px}
+.swipe .slide{flex:0 0 78%;max-width:360px;scroll-snap-align:center;margin:0}
+@media(min-width:760px){ .swipe .slide{flex:0 0 40%} }
+@media(min-width:1100px){ .swipe .slide{flex:0 0 300px} }
+/* A transformation photo is a before and after pair, so the whole frame is
+   the content. cover would crop whatever does not fit the card, which on a
+   full body shot takes the part people are looking at. contain never cuts,
+   whatever shape the photo is uploaded at. */
+.slide.tf img{
+  width:100%;height:auto;
+  max-height:min(62vh,520px);
+  object-fit:contain;
+  border-radius:var(--r);background:var(--linen);
+  display:block;
+}
+/* the slides sit on a shared baseline so a tall photo and a wide one do not
+   look like a mistake next to each other */
+#tf-swipe .track{align-items:flex-end}
+.slide.tf img.missing{background:var(--linen)}
+.slide.tf figcaption{
+  margin-top:12px;text-align:center;font-size:.7rem;
+  text-transform:uppercase;letter-spacing:.22em;color:var(--clay);
+}
+/* the carousel scrolls by swipe, so the arrows and dots were clutter */
+.swipe-nav{display:none}
+.swipe-nav-legacy{display:flex;align-items:center;justify-content:center;gap:18px;margin-top:26px}
+/* direct children only: without the > this also matched the dots inside
+   .dots, sizing them as 40px circles and pushing the arrows off screen */
+.swipe-nav > button{
+  flex:none;width:40px;height:40px;padding:0;border-radius:50%;
+  border:1px solid var(--sand);background:transparent;color:var(--ink);
+  font-size:1.1rem;line-height:1;cursor:pointer;
+}
+.swipe-nav > button:hover{background:var(--white)}
+.swipe-nav .dots{margin:0;flex-wrap:wrap}
+
+/* ── article ────────────────────────────────────────────────── */
+.article-meta{
+  display:flex;flex-wrap:wrap;align-items:center;gap:12px;margin-top:22px;
+  font-size:.74rem;text-transform:uppercase;letter-spacing:.18em;color:var(--clay);
+}
+.article-meta .dot{width:3px;height:3px;border-radius:50%;background:var(--sand)}
+.say{
+  font-family:var(--f-accent);font-style:italic;font-size:clamp(1.3rem,3.4vw,1.7rem);
+  line-height:1.34;color:var(--ink);margin:36px 0;text-align:center;
+}
+/* ── sticky mobile CTA ──────────────────────────────────────── */
+/* Slides up once the hero has gone by. Before that it would just be
+   covering the photo with the same offer the hero already makes. */
+.sticky{
+  position:fixed;left:0;right:0;bottom:0;z-index:55;
+  padding:10px var(--gut) calc(10px + env(safe-area-inset-bottom));
+  background:var(--sage);
+  border-top:1px solid rgba(237,232,224,.14);
+  transform:translateY(110%);
+  transition:transform .4s cubic-bezier(.22,.61,.36,1);
+}
+/* the button sits on sage now, so it flips to a pale fill */
+.sticky .btn{background:var(--bone);color:var(--ink)}
+.sticky .btn:hover{background:#fff}
+.sticky.up{transform:translateY(0)}
+.sticky .btn{width:100%}
+@media(min-width:820px){ .sticky{display:none} }
+@media(prefers-reduced-motion:reduce){
+  .sticky{transition:none}
+}
+@media(max-width:819px){ body{padding-bottom:82px} }
+
+/* ── modal ──────────────────────────────────────────────────── */
+.promo{position:fixed;inset:0;z-index:90;display:flex;align-items:center;justify-content:center;padding:20px}
+.promo[hidden]{display:none}
+.promo-bg{position:absolute;inset:0;background:rgba(18,20,16,.62);backdrop-filter:blur(3px)}
+.promo-box{
+  position:relative;background:var(--bone);border-radius:var(--r);
+  width:min(460px,100%);max-height:90svh;overflow:auto;padding:30px;text-align:center;
+}
+.promo-box .ph{aspect-ratio:16/9;margin:-30px -30px 24px;border-radius:var(--r) var(--r) 0 0}
+.promo-x{
+  position:absolute;right:12px;top:12px;z-index:3;width:34px;height:34px;
+  border-radius:50%;border:0;background:rgba(255,255,255,.9);cursor:pointer;
+  font-size:0;color:var(--ink);
+}
+.promo-x::before{content:"\00d7";font-size:20px;line-height:34px}
+.promo-flag{font-size:.7rem;text-transform:uppercase;letter-spacing:.22em;color:var(--clay);margin-bottom:14px}
+.promo-box h3{font-size:1.9rem;text-transform:uppercase;font-weight:300;line-height:1.05}
+.promo-box h3 em{font-family:var(--f-accent);font-style:italic;text-transform:none;display:block;font-size:1.12em}
+.promo-lede{color:var(--soft);font-size:.95rem;margin:16px 0 22px}
+.pop-form{display:grid;gap:10px}
+.pop-form input,.pop-form select{
+  width:100%;font-family:var(--f);font-size:.95rem;padding:14px 16px;
+  border:1px solid var(--sand);border-radius:12px;background:var(--white);color:var(--ink);
+}
+.promo-cta{
+  width:100%;margin-top:4px;border:0;cursor:pointer;
+  font-family:var(--f);font-size:.74rem;font-weight:500;
+  text-transform:uppercase;letter-spacing:.22em;
+  padding:17px 24px;border-radius:999px;background:var(--ink);color:var(--bone);
+  display:inline-flex;align-items:center;justify-content:center;text-decoration:none;
+}
+.promo-fine{font-size:.78rem;color:var(--soft);margin:14px 0 0}
+.launch-err{color:#8C4A3F;font-size:.85rem;margin:10px 0 0}
+.hidden{position:absolute;left:-9999px}
+.thanks-tick{
+  width:52px;height:52px;margin:0 auto 16px;border-radius:50%;
+  background:var(--sage);color:#EDE8E0;display:flex;align-items:center;justify-content:center;font-size:1.3rem;
+}
+
+/* ── footer ─────────────────────────────────────────────────── */
+footer{background:var(--sage-dk);color:#EDE8E0;padding-block:clamp(48px,7vw,80px) 30px;font-size:.92rem}
+.fgrid{display:grid;gap:36px}
+@media(min-width:760px){ .fgrid{grid-template-columns:1.4fr 1fr 1fr} }
+.flock{display:flex;align-items:center;gap:9px;font-family:var(--f-mark);color:#EDE8E0;font-size:1rem;letter-spacing:.22em;text-transform:uppercase;margin-bottom:16px}
+footer p{margin:0;color:rgba(237,232,224,.72);max-width:34ch;line-height:1.65}
+footer h4{font-size:.66rem;text-transform:uppercase;letter-spacing:.24em;color:rgba(237,232,224,.6);margin-bottom:16px;font-weight:500}
+footer ul{list-style:none;margin:0;padding:0;display:grid;gap:11px}
+footer a{color:#EDE8E0;text-decoration:none;font-size:.92rem}
+footer a:hover{color:#fff;text-decoration:underline;text-underline-offset:3px}
+.fbot{
+  display:flex;flex-wrap:wrap;gap:12px;justify-content:space-between;align-items:center;
+  margin-top:44px;padding-top:22px;border-top:1px solid rgba(237,232,224,.16);
+  font-size:.8rem;color:rgba(237,232,224,.6);
+}
+.fbot-links{display:flex;flex-wrap:wrap;gap:8px;align-items:center}
+.fbot-links a{font-size:.8rem;color:rgba(237,232,224,.72)}
+.fadmin{opacity:.45}
+
+/* ── reveal ─────────────────────────────────────────────────── */
+[data-reveal],[data-reveal-group]{opacity:0;transform:translateY(16px);transition:opacity .7s ease,transform .7s ease}
+[data-reveal].in,[data-reveal-group].in{opacity:1;transform:none}
+
+@media(prefers-reduced-motion:reduce){
+  html{scroll-behavior:auto}
+  [data-reveal],[data-reveal-group]{opacity:1;transform:none;transition:none}
+  .btn:hover,.tile:hover{transform:none}
+  .ph>img{animation:none}
+}
+
+/* ── legal + support pages ──────────────────────────────────── */
+.updated{
+  font-size:.7rem;text-transform:uppercase;letter-spacing:.2em;
+  color:var(--clay);margin:22px 0 0;
+}
+.legal h2{
+  font-size:clamp(1.1rem,2.6vw,1.35rem);text-transform:uppercase;
+  letter-spacing:.1em;margin:52px 0 18px;padding-top:26px;
+  border-top:1px solid var(--sand);
+}
+.legal h2:first-of-type{margin-top:0}
+.legal h3{margin:28px 0 10px;font-size:.95rem;letter-spacing:.04em}
+.legal ul{margin:0 0 20px;padding-left:22px;color:var(--soft)}
+.legal li{margin-bottom:9px}
+.legal p{max-width:72ch}
+.notice{
+  background:var(--linen);border-radius:var(--r-sm);
+  padding:22px 24px;margin:0 0 40px;
+}
+.notice p{margin:0;font-size:.92rem;color:var(--soft);max-width:none}
+
+/* clause numbering, summary panels and flagged clauses on the legal pages */
+.summary-box{
+  background:var(--linen);border-left:3px solid var(--sage);
+  border-radius:0 var(--r-sm) var(--r-sm) 0;padding:26px 28px;margin:0 0 44px;
+}
+.summary-box h3{
+  font-size:.72rem;text-transform:uppercase;letter-spacing:.22em;
+  color:var(--clay);margin-bottom:16px;font-weight:600;
+}
+.summary-box ul{margin:0;padding-left:20px;color:var(--soft)}
+.summary-box li{margin-bottom:10px;font-size:.95rem;line-height:1.6}
+.summary-box li strong{color:var(--ink);font-weight:600}
+.summary-note{
+  margin:16px 0 0 !important;font-size:.8rem;font-style:italic;
+  color:var(--soft);opacity:.8;
+}
+.clause-flag{
+  background:#F3EEE4;border:1px solid var(--sand);border-radius:var(--r-sm);
+  padding:14px 18px;font-size:.92rem;font-weight:500;color:var(--ink) !important;
+  margin:0 0 22px !important;
+}
+.legal code{font-size:.86em}
+
+/* pictures inside an article body */
+.post-figure{margin:38px 0}
+.post-figure img{
+  width:100%;height:auto;border-radius:var(--r);
+  background:var(--linen);display:block;
+}
+.post-figure figcaption{
+  margin-top:12px;text-align:center;font-size:.8rem;
+  color:var(--soft);line-height:1.5;
+}
+#aCover{margin-bottom:clamp(28px,5vw,48px)}
+
+/* ── blog index ─────────────────────────────────────────────── */
+.posts{display:grid;gap:18px}
+@media(min-width:700px){ .posts{grid-template-columns:1fr 1fr} }
+@media(min-width:1040px){ .posts{grid-template-columns:repeat(3,1fr)} }
+.post-card{
+  display:flex;flex-direction:column;text-decoration:none;color:inherit;
+  background:var(--white);border:1px solid var(--sand);
+  border-radius:var(--r);overflow:hidden;transition:transform .2s ease;
+}
+.post-card:hover{transform:translateY(-3px)}
+.post-card .ph{border-radius:0;aspect-ratio:16/10}
+.post-card .body{padding:24px;display:flex;flex-direction:column;gap:11px;flex:1}
+.post-cat{font-size:.64rem;text-transform:uppercase;letter-spacing:.22em;color:var(--clay)}
+.post-card h3{font-size:1.14rem;line-height:1.3;font-weight:400}
+.post-card p{margin:0;color:var(--soft);font-size:.92rem;line-height:1.6;flex:1}
+.post-read{font-size:.72rem;text-transform:uppercase;letter-spacing:.18em;color:var(--soft)}
+
+/* ══════════════════════════════════════════════════════════════
+   MOBILE REFINEMENTS
+   Two things a desktop browser hides: labels that are legible at
+   arm's length but not on a phone, and controls that are too small
+   to hit with a thumb. Apple's guidance is a 44px target minimum.
+   ══════════════════════════════════════════════════════════════ */
+
+/* carousel dots stay 7px to look at, but carry a 44px tall hit area */
+.dots button{position:relative}
+.dots button::after{
+  content:"";position:absolute;top:-18px;bottom:-18px;left:-8px;right:-8px;
+}
+.swipe-nav .dots,.stats-sec .dots{gap:16px}
+
+@media(max-width:600px){
+  /* small tracked labels, lifted off the 10px floor */
+  .eyebrow,.hero-kicker,.hero-status{font-size:.76rem}
+  .btn.sm{font-size:.72rem}
+  .macro span,.macro b{font-size:.74rem}
+  .flag,.promo-flag,.cal-tag,.cal-amb-label,.compare .tag{font-size:.7rem}
+  .plan .term,.cal-when,.post-cat{font-size:.74rem}
+  footer h4{font-size:.72rem}
+  .quote footer,.article-meta,.slide.tf figcaption{font-size:.76rem}
+  .spec p,.steps p,.tile span{font-size:.9rem}
+
+  /* thumb-sized targets */
+  .bar .x{padding:12px 14px}
+  footer ul a,.fbot-links a{display:inline-block;padding:9px 0}
+  footer ul{gap:2px}
+  .tlink,.hero-alt{padding-bottom:12px;padding-top:8px}
+  .faq summary{padding-block:26px}
+}
+
+/* ── join form, used at the end of a challenge page ──────────── */
+.join{
+  background:var(--white);border:1px solid var(--sand);border-radius:var(--r);
+  padding:clamp(28px,5vw,44px);max-width:560px;margin:0 auto;text-align:left;
+}
+.join h3{
+  font-size:.72rem;text-transform:uppercase;letter-spacing:.22em;
+  color:var(--clay);margin-bottom:18px;font-weight:600;
+}
+/* The download is the main move now, so the form underneath needs a line
+   saying who it is for. Sits under the heading, above the fields. */
+.join h3 + .join-intro{margin:-8px 0 20px;font-size:.9rem;color:var(--soft);line-height:1.6}
+.join-form{display:grid;gap:12px}
+/* The script hides a form by setting the hidden attribute, but a
+   display rule beats it, so the form stayed on screen underneath the
+   confirmation with its button still reading "One moment". */
+.join-form[hidden],.pop-form[hidden],.cs-form[hidden]{display:none}
+.join-form label{
+  font-size:.78rem;color:var(--soft);display:block;margin-bottom:6px;
+}
+.join-form input,.join-form select{
+  width:100%;font-family:var(--f);font-size:1rem;padding:15px 16px;
+  border:1px solid var(--sand);border-radius:12px;background:var(--bone);color:var(--ink);
+}
+.join-form input:focus,.join-form select:focus{outline:2px solid var(--moss);outline-offset:1px}
+.join-form .btn{width:100%;margin-top:6px}
+.join-fine{font-size:.82rem;color:var(--soft);margin:16px 0 0;line-height:1.6}
+.join-err{color:#8C4A3F;font-size:.88rem;margin:12px 0 0}
+.join-done{text-align:center}
+.join-done .tick{
+  width:54px;height:54px;margin:0 auto 18px;border-radius:50%;
+  background:var(--sage);color:#EDE8E0;display:flex;align-items:center;
+  justify-content:center;font-size:1.4rem;
+}
+.join-done h3{color:var(--ink);font-size:1.3rem;text-transform:none;letter-spacing:0;margin-bottom:12px}
+.join-done p{color:var(--soft);margin:0}
+
+/* ── challenge host ─────────────────────────────────────────── */
+.host{
+  display:flex;align-items:center;gap:16px;margin-top:30px;
+  background:var(--white);border:1px solid var(--sand);
+  border-radius:var(--r);padding:18px 20px;
+}
+.host .ph{width:64px;height:64px;border-radius:50%;flex:none}
+.host-label{
+  display:block;font-size:.74rem;text-transform:uppercase;
+  letter-spacing:.2em;color:var(--clay);margin-bottom:5px;
+}
+.host-name{display:block;font-size:1.08rem;font-weight:500}
+.host-line{margin:6px 0 0;font-size:.88rem;color:var(--soft);line-height:1.5}
+@media(max-width:520px){
+  .host{flex-direction:column;align-items:flex-start;text-align:left}
+}
+
+/* ── swipe affordance ───────────────────────────────────────────
+   The rails scroll sideways on a phone, but nothing said so. A card
+   is cut off at the right edge to imply more, and a hint sits under
+   it. Both disappear at the width where the rail becomes a grid.
+   ─────────────────────────────────────────────────────────── */
+.rail-hint{
+  display:flex;align-items:center;justify-content:center;gap:9px;
+  margin-top:20px;font-size:.72rem;text-transform:uppercase;
+  letter-spacing:.2em;color:var(--clay);
+}
+.rail-hint svg{width:26px;height:9px;fill:none;stroke:currentColor;stroke-width:1.5;flex:none}
+.rail-hint .arrow{animation:nudge 2.2s ease-in-out infinite}
+@keyframes nudge{
+  0%,100%{transform:translateX(0);opacity:.55}
+  50%    {transform:translateX(5px);opacity:1}
+}
+@media(min-width:1100px){ .rail-hint{display:none} }
+@media(prefers-reduced-motion:reduce){ .rail-hint .arrow{animation:none;opacity:1} }
+
+/* ── clause index on the legal pages ────────────────────────── */
+.clause-index{
+  border:1px solid var(--sand);border-radius:var(--r-sm);
+  padding:26px 28px;margin:0 0 44px;background:var(--white);
+}
+.clause-index h3{
+  font-size:.74rem;text-transform:uppercase;letter-spacing:.24em;
+  color:var(--clay);margin:0 0 18px;font-weight:600;
+}
+.clause-index ol{list-style:none;margin:0;padding:0;display:grid;gap:2px}
+@media(min-width:700px){ .clause-index ol{grid-template-columns:1fr 1fr;gap:2px 28px} }
+.clause-index a{
+  display:flex;gap:12px;align-items:center;min-height:44px;padding:6px 0;
+  font-size:.94rem;color:var(--soft);text-decoration:none;line-height:1.45;
+}
+.clause-index a:hover{color:var(--ink)}
+.clause-index a span{
+  color:var(--clay);font-variant-numeric:tabular-nums;
+  min-width:1.4em;flex:none;
+}
+.legal h2[id]{scroll-margin-top:90px}
+
+/* ══════════════════════════════════════════════════════════════
+   PROGRAM FINDER
+   Three questions, then a recommendation. The app asks eleven; this
+   is the taste of it. Works without JavaScript as a plain list of
+   options, and the result is announced for screen readers.
+   ══════════════════════════════════════════════════════════════ */
+.finder{
+  background:var(--white);border:1px solid var(--sand);border-radius:var(--r);
+  padding:clamp(26px,4vw,40px);max-width:640px;margin:0 auto;
+}
+.finder-step{display:none}
+.finder-step.on{display:block}
+.finder-q{
+  font-size:.7rem;text-transform:uppercase;letter-spacing:.22em;
+  color:var(--clay);margin:0 0 6px;
+}
+.finder h3{font-size:clamp(1.15rem,3.4vw,1.4rem);font-weight:400;margin:0 0 22px;line-height:1.3}
+.finder-opts{display:grid;gap:10px}
+.finder-opts button{
+  display:block;width:100%;text-align:left;cursor:pointer;
+  font-family:var(--f);font-size:1rem;color:var(--ink);
+  background:var(--bone);border:1px solid var(--sand);border-radius:12px;
+  padding:16px 18px;transition:background .15s ease,border-color .15s ease;
+}
+.finder-opts button:hover{background:var(--linen);border-color:var(--moss)}
+.finder-opts button b{display:block;font-weight:500}
+.finder-opts button span{display:block;font-size:.86rem;color:var(--soft);margin-top:3px}
+.finder-bar{display:flex;gap:6px;margin-bottom:22px}
+.finder-bar i{flex:1;height:3px;border-radius:2px;background:var(--sand)}
+.finder-bar i.on{background:var(--moss)}
+.finder-back{
+  margin-top:18px;background:none;border:0;cursor:pointer;padding:8px 0;
+  font-family:var(--f);font-size:.78rem;letter-spacing:.12em;
+  text-transform:uppercase;color:var(--soft);
+}
+.finder-back:hover{color:var(--ink)}
+.finder-result{text-align:center}
+.finder-result .lab{
+  font-size:.74rem;text-transform:uppercase;letter-spacing:.22em;color:var(--clay);
+}
+.finder-result h3{
+  font-family:var(--f-accent);font-style:italic;font-size:clamp(1.7rem,5vw,2.2rem);
+  margin:10px 0 14px;
+}
+.finder-result p{color:var(--soft);margin:0 auto 24px;max-width:44ch}
+.finder-result .btns{justify-content:center;margin-top:0}
+
+/* ══════════════════════════════════════════════════════════════
+   FIND YOUR PROGRAM TAB
+   A quiet tab on the right edge that takes you to the finder. It
+   hides itself once you reach the finder, and stays dismissed for
+   the rest of the visit if you close it.
+   ══════════════════════════════════════════════════════════════ */
+.finder-tab{
+  position:fixed;right:0;top:50%;transform:translateY(-50%) translateX(0);
+  z-index:50;display:flex;align-items:center;
+  transition:transform .35s ease,opacity .35s ease;
+}
+.finder-tab[hidden]{display:none}
+.finder-tab.away{transform:translateY(-50%) translateX(110%);opacity:0;pointer-events:none}
+/* a single nudge the first time it appears, so it is noticed once */
+.finder-tab.nudge a{animation:tabnudge 1.4s ease 1}
+@keyframes tabnudge{
+  0%,100%{transform:translateX(0)}
+  30%,70%{transform:translateX(-7px)}
+}
+@media(prefers-reduced-motion:reduce){ .finder-tab.nudge a{animation:none} }
+.finder-tab a{
+  writing-mode:vertical-rl;display:flex;align-items:center;gap:9px;
+  background:var(--mist);color:var(--ink);text-decoration:none;
+  font-size:.78rem;font-weight:500;letter-spacing:.1em;
+  padding:24px 13px;border-radius:14px 0 0 14px;
+  box-shadow:0 10px 30px -14px rgba(43,45,38,.5);
+}
+.finder-tab a svg{
+  width:13px;height:13px;flex:none;rotate:90deg;
+  fill:none;stroke:currentColor;stroke-width:1.8;
+}
+.finder-tab a:hover{background:#D2D9C6}
+.finder-tab .x{
+  position:absolute;left:-11px;bottom:-11px;
+  width:26px;height:26px;border-radius:50%;border:0;cursor:pointer;
+  background:var(--ink);color:var(--bone);font-size:13px;line-height:26px;
+  padding:0;text-align:center;
+}
+.finder-tab .x:hover{background:#14160F}
+@media(max-width:600px){
+  .finder-tab a{font-size:.7rem;padding:16px 9px}
+  /* Sits above the sticky join bar rather than on top of it. That bar is
+     about 68px plus the home indicator, and the close button hangs 11px
+     below the tab, so 120px was landing right on it. */
+  .finder-tab{top:auto;bottom:calc(132px + env(safe-area-inset-bottom));transform:translateX(0)}
+  .finder-tab.away{transform:translateX(110%)}
+}
+@media(prefers-reduced-motion:reduce){ .finder-tab{transition:none} }
+
+/* ══════════════════════════════════════════════════════════════
+   MACRO CALCULATOR
+   Same Mifflin St Jeor maths the app uses, and the same hard floor
+   under the calories. The result shows before anything is asked for,
+   because gating it would contradict the rest of the site.
+   ══════════════════════════════════════════════════════════════ */
+.calc{
+  background:var(--white);border:1px solid var(--sand);border-radius:var(--r);
+  padding:clamp(24px,4vw,36px);max-width:640px;margin:0 auto;
+}
+.calc-grid{display:grid;gap:14px}
+@media(min-width:560px){ .calc-grid{grid-template-columns:1fr 1fr} }
+.calc-field label{
+  display:block;font-size:.74rem;text-transform:uppercase;letter-spacing:.14em;
+  color:var(--clay);margin-bottom:7px;
+}
+.calc-field input,.calc-field select{
+  width:100%;font-family:var(--f);font-size:1rem;padding:14px 15px;
+  border:1px solid var(--sand);border-radius:12px;background:var(--bone);color:var(--ink);
+}
+.calc-field input:focus,.calc-field select:focus{outline:2px solid var(--moss);outline-offset:1px}
+.calc-field.wide{grid-column:1/-1}
+.calc .btn{width:100%;margin-top:18px}
+.calc-err{color:#8C4A3F;font-size:.88rem;margin:12px 0 0}
+
+.calc-out{margin-top:30px;padding-top:28px;border-top:1px solid var(--sand)}
+.calc-out[hidden]{display:none}
+.calc-nums{display:grid;grid-template-columns:repeat(2,1fr);gap:12px}
+@media(min-width:560px){ .calc-nums{grid-template-columns:repeat(4,1fr)} }
+.calc-num{background:var(--linen);border-radius:var(--r-sm);padding:18px 14px;text-align:center}
+.calc-num b{
+  display:block;font-family:var(--f-accent);font-size:1.8rem;line-height:1;color:var(--ink);
+}
+.calc-num span{
+  display:block;margin-top:7px;font-size:.72rem;text-transform:uppercase;
+  letter-spacing:.14em;color:var(--soft);
+}
+.calc-saved{
+  margin:14px 0 0;text-align:center;font-size:.8rem;color:var(--soft);
+}
+.calc-note{font-size:.88rem;color:var(--soft);line-height:1.6;margin:20px 0 0}
+.calc-floor{
+  background:var(--mist);border-radius:var(--r-sm);padding:16px 18px;
+  font-size:.9rem;line-height:1.55;color:#22322F;margin:18px 0 0;
+}
+
+/* ══════════════════════════════════════════════════════════════
+   WELCOME BLOCK
+   Sits directly under the hero. Three app screens overlapping on a
+   soft disc, then the handful of things that matter most, ticked.
+   ══════════════════════════════════════════════════════════════ */
+.welcome{text-align:center}
+.welcome h2{margin-bottom:0}
+.welcome h2{
+  font-size:clamp(1.3rem,4vw,1.7rem);font-weight:400;letter-spacing:.02em;
+  text-transform:none;color:var(--soft);
+}
+.welcome .sub{
+  font-family:var(--f-mark);font-weight:500;color:var(--sage);
+  font-size:clamp(1.7rem,6vw,2.6rem);line-height:1.1;margin:8px 0 0;
+  text-transform:uppercase;letter-spacing:.2em;padding-left:.2em;
+}
+.wel-shot{
+  position:relative;margin:clamp(34px,6vw,54px) auto clamp(28px,5vw,44px);
+  max-width:660px;
+}
+.wel-disc{
+  position:absolute;left:50%;top:52%;transform:translate(-50%,-50%);
+  width:min(84%,520px);aspect-ratio:1;border-radius:50%;
+  background:var(--mist);z-index:0;
+}
+.wel-row{
+  position:relative;z-index:1;display:flex;align-items:center;
+  justify-content:center;gap:clamp(-30px,-4vw,-10px);
+}
+.wel-row .ph{
+  width:clamp(108px,29vw,190px);aspect-ratio:9/19.5;border-radius:18px;
+  background:var(--white);box-shadow:0 20px 44px -22px rgba(43,45,38,.45);
+  border:1px solid rgba(43,45,38,.07);flex:none;
+}
+.wel-row .ph:nth-child(1){transform:rotate(-5deg) translateY(14px)}
+.wel-row .ph:nth-child(3){transform:rotate(5deg) translateY(14px)}
+.wel-row .ph:nth-child(2){z-index:2;width:clamp(122px,32vw,210px)}
+.wel-list{
+  list-style:none;margin:0 auto;padding:0;max-width:520px;text-align:left;
+  display:grid;gap:14px;
+}
+.wel-list li{
+  display:flex;gap:13px;align-items:flex-start;
+  font-size:clamp(.98rem,2.6vw,1.08rem);line-height:1.55;color:var(--ink);
+}
+.wel-list li::before{
+  content:"\2713";color:var(--sage-lt);font-size:1rem;line-height:1.5;flex:none;
+}
+
+/* The welcome list is left aligned and runs the full width, so on a phone
+   it needs to stop short of the side tab. This sits at the end of the file
+   deliberately: the base .wel-list rule sets padding:0 and would otherwise
+   win on source order. */
+@media(max-width:600px){
+  .wel-list{padding-right:38px}
+}
+
+/* ══════════════════════════════════════════════════════════════
+   COMMUNITY EVENTS
+   The recurring things sit in the page. One-offs come from the
+   events table in the admin, so adding one never needs a developer.
+   ══════════════════════════════════════════════════════════════ */
+.ev-list{display:grid;gap:20px;max-width:760px;margin:0 auto}
+.ev{
+  display:grid;gap:0;background:var(--white);border:1px solid var(--sand);
+  border-radius:var(--r);overflow:hidden;
+}
+@media(min-width:640px){ .ev{grid-template-columns:230px 1fr} }
+.ev .ph{border-radius:0;aspect-ratio:4/3;min-height:100%}
+@media(min-width:640px){ .ev .ph{aspect-ratio:auto} }
+.ev-body{padding:clamp(22px,3.4vw,30px)}
+.ev-when{
+  font-size:.72rem;text-transform:uppercase;letter-spacing:.18em;
+  color:var(--clay);margin:0 0 8px;
+}
+.ev-body h3{font-size:clamp(1.15rem,3.2vw,1.35rem);font-weight:500;margin:0 0 10px}
+.ev-body p{color:var(--soft);margin:0;line-height:1.6;font-size:.96rem}
+.ev-where{
+  display:flex;gap:8px;align-items:center;margin-top:14px;
+  font-size:.88rem;color:var(--soft);
+}
+.ev-where svg{width:15px;height:15px;flex:none;fill:none;stroke:var(--moss);stroke-width:1.6}
+.ev .btns{margin-top:18px}
+.ev-tag{
+  display:inline-block;background:var(--mist);color:#22322F;
+  font-size:.68rem;text-transform:uppercase;letter-spacing:.16em;
+  padding:5px 11px;border-radius:999px;margin-bottom:12px;
+}
+.ev-past{opacity:.55}
+
+/* ══════════════════════════════════════════════════════════════
+   APP SCREEN RAIL, AUTO SCROLL
+   Drifts slowly so the section reads as alive rather than as a
+   single oversized card. Any touch, drag or hover stops it for
+   good, so it never fights the person using it.
+   ══════════════════════════════════════════════════════════════ */
+/* the drift sets scrollLeft every frame, and smooth scrolling restarts a
+   fresh animation each time, so the two cancel out. While drifting the
+   rail switches to instant scrolling. */
+.rail.drifting,.swipe.drifting{
+  scroll-behavior:auto;
+  /* mandatory snapping pulls the rail straight back to the nearest card
+     every frame, so snapping is off while it drifts and comes back the
+     moment anyone touches it */
+  scroll-snap-type:none;
+}
+
+/* the founder block is text only on the homepage now, so it centres
+   instead of sitting in the empty half of a two column grid */
+.founder.solo{grid-template-columns:1fr;max-width:660px;margin-inline:auto}
+
+/* the transformation photos were 78% of the screen, so only one showed and
+   the rail did not read as something you could swipe */
+@media(max-width:819px){
+  .swipe .slide{flex:0 0 63%}
+}
+
+/* ══════════════════════════════════════════════════════════════
+   CALCULATOR, THE FREE TOOL
+   It sits on the soft sage rather than the same bone as everything
+   around it, so it reads as a thing you can use rather than another
+   block of copy. The eyebrow becomes a small tag for the same reason.
+   ══════════════════════════════════════════════════════════════ */
+.bg-mist{background:var(--mist)}
+.eyebrow-tag{
+  display:inline-block;background:var(--white);color:var(--sage);
+  padding:8px 18px;border-radius:999px;letter-spacing:.16em;
+  font-size:.74rem;margin-bottom:4px;
+}
+#calculator .calc{
+  box-shadow:0 26px 60px -34px rgba(43,45,38,.4);
+  border-color:transparent;
+}
+#calculator .calc-num{background:var(--bone)}
+#calculator .lede{color:#3E4A3E}
+
+/* the opening question on the challenge page carries the weight, so it is
+   set a size up from the rest of the paragraph */
+.page-hero .lede strong{
+  display:block;font-weight:500;color:var(--ink);
+  font-size:clamp(1.25rem,4.4vw,1.6rem);line-height:1.25;margin-bottom:12px;
+}
+
+/* ══════════════════════════════════════════════════════════════
+   BACK TO TOP
+   Appears once you are well down the page. It sits on the left,
+   because the right hand side already has the program tab, and it
+   lifts above the join bar so it never covers it.
+   ══════════════════════════════════════════════════════════════ */
+.totop{
+  position:fixed;left:16px;z-index:54;
+  bottom:calc(104px + env(safe-area-inset-bottom));
+  width:48px;height:48px;border-radius:50%;border:1px solid var(--sand);
+  background:rgba(245,242,236,.94);backdrop-filter:blur(10px);
+  color:var(--ink);cursor:pointer;padding:0;
+  display:flex;align-items:center;justify-content:center;
+  box-shadow:0 10px 26px -14px rgba(43,45,38,.5);
+  opacity:0;transform:translateY(14px);pointer-events:none;
+  transition:opacity .3s ease,transform .3s ease;
+}
+.totop.show{opacity:1;transform:translateY(0);pointer-events:auto}
+.totop svg{width:19px;height:19px;fill:none;stroke:currentColor;stroke-width:1.9}
+.totop:hover{background:var(--white)}
+@media(min-width:820px){
+  /* no join bar on a laptop, so it can sit lower */
+  .totop{bottom:26px;left:26px;width:52px;height:52px}
+}
+@media(prefers-reduced-motion:reduce){ .totop{transition:none} }
+
+/* a media block with no photo beside it should read as one centred column
+   rather than sitting in half of an empty two column grid */
+.media.solo{grid-template-columns:1fr;max-width:680px;margin-inline:auto;text-align:center}
+.media.solo .ticks{text-align:left;display:inline-block}
+
+/* the line under the wordmark in the welcome block */
+.wel-by{
+  margin:14px 0 0;font-size:.78rem;text-transform:uppercase;
+  letter-spacing:.24em;padding-left:.24em;color:var(--moss);
+}
+
+/* ══════════════════════════════════════════════════════════════
+   ARTICLE, NO FLASH
+   post.html ships with an article already in it as the fallback. If
+   the database is going to replace it, showing the fallback first
+   and swapping a moment later reads as a glitch. The article is
+   held back for a beat, then revealed once we know which one it is.
+   ══════════════════════════════════════════════════════════════ */
+.article-wait #aTitle,.article-wait #aBody,.article-wait #aCat,
+.article-wait #aRead,.article-wait #aDate,.article-wait #aCover{
+  opacity:0;
+}
+.article-ready #aTitle,.article-ready #aBody,.article-ready #aCat,
+.article-ready #aRead,.article-ready #aDate,.article-ready #aCover{
+  opacity:1;transition:opacity .25s ease;
+}
+@media(prefers-reduced-motion:reduce){
+  .article-ready #aTitle,.article-ready #aBody,.article-ready #aCat,
+  .article-ready #aRead,.article-ready #aDate,.article-ready #aCover{transition:none}
+}
+
+/* ══════════════════════════════════════════════════════════════
+   EMPTY PHOTO SLOTS
+   The site is going live before the shoot, so the slots that have no
+   photo yet get a faint version of the mark. A soft brand shape reads
+   as deliberate; a blank grey rectangle reads as broken.
+   The moment a photo is uploaded the img covers this completely.
+   ══════════════════════════════════════════════════════════════ */
+.ph::before{
+  content:"";
+  position:absolute;left:50%;top:50%;
+  width:clamp(34px,14%,64px);aspect-ratio:1.22;
+  transform:translate(-50%,-50%);
+  background:currentColor;
+  -webkit-mask:var(--mark-mask) center/contain no-repeat;
+          mask:var(--mark-mask) center/contain no-repeat;
+  color:rgba(43,45,38,.07);
+  pointer-events:none;
+}
+.ph.has-photo::before,.ph:has(img)::before{display:none}
+/* on the dark hero the wash needs to be lighter, not darker */
+.hero-bg .ph::before{color:rgba(237,232,224,.09)}
+
+/* ══════════════════════════════════════════════════════════════
+   MARKETING CONSENT
+   A separate, unticked box. Under the Spam Act a signup for one
+   thing is not consent to be emailed about everything, so it is
+   asked for plainly rather than buried or pre-ticked.
+   ══════════════════════════════════════════════════════════════ */
+.consent{
+  display:flex;gap:11px;align-items:flex-start;
+  margin-top:4px;cursor:pointer;
+}
+.consent input{
+  width:20px;height:20px;flex:none;margin-top:2px;accent-color:var(--sage);
+}
+.consent span{font-size:.88rem;line-height:1.5;color:var(--soft)}
+
+/* ══════════════════════════════════════════════════════════════
+   TAP TARGETS
+   Two things were smaller than a fingertip. The logo is wide so it
+   was never hard to hit, but it is only 27px tall, and the tab's
+   close button was 26px square with nothing around it. Both get a
+   larger invisible hit area rather than being made visually bigger,
+   so nothing about the design changes.
+   ══════════════════════════════════════════════════════════════ */
+.brand{position:relative}
+.brand::after{
+  content:"";position:absolute;left:0;right:0;top:-9px;bottom:-9px;
+}
+/* the close button is already position:absolute, so it only needs the
+   larger hit area, not a new position value */
+.finder-tab .x::after{
+  content:"";position:absolute;left:-9px;right:-9px;top:-9px;bottom:-9px;
+}
+
+/* ══════════════════════════════════════════════════════════════
+   PROGRAMS PAGE
+   All twelve in one place, filterable. This is where "view all
+   programs" should have gone all along, rather than to a paragraph
+   describing the feature.
+   ══════════════════════════════════════════════════════════════ */
+.prog-filters{
+  display:flex;flex-wrap:wrap;gap:8px;justify-content:center;
+  margin:0 auto 34px;max-width:720px;
+}
+.pf{
+  border:1px solid var(--sand);background:var(--white);color:var(--soft);
+  font:inherit;font-size:.86rem;padding:9px 17px;border-radius:999px;
+  cursor:pointer;transition:background .14s ease,color .14s ease;
+}
+.pf:hover{background:var(--linen)}
+.pf.on{background:var(--sage);border-color:var(--sage);color:var(--bone)}
+
+.prog-list{display:grid;gap:14px;max-width:840px;margin:0 auto}
+@media(min-width:700px){ .prog-list{grid-template-columns:1fr 1fr} }
+.pcard{
+  background:var(--white);border:1px solid var(--sand);border-radius:var(--r);
+  padding:24px 26px;display:flex;flex-direction:column;
+}
+.pcard h3{font-size:1.12rem;font-weight:500;margin:0 0 4px}
+.pcard .pmeta{
+  font-size:.72rem;text-transform:uppercase;letter-spacing:.14em;
+  color:var(--clay);margin:0 0 12px;
+}
+.pcard p{font-size:.94rem;line-height:1.6;color:var(--soft);margin:0 0 16px;flex:1}
+.pcard .ptags{display:flex;gap:6px;flex-wrap:wrap}
+.pcard .ptag{
+  font-size:.72rem;background:var(--linen);color:var(--soft);
+  padding:5px 11px;border-radius:999px;
+}
+.pcard[hidden]{display:none}
+.prog-none{text-align:center;color:var(--soft);padding:30px 0}
+
+/* ══════════════════════════════════════════════════════════════
+   ANNOUNCEMENT BAR, THE OFFER VERSION
+   Sweat run a dark bar with the offer and a button rather than a
+   sentence with a link in it. Same idea here: the thing on offer,
+   then something to press. A countdown only appears if there is a
+   real date to count to.
+   ══════════════════════════════════════════════════════════════ */
+.bar.offer{
+  background:var(--sage);color:var(--bone);
+  display:flex;align-items:center;justify-content:center;gap:12px;
+  flex-wrap:nowrap;font-size:.84rem;
+  padding:9px calc(var(--gut) + 46px) 9px var(--gut);
+}
+.bar.offer .bar-txt{
+  display:flex;align-items:center;gap:8px;min-width:0;
+  white-space:nowrap;overflow:hidden;
+}
+.bar.offer .bar-count::before{content:"\00B7";margin-right:8px;opacity:.5}
+.bar.offer b{font-weight:600}
+.bar.offer .bar-cta{
+  background:var(--bone);color:var(--ink);text-decoration:none;
+  font-size:.78rem;font-weight:500;letter-spacing:.06em;
+  padding:7px 16px;border-radius:999px;white-space:nowrap;
+  transition:background .14s ease;
+  position:relative;
+}
+/* the visible pill stays small so the bar stays a bar, but the area you
+   can actually hit is a full 44px */
+.bar.offer .bar-cta::after{
+  content:"";position:absolute;left:0;right:0;top:-7px;bottom:-7px;
+}
+.bar.offer .bar-cta:hover{background:#fff}
+.bar.offer .bar-count{
+  font-variant-numeric:tabular-nums;opacity:.82;font-size:.8rem;
+}
+@media(max-width:520px){
+  .bar.offer{font-size:.8rem;gap:9px;padding:9px calc(var(--gut) + 42px) 9px var(--gut)}
+  .bar.offer .bar-cta{font-size:.74rem;padding:6px 13px}
+}
+
+/* the statement slab is the light sage now, so its type is ink rather than
+   the cream that a dark slab needed */
+.slab.bg-mist h2{color:var(--ink)}
+.slab.bg-mist .eyebrow{color:var(--sage)}
+.slab.bg-mist .slab-italic{color:#3E4A3E}
+
+/* the countdown reads as a number, so it is set in tabular figures and
+   does not jiggle as the digits change */
+.bar.offer .bar-count{
+  font-variant-numeric:tabular-nums;letter-spacing:.01em;
+}
+.bar.offer.is-live .bar-count{font-weight:600;opacity:1}
+
+/* the tag sat right on top of the heading below it */
+.eyebrow-tag{margin-bottom:16px}
+.head .eyebrow-tag + h2,.page-hero .eyebrow-tag + h1{margin-top:0}
+
+/* ══════════════════════════════════════════════════════════════
+   THE SAVING, SAID PLAINLY
+   The annual plan is 43% less per month than paying monthly. That
+   is the argument, so it gets said as a number rather than left for
+   someone to work out from two prices sitting next to each other.
+   ══════════════════════════════════════════════════════════════ */
+.save-tag{
+  display:inline-flex;align-items:center;gap:8px;
+  background:var(--sage);color:var(--bone);
+  font-size:.78rem;font-weight:500;letter-spacing:.04em;
+  padding:8px 16px;border-radius:999px;margin:0 0 18px;
+}
+.save-tag b{font-weight:600}
+.compare-note{
+  text-align:center;font-size:.88rem;color:var(--soft);
+  margin:22px auto 0;max-width:460px;line-height:1.55;
+}
+
+/* the tag belongs with the prices it is describing, not wedged between a
+   heading and the line that finishes it */
+.head .save-tag{margin:20px 0 0}
+
+/* ══════════════════════════════════════════════════════════════
+   CALCULATOR STRIP
+   A link to a tool, sitting between two full sections. It reads
+   better as a band than as another full height block.
+   ══════════════════════════════════════════════════════════════ */
+.calc-strip{
+  display:flex;align-items:center;justify-content:space-between;
+  gap:clamp(20px,4vw,44px);flex-wrap:wrap;
+  max-width:900px;margin:0 auto;
+}
+.calc-strip h2{
+  font-size:clamp(1.5rem,4.6vw,2.1rem);margin:0 0 8px;
+}
+.calc-strip p{margin:0;color:var(--soft);font-size:.95rem;line-height:1.55}
+.calc-strip .btn{flex:none}
+@media(max-width:700px){
+  .calc-strip{flex-direction:column;align-items:flex-start;text-align:left}
+  .calc-strip .btn{width:100%;justify-content:center;margin-top:4px}
+}
+
+/* ══════════════════════════════════════════════════════════════
+   CALCULATOR TEASER
+   Two halves: the ask on one side, an example of the answer on the
+   other. Someone weighing up thirty seconds of form filling wants
+   to see what comes out, so the numbers do the persuading.
+   ══════════════════════════════════════════════════════════════ */
+.ct{
+  display:grid;gap:clamp(26px,4vw,52px);align-items:center;
+  grid-template-columns:1fr;
+}
+@media(min-width:860px){ .ct{grid-template-columns:1fr 1fr} }
+
+.ct-copy h2{margin:14px 0 0}
+.ct-lede{
+  color:var(--soft);line-height:1.65;margin:16px 0 0;
+  font-size:clamp(.98rem,2.6vw,1.06rem);max-width:44ch;
+}
+.ct-copy .btns{margin-top:26px}
+
+.ct-out{
+  margin:0;background:var(--white);border:1px solid var(--sand);
+  border-radius:var(--r);padding:clamp(22px,3.4vw,30px);
+  box-shadow:0 24px 54px -34px rgba(43,45,38,.34);
+}
+.ct-out figcaption{
+  font-size:.76rem;text-transform:uppercase;letter-spacing:.13em;
+  color:var(--clay);margin-bottom:18px;line-height:1.5;
+}
+.ct-nums{display:grid;grid-template-columns:repeat(2,1fr);gap:10px}
+@media(min-width:520px){ .ct-nums{grid-template-columns:repeat(4,1fr)} }
+.ct-nums div{
+  background:var(--mist);border-radius:var(--r-sm);
+  padding:16px 10px;text-align:center;
+}
+.ct-nums b{
+  display:block;font-family:var(--f-accent);font-size:clamp(1.4rem,4vw,1.7rem);
+  line-height:1;color:var(--ink);font-weight:400;
+}
+.ct-nums span{
+  display:block;margin-top:7px;font-size:.7rem;text-transform:uppercase;
+  letter-spacing:.13em;color:var(--soft);
+}
+.ct-floor{
+  margin:18px 0 0;font-size:.86rem;line-height:1.55;color:var(--soft);
+  padding-top:16px;border-top:1px solid var(--sand);
+}
+
+/* ══════════════════════════════════════════════════════════════
+   PRICE CARDS
+   The annual plan is the one that makes sense, so it is allowed to
+   look like it: the old price struck through, the money saved in
+   the tag, and the yearly total under each so nobody has to guess.
+   ══════════════════════════════════════════════════════════════ */
+.cmp-sub{
+  margin-top:9px;font-size:.8rem;line-height:1.45;color:var(--soft);opacity:.9;
+}
+.cmp.on .cmp-sub{color:rgba(237,232,224,.78);opacity:1}
+.cmp .p s{
+  opacity:.45;font-size:.62em;margin-right:8px;text-decoration-thickness:1.5px;
+}
+.cmp.on .tag{background:var(--bone);color:var(--ink);font-weight:600}
+
+/* the blog list is held back until we know which cards to show, the same
+   way a single article is */
+.list-wait #postList{opacity:0}
+.list-ready #postList{opacity:1;transition:opacity .25s ease}
+@media(prefers-reduced-motion:reduce){ .list-ready #postList{transition:none} }
+
+/* once doors are closing the bar earns a bit more weight */
+.bar.offer.is-urgent{background:var(--sage-dk)}
+
+/* ══════════════════════════════════════════════════════════════
+   COUNTDOWN
+   Four boxes on the challenge page. Tabular figures so the digits
+   do not jump about as they change, and a flip on the seconds so
+   there is something moving without it being a distraction.
+   ══════════════════════════════════════════════════════════════ */
+.cdown{
+  display:flex;justify-content:center;gap:clamp(8px,2.4vw,16px);
+  margin:32px auto 0;max-width:440px;
+}
+/* This lives in the light hero now, so it is dark type on a pale box.
+   It was cream on cream when it moved up from the sage section, which
+   made it invisible. */
+.cdown > div{
+  flex:1;background:var(--white);border:1px solid var(--sand);
+  border-radius:var(--r-sm);padding:16px 6px 13px;text-align:center;
+}
+/* The digits match the countdown in the announcement bar: the body face
+   with tabular figures, not the serif accent. Two counters running on
+   the same page in two different typefaces read as two brands. */
+.cdown b{
+  display:block;font-family:var(--f);font-weight:500;
+  font-size:clamp(1.7rem,6vw,2.4rem);line-height:1;color:var(--ink);
+  font-variant-numeric:tabular-nums;letter-spacing:.01em;
+}
+.cdown span{
+  display:block;margin-top:8px;font-size:.72rem;text-transform:uppercase;
+  letter-spacing:.16em;color:var(--soft);
+}
+/* and if it is ever dropped into a dark section again, it flips */
+.bg-sage .cdown > div,.bg-sage-dk .cdown > div{
+  background:rgba(255,255,255,.13);border-color:rgba(255,255,255,.2);
+}
+.bg-sage .cdown b{color:var(--bone)}
+.bg-sage .cdown span{color:rgba(237,232,224,.72)}
+.cdown b.flip{animation:cdflip .4s ease}
+@keyframes cdflip{
+  0%{transform:translateY(-5px);opacity:.5}
+  100%{transform:translateY(0);opacity:1}
+}
+.cdown-note{
+  text-align:center;margin:16px 0 0;font-size:.82rem;
+  letter-spacing:.1em;text-transform:uppercase;color:var(--clay);
+}
+.bg-sage .cdown-note{color:rgba(237,232,224,.68)}
+@media(prefers-reduced-motion:reduce){ .cdown b.flip{animation:none} }
+
+/* the price cards go to the App Store, so they behave like the buttons
+   they now are */
+a.cmp{text-decoration:none;color:inherit;display:block;transition:transform .16s ease,box-shadow .16s ease}
+a.cmp:hover{transform:translateY(-3px);box-shadow:0 20px 40px -26px rgba(43,45,38,.5)}
+a.cmp:focus-visible{outline:2px solid var(--sage);outline-offset:3px}
+@media(prefers-reduced-motion:reduce){ a.cmp,a.cmp:hover{transition:none;transform:none} }
+
+/* ══════════════════════════════════════════════════════════════
+   HOST QUOTE
+   Chey in her own words, set apart from the surrounding copy so it
+   reads as her rather than as more of the page.
+   ══════════════════════════════════════════════════════════════ */
+.host-quote{
+  margin:26px 0;padding:0 0 0 22px;
+  border-left:2px solid var(--mist);
+}
+.host-quote p{
+  font-family:var(--f-accent);font-style:italic;
+  font-size:clamp(1.08rem,3vw,1.3rem);line-height:1.5;
+  color:var(--ink);margin:0;
+}
+.host-quote cite{
+  display:block;margin-top:12px;font-style:normal;
+  font-size:.76rem;text-transform:uppercase;letter-spacing:.16em;
+  color:var(--clay);
+}
+
+/* ══════════════════════════════════════════════════════════════
+   THE PHONE RAIL
+   A phone is about 1:2, so at the same card width as the programs
+   and recipe rails it ends up half again as tall and the section
+   towers over the ones around it. The cards are narrower here so
+   the heights sit in the same range, and the phone keeps its own
+   proportions rather than being cropped.
+   ══════════════════════════════════════════════════════════════ */
+.rail.cols-5 > *{flex:0 0 52%;max-width:210px}
+@media(min-width:900px){
+  .rail.cols-5 > *{max-width:none}
+  .rail.cols-5{max-width:900px}
+}
+
+/* ══════════════════════════════════════════════════════════════
+   PRICE CARDS ON A PHONE
+   Three cards stacking made this section half again as tall as
+   every other one on the page. Tighter padding and a smaller price
+   brings it back in line without losing anything.
+   ══════════════════════════════════════════════════════════════ */
+@media(max-width:700px){
+  .compare{gap:10px}
+  .cmp{padding:20px 18px}
+  .cmp .p{font-size:1.9rem}
+  .cmp-sub{margin-top:6px;font-size:.76rem}
+  .cmp .l{margin-top:4px}
+  .head .save-tag{margin-top:16px}
+  .compare-note{margin-top:16px;font-size:.82rem}
+}
+
+/* ══════════════════════════════════════════════════════════════
+   PICKING A PLAN
+   A small circle so the three read as a choice rather than three
+   statements of price. Top right, because top left collided with
+   the "save" tag on the annual card. The annual one is filled,
+   since it is the one that makes sense.
+   ══════════════════════════════════════════════════════════════ */
+.cmp{position:relative}
+.cmp-pick{
+  position:absolute;top:14px;right:14px;
+  width:18px;height:18px;border-radius:50%;
+  border:1.5px solid var(--sand);background:transparent;
+  transition:border-color .15s ease,box-shadow .15s ease;
+}
+.cmp.on .cmp-pick{
+  border-color:var(--bone);
+  box-shadow:inset 0 0 0 4px var(--bone);
+}
+.cmp:hover .cmp-pick{border-color:var(--moss)}
+.cmp.on:hover .cmp-pick{border-color:var(--bone)}
+@media(max-width:560px){
+  .cmp-pick{top:12px;right:12px;width:16px;height:16px}
+  .cmp.on .cmp-pick{box-shadow:inset 0 0 0 3.5px var(--bone)}
+}
+
+/* two plans rather than three now the trial has its own line above */
+@media(min-width:700px){
+  .compare{grid-template-columns:repeat(2,1fr);max-width:680px;margin-inline:auto}
+}
+
+/* ══════════════════════════════════════════════════════════════
+   CHOOSING A PLAN
+   Neither starts picked, so the section is a choice rather than a
+   display. The button underneath stays quiet until one is chosen,
+   then names it.
+   ══════════════════════════════════════════════════════════════ */
+button.cmp{
+  font:inherit;text-align:inherit;color:inherit;cursor:pointer;
+  border:1px solid var(--sand);width:100%;
+  transition:transform .16s ease,box-shadow .16s ease,background .16s ease;
+}
+button.cmp:hover{transform:translateY(-3px);box-shadow:0 20px 40px -26px rgba(43,45,38,.5)}
+button.cmp:focus-visible{outline:2px solid var(--sage);outline-offset:3px}
+#planGo[aria-disabled="true"]{
+  background:var(--sand);color:var(--soft);box-shadow:none;
+}
+#planGo[aria-disabled="true"]:hover{transform:none}
+@media(prefers-reduced-motion:reduce){
+  button.cmp,button.cmp:hover{transition:none;transform:none}
+}
+
+/* ══════════════════════════════════════════════════════════════
+   WHAT EVERY PLAN INCLUDES
+   The plans were two prices with nothing between them, so the
+   only difference on show was the cost. The list of what you
+   actually get sits under both, which is how the apps she is
+   comparing against do it.
+   ══════════════════════════════════════════════════════════════ */
+.incl{
+  max-width:620px;margin:26px auto 0;
+  background:var(--white);border:1px solid var(--sand);
+  border-radius:var(--r);padding:clamp(22px,3.4vw,30px);
+}
+.incl-head{
+  margin:0 0 18px;font-size:.74rem;text-transform:uppercase;
+  letter-spacing:.18em;color:var(--clay);text-align:center;
+}
+.incl-list{
+  list-style:none;margin:0;padding:0;
+  display:grid;gap:11px 22px;
+}
+@media(min-width:620px){ .incl-list{grid-template-columns:1fr 1fr} }
+.incl-list li{
+  position:relative;padding-left:28px;
+  font-size:.94rem;line-height:1.45;color:var(--ink);
+}
+.incl-list li::before{
+  content:"";position:absolute;left:2px;top:.42em;
+  width:13px;height:8px;
+  border-left:2px solid var(--sage);border-bottom:2px solid var(--sage);
+  transform:rotate(-45deg);
+}
+.incl-foot{
+  margin:20px 0 0;padding-top:18px;border-top:1px solid var(--sand);
+  font-size:.86rem;line-height:1.55;color:var(--soft);text-align:center;
+}
+
+/* ══════════════════════════════════════════════════════════════
+   CAPTURE AT THE RESULT
+   Someone who has just typed their height and weight in and got a
+   number back is the most engaged they will be on this page.
+   Asking to email it to them is a fair trade at that moment, and
+   it is the only place on the homepage that collects anything.
+   ══════════════════════════════════════════════════════════════ */
+.calc-save{
+  margin-top:26px;padding-top:24px;border-top:1px solid var(--sand);
+}
+.cs-head{
+  margin:0 0 6px;font-size:1.05rem;font-weight:600;color:var(--ink);
+}
+.cs-lede{margin:0 0 18px;font-size:.92rem;line-height:1.55;color:var(--soft)}
+.cs-form{display:grid;gap:11px}
+.cs-form input[type="text"],.cs-form input[type="email"]{
+  padding:14px 16px;border:1px solid var(--sand);border-radius:12px;
+  font:inherit;font-size:1rem;background:var(--white);color:var(--ink);
+}
+.cs-form input::placeholder{color:var(--clay);opacity:.85}
+.cs-form input:focus-visible{outline:2px solid var(--sage);outline-offset:1px}
+.cs-form .btn{width:100%;justify-content:center;margin-top:2px}
+.cs-form .consent{margin-top:6px}
+.cs-done{
+  background:var(--mist);border-radius:var(--r-sm);padding:20px;
+  text-align:center;
+}
+.cs-done p{margin:0;font-size:.96rem;color:var(--ink)}
+@media(min-width:560px){
+  .cs-form{grid-template-columns:1fr 1fr;align-items:start}
+  .cs-form .btn{grid-column:1 / -1}
+  .cs-form .consent,.cs-form .join-err{grid-column:1 / -1}
+}
+
+/* a label that only a screen reader reads, for fields where the
+   placeholder already says what it is */
+.sr-only{
+  position:absolute;width:1px;height:1px;padding:0;margin:-1px;
+  overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap;border:0;
+}
+
+
+/* ══════════════════════════════════════════════════════════════
+   BUTTONS INHERIT THE PAGE FONT
+   A <button> does not inherit font-family, so any button without
+   an explicit one falls back to the browser default. That was
+   putting the close crosses in Arial while the rest of the site
+   is DM Sans.
+   ══════════════════════════════════════════════════════════════ */
+button,input,select,textarea{font-family:inherit}
+
+/* the bar must never push the page wider than the screen */
+.bar.offer{max-width:100%;overflow:hidden}
+.bar.offer .bar-txt{flex:0 1 auto;min-width:0}
+.bar.offer .bar-count:empty{display:none}
+@media(max-width:340px){
+  .bar.offer{gap:8px;font-size:.76rem;padding-left:12px}
+  .bar.offer .bar-cta{padding:6px 11px;font-size:.72rem}
+}
+
+/* ══════════════════════════════════════════════════════════════
+   THE BAR ON A NARROW SCREEN
+   "Summer Shred, save 43%" plus a button plus a close
+   cross does not fit on one line at 390px, and truncating the
+   event name is worse than a taller bar. Below 480px it wraps.
+   ══════════════════════════════════════════════════════════════ */
+/* One line on a phone. A long label plus a
+   button plus a close cross needs 389px of the 390 available, so
+   everything tightens rather than the event name being cut. */
+@media(max-width:480px){
+  .bar.offer{
+    flex-wrap:nowrap;gap:8px;
+    padding:9px 44px 9px 12px;
+    font-size:.72rem;
+  }
+  .bar.offer .bar-txt{
+    flex:0 1 auto;min-width:0;
+    white-space:nowrap;overflow:hidden;text-overflow:ellipsis;
+  }
+  .bar.offer b{font-weight:600;letter-spacing:-.01em}
+  .bar.offer .bar-cta{
+    flex:0 0 auto;padding:6px 11px;font-size:.7rem;letter-spacing:.03em;
+  }
+  .bar .x{right:2px;padding:12px}   /* keeps it a 40px target */
+  .bar .x svg,.bar .x{font-size:1rem}
+}
+/* Below about 350px there is genuinely not room for the event name,
+   a button and a close cross on one line without shrinking the type
+   past what is readable, so it wraps instead. */
+/* the tightest phones need a touch less type to hold one line */
+@media(max-width:380px){
+  .bar.offer{font-size:.7rem;gap:7px}
+  .bar.offer .bar-cta{padding:6px 10px;font-size:.68rem}
+}
+@media(max-width:350px){
+  .bar.offer{
+    flex-wrap:wrap;row-gap:7px;padding:9px 38px 10px 12px;
+  }
+  .bar.offer .bar-txt{
+    flex:1 0 100%;white-space:normal;overflow:visible;
+    justify-content:center;text-align:center;
+  }
+  .bar .x{top:12px;transform:none}
+}
+
+/* ══════════════════════════════════════════════════════════════
+   THE CHALLENGE HERO IMAGE
+   Sits under the countdown, the same shape the challenge cards
+   use, so the two challenge pages open the same way.
+   ══════════════════════════════════════════════════════════════ */
+.hero-shot{max-width:820px;margin:34px auto 0}
+.hero-shot .ph{
+  aspect-ratio:16/9;border-radius:var(--r);overflow:hidden;
+  background:var(--linen);border:1px solid var(--sand);
+}
+@media(max-width:560px){
+  .hero-shot{margin-top:26px}
+  .hero-shot .ph{aspect-ratio:4/3}
+}
+
+/* the countdown was competing with the headline above it */
+.cdown{max-width:360px;gap:clamp(7px,2vw,12px);margin-top:28px}
+.cdown > div{padding:12px 5px 10px}
+.cdown b{font-size:clamp(1.35rem,4.6vw,1.75rem)}
+.cdown span{margin-top:6px;font-size:.72rem;letter-spacing:.13em}
+.cdown-note{margin-top:13px;font-size:.76rem}
+
+/* ══════════════════════════════════════════════════════════════
+   PAGE HERO WITH A PHOTO BEHIND IT
+   The homepage hero already sits over photography, so page heroes
+   can too. It only switches to the dark treatment once a photo is
+   actually there: the loader adds has-photo, and until then the
+   hero stays pale with dark type. That means a page with no photo
+   yet never looks broken.
+   ══════════════════════════════════════════════════════════════ */
+.page-hero.has-bg{position:relative;overflow:hidden;isolation:isolate}
+.page-hero-photo{
+  position:absolute;inset:0;z-index:0;
+}
+.page-hero-photo img{
+  width:100%;height:100%;object-fit:cover;object-position:center 30%;
+}
+/* a scrim, so the type stays readable whatever the photo is doing */
+.page-hero-photo.has-photo::after{
+  content:"";position:absolute;inset:0;
+  background:linear-gradient(180deg,
+    rgba(28,30,25,.62) 0%, rgba(28,30,25,.52) 45%, rgba(28,30,25,.72) 100%);
+}
+.page-hero.has-bg .wrap{position:relative;z-index:1}
+
+/* only once the photo has loaded does the type go light */
+.page-hero.has-bg:has(.page-hero-photo.has-photo){background:var(--ink)}
+.page-hero.has-bg:has(.page-hero-photo.has-photo) h1,
+.page-hero.has-bg:has(.page-hero-photo.has-photo) .lede,
+.page-hero.has-bg:has(.page-hero-photo.has-photo) .lede strong{color:var(--bone)}
+.page-hero.has-bg:has(.page-hero-photo.has-photo) .eyebrow{color:rgba(240,236,229,.86)}
+.page-hero.has-bg:has(.page-hero-photo.has-photo) .cdown > div{
+  background:rgba(255,255,255,.14);border-color:rgba(255,255,255,.26);
+}
+.page-hero.has-bg:has(.page-hero-photo.has-photo) .cdown b{color:var(--bone)}
+.page-hero.has-bg:has(.page-hero-photo.has-photo) .cdown span,
+.page-hero.has-bg:has(.page-hero-photo.has-photo) .cdown-note{color:rgba(240,236,229,.82)}
+.page-hero.has-bg:has(.page-hero-photo.has-photo) .btn.line{
+  border-color:rgba(240,236,229,.5);color:var(--bone);
+}
+.page-hero.has-bg:has(.page-hero-photo.has-photo) .btn.line:hover{
+  background:rgba(255,255,255,.1);
+}
+
+/* the solid button is ink, which vanishes on a dark hero */
+.page-hero.has-bg:has(.page-hero-photo.has-photo) .btn:not(.line){
+  background:var(--bone);color:var(--ink);
+}
+.page-hero.has-bg:has(.page-hero-photo.has-photo) .btn:not(.line):hover{background:#fff}
+
+/* ── page hero type, matched to the home one ──────────────────
+   A page hero over a photo was still using the plain h1: weight 400
+   and a size ramp of its own, so Summer Shred read thin and airy next
+   to the bold home hero. These pull the eyebrow, the heading and the
+   lede onto the same settings the home hero uses, including the same
+   shadows, so both look like the same brand.
+   Only applies once a photo is actually behind the type. A page hero
+   on a pale background is unchanged.
+   ──────────────────────────────────────────────────────────── */
+.page-hero.has-bg:has(.page-hero-photo.has-photo) .eyebrow{
+  font-size:.72rem;font-weight:500;letter-spacing:.34em;padding-left:.34em;
+  color:rgba(255,255,255,.9);text-shadow:0 1px 16px rgba(0,0,0,.5);
+  margin-bottom:0;
+}
+.page-hero.has-bg:has(.page-hero-photo.has-photo) h1{
+  margin:.42em 0 0;color:#fff;font-weight:700;
+  font-size:clamp(1.9rem,7vw,3.7rem);line-height:1.04;
+  letter-spacing:.035em;padding-left:.035em;
+  text-shadow:0 2px 30px rgba(0,0,0,.55);
+}
+.page-hero.has-bg:has(.page-hero-photo.has-photo) .lede{
+  margin-top:1.1em;font-size:1rem;color:rgba(255,255,255,.88);
+  text-shadow:0 1px 16px rgba(0,0,0,.5);max-width:46ch;
+}
+/* the em in a heading is the serif italic accent, which on the home
+   hero sits on its own line */
+.page-hero.has-bg:has(.page-hero-photo.has-photo) h1 em{color:#fff}
+
+/* a challenge that has not opened yet says so, rather than looking the
+   same as the one taking entries right now */
+.cal-tag.soon{
+  background:var(--linen);color:var(--soft);border:1px solid var(--sand);
+}

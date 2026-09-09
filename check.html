@@ -1,0 +1,283 @@
+<!DOCTYPE html>
+<html lang="en-AU">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="robots" content="noindex, nofollow">
+<title>ALTER YOU site check</title>
+
+<!-- deliberately the same references the real pages use -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,wght@0,300;0,400;0,500;0,700;1,400&family=Instrument+Serif:ital@0;1&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="alter.css?v=162">
+
+<style>
+  /* self-contained, so this page still works even when alter.css is missing */
+  body{font-family:'DM Sans',system-ui,sans-serif;background:#F5F2EC;color:#2B2D26;
+       margin:0;padding:28px 20px 60px;line-height:1.6}
+  .box{max-width:760px;margin:0 auto}
+  h1{font-size:22px;letter-spacing:.06em;text-transform:uppercase;margin:0 0 6px;font-weight:600}
+  .sub{color:#5A5F4E;font-size:14px;margin:0 0 26px}
+  .t{background:#fff;border:1px solid #DDD8CC;border-radius:14px;
+     padding:14px 16px;margin-bottom:10px;display:flex;gap:12px;align-items:flex-start}
+  .dot{width:10px;height:10px;border-radius:50%;flex:none;margin-top:7px;background:#C7C2B6}
+  .pass .dot{background:#45493C}
+  .fail .dot{background:#B0574F}
+  .warn .dot{background:#C79A3E}
+  .t b{display:block;font-weight:600;font-size:15px}
+  .t span{display:block;font-size:13.5px;color:#5A5F4E}
+  .fix{margin-top:6px;font-size:13.5px;color:#B0574F}
+  h2{font-size:12px;letter-spacing:.2em;text-transform:uppercase;color:#8A9179;
+     margin:30px 0 12px;font-weight:600}
+  code{background:#EDE8E0;padding:1px 6px;border-radius:5px;font-size:12.5px}
+  .sum{border-radius:14px;padding:16px 18px;margin-bottom:22px;font-size:14.5px;
+       background:#EDE8E0;border:1px solid #DDD8CC}
+</style>
+</head>
+<body>
+<div class="box">
+  <h1>ALTER YOU site check</h1>
+  <p class="sub">
+    Upload this file next to your other pages and open it at
+    <code>alteryouapp.com/check.html</code>. It tests everything the website
+    depends on and tells you exactly what is missing. Delete it once you are done.
+  </p>
+
+  <div class="sum" id="summary">Running checks...</div>
+
+  <h2>Website files</h2>
+  <div id="files"></div>
+
+  <h2>Database and photos</h2>
+  <div id="db"></div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script>
+(function () {
+  var results = [];
+
+  function row(target, state, title, detail, fix) {
+    var d = document.createElement('div');
+    d.className = 't ' + state;
+    d.innerHTML = '<span class="dot"></span><div><b>' + title + '</b><span>' + detail + '</span>' +
+                  (fix ? '<div class="fix">' + fix + '</div>' : '') + '</div>';
+    document.getElementById(target).appendChild(d);
+    results.push(state);
+    summarise();
+  }
+
+  function summarise() {
+    var fails = results.filter(function (r) { return r === 'fail'; }).length;
+    var warns = results.filter(function (r) { return r === 'warn'; }).length;
+    var el = document.getElementById('summary');
+    if (fails) {
+      el.innerHTML = '<b>' + fails + ' problem' + (fails > 1 ? 's' : '') +
+        ' found.</b> Fix the red items below and reload this page.';
+    } else if (warns) {
+      el.innerHTML = '<b>Mostly working.</b> ' + warns + ' thing' + (warns > 1 ? 's' : '') +
+        ' worth looking at below.';
+    } else {
+      el.innerHTML = '<b>Everything checks out.</b> The site has all its files, the fonts are ' +
+        'loading, and the photo database is reachable.';
+    }
+  }
+
+  // ── 1. is alter.css actually there? ────────────────────────────
+  // .btn is defined in alter.css and nowhere else, so if it has no
+  // border-radius the stylesheet did not load.
+  var probe = document.createElement('a');
+  probe.className = 'btn';
+  probe.style.position = 'absolute';
+  probe.style.visibility = 'hidden';
+  document.body.appendChild(probe);
+  var cssLoaded = getComputedStyle(probe).borderRadius.indexOf('999') === 0;
+  probe.remove();
+
+  row('files', cssLoaded ? 'pass' : 'fail',
+    'alter.css',
+    cssLoaded ? 'Loaded. Your pages will be styled correctly.'
+              : 'Not loading. Every page will show as plain unstyled text.',
+    cssLoaded ? '' : 'Upload <code>alter.css</code> into the same folder as <code>index.html</code>, not into a subfolder.');
+
+  // ── 2. is alter.js there? ──────────────────────────────────────
+  var s = document.createElement('script');
+  s.src = 'alter.js?v=162';
+  s.onload = function () {
+    row('files', 'pass', 'alter.js',
+      'Loaded. Menus, carousels and photo loading will work.');
+    checkDb();
+  };
+  s.onerror = function () {
+    row('files', 'fail', 'alter.js',
+      'Not loading. The mobile menu, carousels and photos will not work.',
+      'Upload <code>alter.js</code> into the same folder as <code>index.html</code>.');
+    checkDb();
+  };
+  document.head.appendChild(s);
+
+  // ── 3. fonts ───────────────────────────────────────────────────
+  if (document.fonts && document.fonts.ready) {
+    document.fonts.ready.then(function () {
+      // document.fonts.check() reports true too eagerly, so measure instead:
+      // if the text is exactly as wide in the test font as in the fallback,
+      // the real font never arrived.
+      var cv = document.createElement('canvas').getContext('2d');
+      function width(font){ cv.font = font; return cv.measureText('BIKINI BUILD Handgloves').width; }
+      var base = width('700 20px monospace');
+      var jost  = Math.abs(width('700 20px "DM Sans", monospace') - base) > 0.5;
+      var base2 = width('italic 20px monospace');
+      var serif = Math.abs(width('italic 20px "Instrument Serif", monospace') - base2) > 0.5;
+      row('files', jost ? 'pass' : 'warn', 'Fonts',
+        jost ? 'DM Sans and Instrument Serif are loading from Google Fonts.'
+             : 'DM Sans did not load. Text will fall back to a system font and will not match the app.',
+        jost ? '' : 'Usually a network or content-blocker issue. Try another browser or device.');
+      if (jost && !serif) {
+        row('files', 'warn', 'Instrument Serif',
+          'The italic accent font did not load. Italic lines in headings will look plain.');
+      }
+    });
+  }
+
+  // ── 4. supabase, the table, and a real photo ───────────────────
+  function checkDb() {
+    if (!window.supabase) {
+      row('db', 'fail', 'Supabase library',
+        'Did not load from the CDN, so no photos can appear on the site.',
+        'Check the page is served over https, and that nothing is blocking cdn.jsdelivr.net.');
+      return;
+    }
+    row('db', 'pass', 'Supabase library', 'Loaded.');
+
+    var sb = window.supabase.createClient(
+      'https://ghubvckcfcclzhbaafjh.supabase.co',
+      'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImdodWJ2Y2tjZmNjbHpoYmFhZmpoIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODM5OTU3NTEsImV4cCI6MjA5OTU3MTc1MX0.O3P4jfXbBSBKpiKX8De8DiN36aLmZpjiZof9TORto68'
+    );
+
+    sb.from('site_images').select('key,url,page,sort_order').then(function (res) {
+      if (res.error) {
+        var msg = res.error.message || String(res.error);
+        if (/sort_order|page|column/i.test(msg)) {
+          row('db', 'warn', 'site_images table',
+            'The table exists but is missing the newer columns.',
+            'Run <code>_setup/SETUP.sql</code> in the Supabase SQL editor once.');
+          return checkOldTable(sb);
+        }
+        row('db', 'fail', 'site_images table', 'Could not read it: ' + msg,
+          'Run <code>_setup/SETUP.sql</code> in the Supabase SQL editor once.');
+        return;
+      }
+      report(res.data || []);
+    }).catch(function (e) {
+      row('db', 'fail', 'Supabase connection', String(e && e.message || e),
+        'Check the project is not paused in your Supabase dashboard.');
+    });
+  }
+
+  function checkOldTable(sb) {
+    sb.from('site_images').select('key,url').then(function (res) {
+      if (res.error) return;
+      report(res.data || []);
+    });
+  }
+
+  function report(rows) {
+    var filled = rows.filter(function (r) { return r.url; });
+    row('db', rows.length ? 'pass' : 'fail', 'Photo slots',
+      rows.length + ' registered, ' + filled.length + ' with a photo uploaded.',
+      rows.length ? '' : 'Run <code>_setup/SETUP.sql</code> in Supabase to create them.');
+
+    if (rows.length && rows.length < 46) {
+      row('db', 'warn', 'Missing slots',
+        'Only ' + rows.length + ' of the 46 spots the website uses are registered.',
+        'Re-run <code>_setup/SETUP.sql</code>. It will not overwrite photos you have already uploaded.');
+    }
+
+    // the share image is the one nobody notices is broken until the site
+    // gets posted somewhere, so test it explicitly
+    var og = document.querySelector('meta[property="og:image"]');
+    if (og) {
+      var ogImg = new Image();
+      ogImg.onload = function () {
+        row('db', 'pass', 'Share image',
+          'Loads at ' + ogImg.naturalWidth + ' x ' + ogImg.naturalHeight +
+          '. This is what shows when the site is shared.');
+      };
+      ogImg.onerror = function () {
+        row('db', 'fail', 'Share image',
+          'Missing. Sharing the site to Instagram, WhatsApp or a group chat will show no picture.',
+          'og-image.jpg is missing from the site root. It ships in the zip, so re-upload it next to index.html.');
+      };
+      ogImg.src = og.content;
+    }
+
+    ['brand_favicon', 'brand_appicon'].forEach(function (k) {
+      var r = rows.filter(function (x) { return x.key === k; })[0];
+      var label = k === 'brand_favicon' ? 'Favicon' : 'Home screen icon';
+      if (!r || !r.url) {
+        row('db', 'warn', label, 'Not uploaded yet, so the file already on your server is used.',
+          'Admin, then Website Images, then Brand.');
+      } else {
+        row('db', 'pass', label, 'Uploaded and being served from the admin.');
+      }
+    });
+
+    // transformation photos: the folder on the server, and any admin rows
+    var tf = new Image();
+    tf.onload = function () {
+      row('db', 'pass', 'Transformation photos',
+        'results/client1.jpg loads, so the folder uploaded correctly.');
+    };
+    tf.onerror = function () {
+      row('db', 'fail', 'Transformation photos',
+        'results/client1.jpg will not load. The photos are missing from the server.',
+        'Upload the whole <code>results</code> folder into the same place as index.html, keeping it as a folder.');
+    };
+    tf.src = 'results/client1.jpg';
+
+    sb.from('transformations').select('image_url,published').eq('published', true)
+      .then(function (r2) {
+        var rws = (r2.data || []).filter(function (x) { return x.image_url; });
+        if (!rws.length) {
+          row('db', 'pass', 'Transformations table',
+            'No published rows, so the photos in the results folder are used.');
+          return;
+        }
+        var im = new Image();
+        im.onload = function () {
+          row('db', 'pass', 'Transformations table',
+            rws.length + ' published row(s), and the images load. These replace the results folder.');
+        };
+        im.onerror = function () {
+          row('db', 'warn', 'Transformations table',
+            rws.length + ' published row(s), but the images do not load. The site falls back to the results folder.',
+            'Re-upload them in the admin under Transformations, or unpublish those rows.');
+        };
+        im.src = rws[0].image_url;
+      }).catch(function () {});
+
+    var hero = rows.filter(function (r) { return r.key === 'hero_1'; })[0];
+    if (!hero || !hero.url) {
+      row('db', 'pass', 'Home page hero photo',
+        'Nothing uploaded, so the hero uses the photos in the site\'s own hero folder.',
+        'To change them in the admin instead: Website Images, then Home, then the hero grid slots.');
+      return;
+    }
+
+    var img = new Image();
+    img.onload = function () {
+      row('db', 'pass', 'Photo delivery',
+        'The hero photo loads from storage at ' + img.naturalWidth + ' x ' + img.naturalHeight + '.');
+    };
+    img.onerror = function () {
+      row('db', 'fail', 'Photo delivery',
+        'A hero photo is saved but the file will not load.',
+        'The <code>site-images</code> bucket is probably not public. Re-run <code>_setup/SETUP.sql</code>.');
+    };
+    img.src = hero.url;
+  }
+})();
+</script>
+</body>
+</html>

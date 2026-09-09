@@ -1,0 +1,51 @@
+APP STORE SCREENSHOTS
+=====================
+
+Seven tiles, 1290 x 2796 pixels. That is the 6.7 inch iPhone slot, and
+uploading at that size covers every other iPhone size on the listing, so
+this one set is all you need.
+
+They are finished. Your screenshots are already in them.
+
+WHAT WAS DONE TO YOUR SCREENSHOTS
+---------------------------------
+The TestFlight banner was cropped off the top of each one. Apple will
+question a listing that shows TestFlight, since it means the images came
+from a beta build rather than the app people will download.
+
+Everything else is untouched.
+
+ORDER
+-----
+01-strength   the home screen. This tile says what the app is, which is
+              the one thing a stranger scrolling the store needs
+02-programs   the week, and the twelve programs
+03-tracker    a session, exercise by exercise
+04-cycle      the cycle screen
+05-food       a recipe
+06-progress   the progress screen
+07-trial      the offer, with two screens
+
+Most people only look at the first two, which is why the home screen and
+the programs are first.
+
+IF YOU RETAKE THE SCREENSHOTS
+-----------------------------
+Take them on a phone with a clean status bar: full battery, full signal,
+a sensible time. Send them over and I will drop them straight in.
+
+THE COPY
+--------
+Plainer than the website on purpose. On the site a hero has already told
+someone what ALTER YOU is before they reach any of this. On the App Store
+there is no hero, so the first tile has to say "strength training, built
+for women" rather than something clever.
+
+The claims still match the website. If you change one, change the other.
+
+
+ONE MORE SCREENSHOT WOULD HELP
+------------------------------
+Tiles 02 and 03 both use the Lower Body session, because there was no
+screenshot of the Move screen or a program list in the last batch. Send
+one of those and tile 02 becomes its own thing.

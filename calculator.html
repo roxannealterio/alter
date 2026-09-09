@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+<html lang="en-AU">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+
+<title>Free Macro Calculator for Women | ALTER YOU</title>
+<meta name="description" content="Work out your calories and protein from your own height, weight, age and training. Free, no sign up, and never a number that is too low.">
+<link rel="canonical" href="https://alteryouapp.com/calculator.html">
+<meta name="theme-color" content="#F6F3ED">
+<meta name="author" content="Roxy Alterio">
+<meta name="geo.region" content="AU-QLD">
+<meta name="robots" content="index, follow, max-image-preview:large">
+
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="ALTER YOU">
+<meta property="og:locale" content="en_AU">
+<meta property="og:url" content="https://alteryouapp.com/calculator.html">
+<meta property="og:title" content="Free macro calculator">
+<meta property="og:description" content="Your calories and protein, worked out from your own body.">
+<!-- The share image is read by crawlers that never run JavaScript, so it has to
+     be a real URL. This one points at the admin's storage, where uploading
+     "Share image" overwrites it in place. -->
+<meta property="og:image" content="https://alteryouapp.com/og-image.jpg">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="ALTER YOU, a strength training and cycle syncing app for women">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:site" content="@alteryouapp">
+<meta name="apple-mobile-web-app-title" content="ALTER YOU">
+<!-- ROXY: once the app is live, put your App Store ID here and iPhone Safari
+     shows an "Open in the App Store" banner above the page:
+     <meta name="apple-itunes-app" content="app-id=0000000000"> -->
+<meta name="format-detection" content="telephone=no">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,wght@0,300;0,400;0,500;0,700;1,400&family=Instrument+Serif:ital@0;1&family=Jost:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="alter.css?v=162">
+<link rel="icon" href="favicon.png" id="fav">
+<link rel="apple-touch-icon" href="icon.png" id="appicon">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://alteryouapp.com/" },
+    { "@type": "ListItem", "position": 2, "name": "Macro calculator", "item": "https://alteryouapp.com/calculator.html" }
+  ]
+}
+</script>
+</head>
+<body>
+
+<div class="bar offer" id="offerBar"
+     data-launch="2026-09-19T09:00:00+10:00"
+     data-doors="2026-09-27T23:59:00+10:00"
+     data-starts="2026-09-28T05:00:00+10:00">
+  <span class="bar-txt">
+    <b id="barLabel">Summer Shred &middot; save 43%</b>
+    <span class="bar-count" id="barCount"></span>
+  </span>
+  <a class="bar-cta" href="shred.html#join" data-track="Offer bar click">Get the app</a>
+  <button class="x" type="button" aria-label="Close">&times;</button>
+</div>
+
+<nav class="nav">
+  <div class="nav-in">
+    <button class="burger" type="button" aria-label="Menu" aria-expanded="false" aria-controls="links"><span></span></button>
+    <a class="brand" href="index.html"><svg width="18" height="15" viewBox="0 0 1220 1000" aria-hidden="true" class="mark"><path d="M110 890 L610 110 L1110 890" fill="none" stroke="#646A58" stroke-width="220" stroke-linecap="round" stroke-linejoin="round"/></svg><span>Alter You</span></a>
+    <div class="nav-links" id="links">
+      <a href="features.html">Features</a>
+      <a href="challenges.html">Challenges</a>
+      <a href="pricing.html">Pricing</a>
+      <a href="about.html">About</a>
+      <a href="blog.html">Blog</a>
+      <a href="faq.html">FAQ</a>
+      <a class="btn sm" href="pricing.html">Download</a>
+    </div>
+  </div>
+</nav>
+
+<section class="page-hero bg-bone has-bg">
+  <div class="page-hero-photo" data-img="hero_calculator" data-alt="" aria-hidden="true"></div>
+  <div class="wrap mid center">
+    <p class="eyebrow eyebrow-tag">Free &middot; no sign up</p>
+    <h1>What should you<em>actually be eating?</em></h1>
+    <p class="lede">
+      Personalised to you and your body, not a number handed to every woman.
+      Same sum the app runs, and it will not take you too low either.
+    </p>
+  </div>
+</section>
+
+<section class="sec bg-mist" id="calculator">
+  <div class="wrap">
+    <div class="calc" data-reveal>
+      <form id="calc-form" novalidate>
+        <div class="calc-grid">
+          <div class="calc-field">
+            <label for="c_age">Age</label>
+            <input type="number" id="c_age" inputmode="numeric" min="16" max="90" placeholder="28">
+          </div>
+          <div class="calc-field">
+            <label for="c_ht">Height (cm)</label>
+            <input type="number" id="c_ht" inputmode="numeric" min="120" max="220" placeholder="165">
+          </div>
+          <div class="calc-field">
+            <label for="c_wt">Weight (kg)</label>
+            <input type="number" id="c_wt" inputmode="decimal" min="35" max="200" placeholder="65">
+          </div>
+          <div class="calc-field">
+            <label for="c_act">How much you move</label>
+            <select id="c_act">
+              <option value="1.2">Desk job, little exercise</option>
+              <option value="1.375">Light, 1 to 2 days a week</option>
+              <option value="1.55" selected>Moderate, 3 to 4 days</option>
+              <option value="1.725">Hard, 5 to 6 days</option>
+              <option value="1.9">On your feet all day, plus training</option>
+            </select>
+          </div>
+          <div class="calc-field wide">
+            <label for="c_goal">Your goal</label>
+            <select id="c_goal">
+              <option value="cut">Lose fat</option>
+              <option value="maintain" selected>Stay where I am</option>
+              <option value="build">Build muscle</option>
+            </select>
+          </div>
+        </div>
+
+        <button type="submit" class="btn" data-track="Calculator run">Work out my numbers</button>
+        <p class="calc-err" hidden>Please fill in your age, height and weight.</p>
+      </form>
+
+      <div class="calc-out" id="calc-out" hidden role="status" aria-live="polite">
+        <div class="calc-nums">
+          <div class="calc-num"><b id="c_kcal">&nbsp;</b><span>Calories</span></div>
+          <div class="calc-num"><b id="c_pro">&nbsp;</b><span>Protein</span></div>
+          <div class="calc-num"><b id="c_carb">&nbsp;</b><span>Carbs</span></div>
+          <div class="calc-num"><b id="c_fat">&nbsp;</b><span>Fat</span></div>
+        </div>
+        <p class="calc-floor" id="c_floor" hidden></p>
+        <p class="calc-note">
+          These are a starting point, not a prescription. In the app they update as your
+          weight changes, and they shift across your cycle instead of staying flat all
+          month.
+        </p>
+        <div class="btns" style="justify-content:center">
+          <button class="btn line" type="button" id="calcCopy" data-track="Calculator copy">Copy my numbers</button>
+          <a class="btn clay" href="#" data-appstore data-track="Calculator to app">Get the app</a>
+        </div>
+        <p class="calc-saved" id="calcSaved" hidden>
+          Saved on this device, so they are still here when you come back.
+        </p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="sec bg-bone">
+  <div class="wrap mid center" data-reveal>
+    <p class="eyebrow">What the app does with it</p>
+    <h2>These move<em>as you do</em></h2>
+    <p class="lede">
+      In the app they update as your weight changes, and they shift across your
+      cycle instead of staying flat all month. You also get the food to hit them.
+    </p>
+    <div class="btns" style="justify-content:center">
+      <a class="btn" href="pricing.html" data-track="Calc page to pricing">Start 3 days free</a>
+      <a class="btn line" href="features.html#fuel">See how the food works</a>
+    </div>
+  </div>
+</section>
+
+<!-- a quiet way into the program finder from anywhere -->
+<div class="finder-tab" id="finderTab">
+  <a href="finder.html" data-track="Finder tab"><svg viewBox="0 0 26 9" aria-hidden="true" style="width:13px;height:13px;rotate:90deg;fill:none;stroke:currentColor;stroke-width:1.8"><path d="M5 12h14M13 6l6 6-6 6" stroke-linecap="round" stroke-linejoin="round"/></svg>Let's find your program</a>
+  <button class="x" type="button" aria-label="Hide this">&times;</button>
+</div>
+
+<button class="totop" id="toTop" type="button" aria-label="Back to top">
+  <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 19V5M5 12l7-7 7 7" stroke-linecap="round" stroke-linejoin="round"/></svg>
+</button>
+
+<div class="sticky">
+  <a class="btn" href="pricing.html" data-track="Sticky bar">Join ALTER YOU &middot; $14.17/mo</a>
+</div>
+
+<footer>
+  <div class="wrap">
+    <div class="fgrid">
+      <div>
+        <div class="flock"><svg width="17" height="14" viewBox="0 0 1220 1000" aria-hidden="true" class="mark"><path d="M110 890 L610 110 L1110 890" fill="none" stroke="#EDE8E0" stroke-width="220" stroke-linecap="round" stroke-linejoin="round"/></svg><span>Alter You</span></div>
+        <p>Strength training, nutrition and cycle syncing.<br>Made for women, by women.</p>
+      </div>
+      <div>
+        <h4>App</h4>
+        <ul>
+          <li><a href="features.html">Features</a></li>
+          <li><a href="shred.html">Summer Shred</a></li>
+          <li><a href="challenges.html">Challenges</a></li>
+        <li><a href="finder.html">Find your program</a></li>
+        <li><a href="programs.html">All programs</a></li>
+        <li><a href="calculator.html">Macro calculator</a></li>
+                  <li><a href="pricing.html">Pricing</a></li>
+          <li><a href="faq.html">FAQ</a></li>
+        </ul>
+      </div>
+      <div>
+        <h4>Company</h4>
+        <ul>
+          <li><a href="about.html">About</a></li>
+          <li><a href="blog.html">Blog</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="fbot">
+      <span>&copy; 2026 ALTER YOU. Australia.</span>
+      <nav class="fbot-links" aria-label="Legal">
+        <a href="privacy.html">Privacy</a><span aria-hidden="true">&middot;</span>
+        <a href="terms.html">Terms</a><span aria-hidden="true">&middot;</span>
+        <a href="support.html">Support</a><span aria-hidden="true">&middot;</span>
+        <a href="admin.html" rel="nofollow" class="fadmin">Admin</a>
+      </nav>
+    </div>
+  </div>
+</footer>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="alter.js?v=162"></script>
+</body>
+</html>

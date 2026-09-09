@@ -1,0 +1,25 @@
+CHALLENGE PHOTOS
+================
+
+Two photos for the challenge pages, resized for the website.
+
+  build_hero.jpg   Bikini Build, the wide photo under the title
+  shred_hero.jpg   Summer Shred, the full width photo behind the title
+
+NOTHING TO UPLOAD
+-----------------
+They sit in the site's own "challenges" folder, the same way the recipe
+and hero photos work. Uploading the matching slot in the admin still
+overrides the file here.
+
+CHECK THIS BEFORE THE SITE GOES LIVE
+------------------------------------
+shred_hero.jpg carries a "BRODIE J PHOTOGRAPHY" watermark in the lower
+left, and it came from a screenshot rather than an original file. Get
+written permission from the photographer and the original file before
+this page is public. The watermark has deliberately been left in place.
+
+Also note: SETUP.sql seeds a shred_hero slot and then deletes it again
+further down, in the retired keys list. Until that is fixed the slot
+will not appear in the admin, so this file is the only way to change
+that photo.

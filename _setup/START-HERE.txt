@@ -1,0 +1,116 @@
+ALTER YOU — everything for launch
+=================================
+
+FOUR STEPS
+----------
+1. UPLOAD
+   Everything in this folder goes to your web root, keeping the folder
+   structure. "results", "recipes" and "app" stay as folders.
+
+2. DATABASE
+   Supabase, SQL editor, paste in the whole of _setup/SETUP.sql and run
+   it. Once. Safe to run again any time, it never overwrites your work.
+
+3. CHECK
+   Open alteryouapp.com/check.html and read it. It tests the stylesheet,
+   the script, the fonts, the database and the photos, and names the fix
+   for anything that failed. Delete check.html when you are happy.
+
+4. THE APP STORE LINK
+   Open alter.js, find line 1, paste your App Store URL:
+
+       window.ALTER_APP_STORE = 'https://apps.apple.com/au/app/...';
+
+   That points every download button and all three price cards at once.
+   Until you set it they scroll to the signup form, so nothing is a dead
+   link in the meantime.
+
+
+THE SITE WORKS BEFORE YOU UPLOAD A SINGLE PHOTO
+-----------------------------------------------
+The app screenshots, the recipe photos and the transformations all ship
+with the site and show immediately. Anything with no photo yet shows a
+faint version of your A mark rather than a blank box.
+
+Every one of them can still be changed in the admin under Website
+Images. An upload there overrides the shipped file.
+
+Sharing works too. og-image.jpg sits in the root, so posting your link
+shows a picture from day one.
+
+
+THE SUMMER SHRED CAMPAIGN
+-------------------------
+  Saturday 19 September   Pilates in the Park, the launch event
+  Sunday 27 September     Doors close on registrations
+  Monday 28 September     Twelve weeks start, everyone together
+  Monday 21 December      Finish, the week before Christmas
+
+The bar at the top of every page moves through those by itself: counts
+down to the event, then to doors closing, then to the Monday, then hides
+itself. The countdown on shred.html does the same. Nobody has to change
+any wording on the day.
+
+To move a date, edit these three attributes on the bar in every page:
+
+    data-event="2026-09-19T09:00:00+10:00"
+    data-close="2026-09-27T23:59:00+10:00"
+    data-start="2026-09-28T05:00:00+10:00"
+
+and the two on the countdown in shred.html.
+
+
+YOUR LEAD LIST
+--------------
+Everyone who fills in a form lands in the admin under People, then
+Leads. Search, filter, mark them contacted or joined, export a CSV.
+
+The consent column decides what you may send. A tick means they agreed
+to hear from you generally. A blank means the Spam Act only lets you
+contact them about the thing they signed up for, so filter to
+"consented only" before exporting for a general campaign.
+
+Formspree still emails you a copy of every submission, so nothing is
+lost if the database has a bad day.
+
+
+WHO IS PAYING
+-------------
+The dashboard shows members, sessions, active users and leads straight
+from the app. It cannot see who is subscribed, because App Store billing
+runs through RevenueCat. _setup/REVENUECAT.md connects the two in about
+ten minutes and adds Paying and On trial to the dashboard.
+
+
+THE PAGES
+---------
+index.html       homepage
+shred.html       Summer Shred, with the countdown
+build.html       Bikini Build, waitlist
+challenges.html  what is open
+programs.html    all twelve programs, filterable
+finder.html      the three question program finder
+calculator.html  the free macro calculator
+features.html    everything inside the app
+glutes.html      glute training
+pricing.html     about.html      blog.html     post.html
+faq.html         support.html    privacy.html  terms.html
+admin.html       your admin
+check.html       diagnostics, delete after use
+
+
+STILL TO DO
+-----------
+  The App Store URL, once the app is approved (step 4 above).
+
+  A solicitor on privacy.html and terms.html before launch.
+
+  Analytics is wired but off. In alter.js, change provider from 'none'
+  to your provider. Worth doing before the 19th, not after.
+
+  The testimonials block on the homepage is built and hidden. Three real
+  quotes with a first name and suburb, delete the word "hidden" from
+  that section, and it appears.
+
+  Nine photo slots still want real photography: the four hero tiles,
+  your portrait on About, Chey, and two program cards.

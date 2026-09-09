@@ -1,0 +1,24 @@
+PROGRAM CARD PHOTOS
+===================
+
+Photos for the "Find your fit" cards on the home page. Supplied already
+cropped to 3:4 and resized to 900 x 1200 for the website.
+
+  program_1.jpg  Glute Build       stability ball
+  program_2.jpg  Foundations       rear view lunge
+  program_3.jpg  Two Day Minimum   quadruped leg raise
+  program_4.jpg  Home Strength     dumbbell lunge
+
+NOTHING TO UPLOAD
+-----------------
+These sit in the site's own "programs" folder, the same way the recipe
+photos work. Uploading a program card photo in the admin overrides the
+file here.
+
+To change one, replace that file on the server with another photo of
+the same name.
+
+A NOTE ON SHAPE
+---------------
+The cards crop to 3:4 upright, and the program name sits over the top
+left corner, so keep that corner clear.

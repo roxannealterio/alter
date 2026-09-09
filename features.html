@@ -1,0 +1,303 @@
+<!DOCTYPE html>
+<html lang="en-AU">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+
+<title>ALTER YOU Features: Programs, Tracker and Form Library</title>
+<meta name="description" content="Twelve programs, a tracker that tells you when to lift heavier, a form library that names the mistake, and calorie targets from your own body.">
+<link rel="canonical" href="https://alteryouapp.com/features.html">
+<meta name="theme-color" content="#F6F3ED">
+<meta name="author" content="Roxy Alterio">
+<meta name="geo.region" content="AU-QLD">
+<meta name="robots" content="index, follow, max-image-preview:large">
+
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="ALTER YOU">
+<meta property="og:locale" content="en_AU">
+<meta property="og:url" content="https://alteryouapp.com/features.html">
+<meta property="og:title" content="Everything Inside ALTER YOU">
+<meta property="og:description" content="Twelve programs, a tracker that tells you when to lift heavier, a form library that names the mistake, and calorie targets from your own body.">
+<!-- The share image is read by crawlers that never run JavaScript, so it has to
+     be a real URL. This one points at the admin's storage, where uploading
+     "Share image" overwrites it in place. -->
+<meta property="og:image" content="https://alteryouapp.com/og-image.jpg">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="ALTER YOU, a strength training and cycle syncing app for women">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:site" content="@alteryouapp">
+<meta name="apple-mobile-web-app-title" content="ALTER YOU">
+<!-- ROXY: once the app is live, put your App Store ID here and iPhone Safari
+     shows an "Open in the App Store" banner above the page:
+     <meta name="apple-itunes-app" content="app-id=0000000000"> -->
+<meta name="format-detection" content="telephone=no">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,wght@0,300;0,400;0,500;0,700;1,400&family=Instrument+Serif:ital@0;1&family=Jost:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="alter.css?v=162">
+<link rel="icon" href="favicon.png" id="fav">
+<link rel="apple-touch-icon" href="icon.png" id="appicon">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "SoftwareApplication",
+  "name": "ALTER YOU",
+  "applicationCategory": "HealthApplication",
+  "operatingSystem": "iOS",
+  "url": "https://alteryouapp.com",
+  "author": { "@type": "Person", "name": "Roxy Alterio" },
+  "featureList": "Twelve training programs, progressive overload tracker, form library with muscle maps, macro tracking with barcode scanning, cycle syncing, progress photos",
+  "offers": [
+    { "@type": "Offer", "name": "Annual", "price": "169.99", "priceCurrency": "AUD" },
+    { "@type": "Offer", "name": "Monthly", "price": "24.99", "priceCurrency": "AUD" }
+  ]
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://alteryouapp.com/" },
+    { "@type": "ListItem", "position": 2, "name": "Features", "item": "https://alteryouapp.com/features.html" }
+  ]
+}
+</script>
+</head>
+<body>
+
+<div class="bar offer" id="offerBar"
+     data-launch="2026-09-19T09:00:00+10:00"
+     data-doors="2026-09-27T23:59:00+10:00"
+     data-starts="2026-09-28T05:00:00+10:00">
+  <span class="bar-txt">
+    <b id="barLabel">Summer Shred &middot; save 43%</b>
+    <span class="bar-count" id="barCount"></span>
+  </span>
+  <a class="bar-cta" href="shred.html#join" data-track="Offer bar click">Get the app</a>
+  <button class="x" type="button" aria-label="Close">&times;</button>
+</div>
+
+<nav class="nav">
+  <div class="nav-in">
+    <button class="burger" type="button" aria-label="Menu" aria-expanded="false" aria-controls="links"><span></span></button>
+    <a class="brand" href="index.html"><svg width="18" height="15" viewBox="0 0 1220 1000" aria-hidden="true" class="mark"><path d="M110 890 L610 110 L1110 890" fill="none" stroke="#646A58" stroke-width="220" stroke-linecap="round" stroke-linejoin="round"/></svg><span>Alter You</span></a>
+    <div class="nav-links" id="links">
+      <a class="on" href="features.html">Features</a>
+      <a href="challenges.html">Challenges</a>
+      <a href="pricing.html">Pricing</a>
+      <a href="about.html">About</a>
+      <a href="blog.html">Blog</a>
+      <a href="faq.html">FAQ</a>
+      <a class="btn sm" href="#get">Download</a>
+    </div>
+  </div>
+</nav>
+
+
+<section class="page-hero bg-bone has-bg">
+  <div class="page-hero-photo" data-img="hero_features" data-alt="" aria-hidden="true"></div>
+  <div class="wrap center">
+    <p class="eyebrow">What's inside</p>
+    <h1>Everything<em>you need to know</em></h1>
+  </div>
+</section>
+
+<section class="sec sm bg-bone">
+  <div class="wrap">
+    <div class="feat" id="programs" data-reveal>
+      <div>
+        <span class="feat-n">01</span>
+        <h2>It picks your program</h2>
+        <p>Eighteen questions. Your goal, your days, your equipment, your injuries. It matches you to one of twelve programs, then does the thing almost no other app does: it tells you why.</p>
+        <p>Why this one. Why not the other eleven. If you disagree, you change it in two taps.</p>
+        <ul class="ticks">
+          <li>Foundations, for a first barbell</li>
+          <li>Two Day Minimum, when two is all you have</li>
+          <li>Glute Focus, Home Strength, Bodyweight Base, and more</li>
+        </ul>
+      </div>
+      <div class="feat-media"><div class="ph phone has-photo" data-img="app_programs" data-alt="It picks your program in the ALTER YOU app"><img src="app/app_programs.jpg" alt="It picks your program in the ALTER YOU app" width="1000" height="2040" loading="lazy" decoding="async"></div></div>
+    </div>
+    <div class="feat rev" id="tracker" data-reveal>
+      <div>
+        <span class="feat-n">02</span>
+        <h2>It tells you when to lift heavier</h2>
+        <p>This is the whole app. Most women train for a year and lift the same weight the entire time, because nothing ever tells them to go up.</p>
+        <p>Hit every rep last week? ALTER YOU says go up, and by exactly how much. Fell short? It says hold, and it means it. It won’t flatter you.</p>
+        <div class="proof">
+          <div class="lab">Time to go up</div>
+          <div class="msg">You hit every rep at 40kg. Go up.</div>
+          <div class="big">42.5 kg</div>
+          <div class="sets"><span>40kg &times; 10</span><span>40kg &times; 10</span><span>40kg &times; 10</span></div>
+        </div>
+      </div>
+      <div class="feat-media"><div class="ph phone has-photo" data-img="app_tracker" data-alt="It tells you when to lift heavier in the ALTER YOU app"><img src="app/app_tracker.jpg" alt="It tells you when to lift heavier in the ALTER YOU app" loading="lazy" decoding="async"></div></div>
+    </div>
+    <div class="feat" id="form" data-reveal>
+      <div>
+        <span class="feat-n">03</span>
+        <h2>It shows you what wrong feels like</h2>
+        <p>A full form library, with a video demonstration on every single lift, so you never have to guess.</p>
+        <p>Not "keep your back straight", which nobody has ever been helped by. Something you can actually feel: <em>if you feel this in your lower back instead of your glutes, your hips are rising first.</em></p>
+      </div>
+      <div class="feat-media"><div class="ph phone has-photo" data-img="app_form" data-alt="It shows you what wrong feels like in the ALTER YOU app"><img src="app/app_form.jpg" alt="It shows you what wrong feels like in the ALTER YOU app" loading="lazy" decoding="async"></div></div>
+    </div>
+    <div class="feat rev" id="fuel" data-reveal>
+      <div>
+        <span class="feat-n">04</span>
+        <h2>Personalised to you,<em>your body and your goals</em></h2>
+        <p>Calories and protein calculated from your height, weight, age and how much you actually move. Not the same number handed to every woman regardless of whether she is 45kg or 105kg.</p>
+        <p>Scan a barcode to log anything packaged. Log in grams.</p>
+        <ul class="ticks">
+          <li>No food is banned. Not one.</li>
+          <li>The app won’t let your calories get too low</li>
+          <li>A protein target you can hit without a shake</li>
+        </ul>
+      </div>
+      <div class="feat-media"><div class="ph phone has-photo" data-img="app_fuel" data-alt="Calories and macros worked out for your body in the ALTER YOU app"><img src="app/app_fuel.jpg" alt="Calories and macros worked out for your body in the ALTER YOU app" loading="lazy" decoding="async"></div></div>
+    </div>
+    <div class="feat" id="cycle" data-reveal>
+      <div>
+        <span class="feat-n">05</span>
+        <h2>Training that moves with you</h2>
+        <p>Four phases, and each one changes what ALTER YOU asks of you. Follicular: push, add weight, try the harder thing. Luteal: expect the bar to feel heavier than it is, and know that holding is a win, not a step back.</p>
+        <p>Every note is about what you can do, never how you look.</p>
+      </div>
+      <div class="feat-media"><div class="ph phone has-photo" data-img="app_cycle" data-alt="Training that moves with you in the ALTER YOU app"><img src="app/app_cycle.jpg" alt="Training that moves with you in the ALTER YOU app" loading="lazy" decoding="async"></div></div>
+    </div>
+    <div class="feat rev" id="progress" data-reveal>
+      <div>
+        <span class="feat-n">06</span>
+        <h2>More than the scale</h2>
+        <p>The tape measure, the weights on the bar, the sessions completed. The scale is in there, but it’s one line on one chart, and it’s never the headline.</p>
+        <p>Progress photos are stored privately. Only your account can read them. Delete your account and the files are deleted too, not just the database rows.</p>
+      </div>
+      <div class="feat-media"><div class="ph phone has-photo" data-img="app_progress" data-alt="Progress that is not just the scale in the ALTER YOU app"><img src="app/app_progress.jpg" alt="Progress that is not just the scale in the ALTER YOU app" loading="lazy" decoding="async"></div></div>
+    </div>
+        <div class="feat rev" id="grocery" data-reveal>
+      <div>
+        <span class="feat-n">08</span>
+        <h2>Your shop writes itself</h2>
+        <p>Save the recipes you want to cook this week and ALTER YOU turns them into one grocery list. Shared ingredients merge into a single line, and the whole thing is grouped by aisle.</p>
+        <p>Tick items off as you walk the store. Close the app in the middle of Woolworths and the ticks are still there when you come back.</p>
+      </div>
+      <div class="feat-media"><div class="ph phone has-photo" data-img="app_grocery" data-alt="Your shop writes itself in the ALTER YOU app"><img src="app/app_grocery.jpg" alt="Your shop writes itself in the ALTER YOU app" width="1000" height="2040" loading="lazy" decoding="async"></div></div>
+    </div>
+      </div>
+</section>
+
+<section class="sec bg-linen">
+  <div class="wrap">
+    <div class="center head" data-reveal>
+      <p class="eyebrow">And everything else</p>
+      <h2>Everything else<em>that is in there</em></h2>
+      <p class="lede">Everything below is included in the price. There’s no upgrade tier and nothing is locked.</p>
+    </div>
+    <div class="specs" data-reveal-group>
+      <div class="spec"><span class="n">12</span><h3>Strength programs</h3><p>Matched to your goal, your equipment and your experience.</p></div>
+      <div class="spec"><span class="n">101</span><h3>Recipes</h3><p>High protein, every one with the macros already worked out. Save any to your grocery list in a tap.</p></div>
+      <div class="spec"><span class="n">300+</span><h3>Food library</h3><p>A searchable database of everyday foods, logged in real grams, so your numbers are actually right.</p></div>
+      <div class="spec"><span class="n">20</span><h3>Guided warm ups</h3><p>One move at a time, with what it should feel like and the common mistake.</p></div>
+      <div class="spec"><span class="n">7 days</span><h3>Sleep and steps</h3><p>A week at a time, so a bad night stops looking like a disaster.</p></div>
+      <div class="spec"><span class="n">&#10003;</span><h3>Train with friends</h3><p>A private circle. Share your training to unlock your friends’ posts. Never public, only the people you choose.</p></div>
+      <div class="spec"><span class="n">&#10003;</span><h3>Tempo and RPE</h3><p>Every exercise comes with a tempo and a target effort, so the same weight keeps getting harder.</p></div>
+      <div class="spec"><span class="n">&#10003;</span><h3>Progress photos</h3><p>Private to you, stored securely, never shared, never public.</p></div>
+      <div class="spec"><span class="n">&#10003;</span><h3>Grocery list</h3><p>Built from your saved recipes, grouped by aisle, ticked as you shop.</p></div>
+      <div class="spec"><span class="n">&#10003;</span><h3>Barcode scanner</h3><p>Scan any packaged food and the calories and macros fill themselves in.</p></div>
+      <div class="spec"><span class="n">&#10003;</span><h3>My Diary</h3><p>A to do list, gratitude notes and your goals, with a fresh affirmation each day.</p></div>
+      <div class="spec"><span class="n">&#10003;</span><h3>Travel mode</h3><p>Swap your week to no-equipment workouts for a hotel or a park, then back again.</p></div>
+      <div class="spec"><span class="n">&#10003;</span><h3>Achievements</h3><p>Badges you earn from real training. First workout, a tonne lifted, a thirty day streak.</p></div>
+      <div class="spec"><span class="n">&#10003;</span><h3>Mindset reads</h3><p>Short, honest reads for the days the training is the easy part.</p></div>
+    </div>
+  </div>
+</section>
+
+<section class="sec bg-bone">
+  <div class="wrap">
+    <div class="center head" data-reveal>
+      <p class="eyebrow">Included with membership</p>
+      <h2>Challenges<em>you can join</em></h2>
+      <p class="lede">Each one is themed around a goal, runs for a set block of weeks, and is judged on your transformation, from your photos and your training.</p>
+    </div>
+    <div class="btns center" style="justify-content:center;margin-top:0">
+      <a class="btn line" href="challenges.html">See the calendar</a>
+    </div>
+  </div>
+</section>
+
+<section class="sec bg-sage center" id="get">
+  <div class="wrap">
+    <p class="eyebrow">Pricing</p>
+    <h2>$14.17 a month,<em>everything included</em></h2>
+    <p class="lede">Three days free. No card to start.</p>
+    <div class="btns">
+      <a class="btn paper" href="#" data-appstore data-track="App Store click"><svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M17.05 12.53c-.02-2.2 1.8-3.26 1.88-3.31-1.03-1.5-2.62-1.7-3.19-1.73-1.36-.14-2.65.8-3.34.8-.69 0-1.75-.78-2.87-.76-1.48.02-2.84.86-3.6 2.18-1.53 2.66-.39 6.6 1.1 8.76.73 1.06 1.6 2.25 2.74 2.2 1.1-.04 1.52-.71 2.85-.71 1.33 0 1.7.71 2.87.69 1.18-.02 1.93-1.08 2.65-2.14.83-1.22 1.18-2.41 1.2-2.47-.03-.01-2.3-.88-2.32-3.5zM14.9 5.9c.6-.74 1.01-1.76.9-2.78-.87.04-1.93.58-2.56 1.31-.56.65-1.06 1.7-.93 2.7.98.08 1.98-.5 2.59-1.23z"/></svg> Download on the App Store</a>
+      <a class="btn line" href="pricing.html">See pricing</a>
+    </div>
+    <p class="fine">$169.99 a year or $24.99 a month &middot; Cancel in two taps</p>
+  </div>
+</section>
+
+
+
+<!-- a quiet way into the program finder from anywhere -->
+<div class="finder-tab" id="finderTab">
+  <a href="finder.html" data-track="Finder tab"><svg viewBox="0 0 26 9" aria-hidden="true" style="width:13px;height:13px;rotate:90deg;fill:none;stroke:currentColor;stroke-width:1.8"><path d="M5 12h14M13 6l6 6-6 6" stroke-linecap="round" stroke-linejoin="round"/></svg>Let's find your program</a>
+  <button class="x" type="button" aria-label="Hide this">&times;</button>
+</div>
+
+<button class="totop" id="toTop" type="button" aria-label="Back to top">
+  <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 19V5M5 12l7-7 7 7" stroke-linecap="round" stroke-linejoin="round"/></svg>
+</button>
+
+<div class="sticky">
+  <a class="btn" href="pricing.html" data-track="Sticky bar">Join ALTER YOU &middot; $14.17/mo</a>
+</div>
+
+<footer>
+  <div class="wrap">
+    <div class="fgrid">
+      <div>
+        <div class="flock"><svg width="17" height="14" viewBox="0 0 1220 1000" aria-hidden="true" class="mark"><path d="M110 890 L610 110 L1110 890" fill="none" stroke="#EDE8E0" stroke-width="220" stroke-linecap="round" stroke-linejoin="round"/></svg><span>Alter You</span></div>
+        <p>Strength training, nutrition and cycle syncing.<br>Made for women, by women.</p>
+      </div>
+      <div>
+        <h4>App</h4>
+        <ul>
+          <li><a href="features.html">Features</a></li>
+          <li><a href="shred.html">Summer Shred</a></li>
+          <li><a href="challenges.html">Challenges</a></li>
+        <li><a href="finder.html">Find your program</a></li>
+        <li><a href="programs.html">All programs</a></li>
+        <li><a href="calculator.html">Macro calculator</a></li>
+                  <li><a href="pricing.html">Pricing</a></li>
+          <li><a href="faq.html">FAQ</a></li>
+        </ul>
+      </div>
+      <div>
+        <h4>Company</h4>
+        <ul>
+          <li><a href="about.html">About</a></li>
+          <li><a href="blog.html">Blog</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="fbot">
+      <span>&copy; 2026 ALTER YOU. Australia.</span>
+      <nav class="fbot-links" aria-label="Legal">
+        <a href="privacy.html">Privacy</a><span aria-hidden="true">&middot;</span>
+        <a href="terms.html">Terms</a><span aria-hidden="true">&middot;</span>
+        <a href="support.html">Support</a><span aria-hidden="true">&middot;</span>
+        <a href="admin.html" rel="nofollow" class="fadmin">Admin</a>
+      </nav>
+    </div>
+  </div>
+</footer>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="alter.js?v=162"></script>
+</body>
+</html>
