@@ -1,0 +1,33 @@
+RECIPE PHOTOS
+=============
+
+Five food photos, resized for the website.
+
+NOTHING TO UPLOAD
+-----------------
+These sit in the site's own "recipes" folder and show the moment the
+site goes up. No admin step, the same way the transformation photos
+work.
+
+To change one later, replace that file on the server with another photo
+of the same name.
+
+  recipe_1.jpg  Strawberry overnight oats
+  recipe_4.jpg  Chipotle chicken tacos
+  recipe_5.jpg  Proper chicken burgers
+
+The first three match the recipes that were already on the homepage. The
+tacos and the burgers are new cards, so they need the macros checked
+against the real recipes in the app before launch. I estimated them:
+
+  Tacos    510 cal, 44g protein, 52g carbs, 14g fat
+  Burgers  620 cal, 48g protein, 58g carbs, 20g fat
+
+If the app says something different, the app wins. Tell me the real
+numbers and I will correct the website.
+
+A NOTE ON SHAPE
+---------------
+The burger photo is landscape and the rest are portrait. The recipe cards
+crop to a square, so the burger photo loses its left and right edges. If
+you have a portrait version of that shot it will sit better.
