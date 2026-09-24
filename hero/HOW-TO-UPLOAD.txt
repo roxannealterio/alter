@@ -1,0 +1,29 @@
+HERO PHOTO
+==========
+
+One photo fills the top of the home page.
+
+  hero_1.jpg  Roxy, seated, black bodysuit
+
+There used to be a second one fading in and out every two seconds.
+That was removed on 24 September. One still photo, no movement.
+
+NOTHING TO UPLOAD
+-----------------
+It sits in the site's own "hero" folder and shows the moment the site
+goes up.
+
+TO CHANGE IT
+------------
+Replace hero_1.jpg on the server with another photo of the same name.
+
+Make it a tall portrait shape, around 1029 x 1809. Anything wider gets
+cropped in from the sides, so keep the important part of the picture
+away from the left and right edges.
+
+IF THE OLD PHOTO KEEPS COMING BACK
+----------------------------------
+A photo uploaded in the admin overrides the file here. If you replace
+hero_1.jpg on the server and still see the old one, the database has a
+copy. Go to the admin, find the home hero slot, and upload the new
+photo there too.

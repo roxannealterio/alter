@@ -1,0 +1,10 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://alteryouapp.com/sitemap.xml
+
+# The admin used to be named here. It is not any more, on purpose.
+# robots.txt is a public file that anyone can open, so listing a private
+# page in it is an advertisement, not a lock. The admin keeps search
+# engines out with a noindex tag on the page itself, which does the same
+# job without telling the world where to look.

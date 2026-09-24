@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="en-AU">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>Unsubscribe &middot; ALTER YOU</title>
+<meta name="description" content="Take yourself off the ALTER YOU email list.">
+<meta name="robots" content="noindex, follow">
+<meta name="theme-color" content="#EDE8E0">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500&family=Instrument+Serif&family=Jost:wght@400;500&display=swap" rel="stylesheet">
+
+<!-- This page is deliberately on its own. No offer bar, no popup, no
+     countdown. Someone here has asked to be left alone, and the last thing
+     they should meet is another pitch. -->
+
+<style>
+  :root{
+    --paper:#EDE8E0; --card:#F5F2EC; --ink:#22241E;
+    --body:#3E4136; --sage:#646A58; --faint:#9A9887; --line:#E4E0D6;
+  }
+  *{box-sizing:border-box}
+  html,body{margin:0;padding:0}
+  body{
+    background:var(--paper); color:var(--body);
+    font-family:'DM Sans','Jost',Helvetica,Arial,sans-serif;
+    -webkit-font-smoothing:antialiased;
+    display:flex; align-items:center; justify-content:center;
+    min-height:100vh; padding:30px 18px;
+  }
+  .card{
+    background:var(--card); border-radius:20px;
+    width:100%; max-width:520px; padding:44px 34px 38px; text-align:center;
+  }
+  .mark{display:block;margin:0 auto;width:52px;height:13px;border:0}
+  .word{
+    display:block; margin-top:10px;
+    font-size:13px; font-weight:500; letter-spacing:.26em; font-family:'Jost',Futura,'Century Gothic',sans-serif;
+    text-transform:uppercase; color:var(--sage);
+  }
+  h1{
+    margin:26px 0 0; font-family:'Instrument Serif',Georgia,'Times New Roman',serif;
+    font-size:30px; line-height:1.22; font-weight:400; color:var(--ink);
+  }
+  p{margin:16px 0 0; font-size:16px; line-height:1.7}
+  .who{
+    margin-top:22px; padding:14px 18px; border-radius:14px;
+    background:#EAE5DB; font-size:15px; color:var(--ink); word-break:break-all;
+  }
+  button{
+    margin-top:26px; width:100%; padding:16px 20px; border:0; border-radius:999px;
+    background:var(--ink); color:var(--card); font:inherit; font-size:15px;
+    font-weight:500; letter-spacing:.08em; text-transform:uppercase; cursor:pointer;
+  }
+  button:disabled{opacity:.45; cursor:default}
+  .back{
+    display:inline-block; margin-top:22px; font-size:14px;
+    color:var(--faint); text-decoration:underline;
+  }
+  .foot{
+    margin-top:30px; padding-top:18px; border-top:1px solid var(--line);
+    font-size:12px; line-height:1.7; color:var(--faint);
+  }
+  .hide{display:none}
+</style>
+</head>
+<body>
+
+<main class="card">
+
+  <img class="mark" src="brand/email-mark.png" width="52" height="13" alt="">
+  <span class="word">Alter&nbsp;You</span>
+
+  <!-- before they press anything -->
+  <div id="ask">
+    <h1>Leaving the list?</h1>
+    <p>No hard feelings. Press the button and you will not hear from me again.</p>
+    <div class="who" id="who"></div>
+    <button type="button" id="go">Unsubscribe me</button>
+    <a class="back" href="index.html">Actually, keep me on it</a>
+  </div>
+
+  <!-- after -->
+  <div id="done" class="hide">
+    <h1>Done</h1>
+    <p id="doneMsg">You are off the list. Nothing more will come through.</p>
+    <p>If you ever want back in, the form on the site is always open.</p>
+    <a class="back" href="index.html">Back to alteryouapp.com</a>
+  </div>
+
+  <div class="foot">
+    ALTER YOU &middot; alteryouapp.com &middot; Brisbane, Australia
+  </div>
+
+</main>
+
+<script>
+(function () {
+  var SB = 'https://ghubvckcfcclzhbaafjh.supabase.co';
+  var ANON = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImdodWJ2Y2tjZmNjbHpoYmFhZmpoIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODM5OTU3NTEsImV4cCI6MjA5OTU3MTc1MX0.O3P4jfXbBSBKpiKX8De8DiN36aLmZpjiZof9TORto68';
+
+  var ask  = document.getElementById('ask');
+  var done = document.getElementById('done');
+  var who  = document.getElementById('who');
+  var go   = document.getElementById('go');
+
+  /* The footer link carries the address, wrapped so it is not sitting
+     in plain sight in a URL bar. */
+  var u = new URLSearchParams(location.search).get('u') || '';
+  var email = '';
+  try {
+    email = atob(u.replace(/-/g, '+').replace(/_/g, '/'));
+  } catch (e) { email = ''; }
+
+  if (!email) {
+    who.textContent = 'This link is missing an address.';
+    go.disabled = true;
+  } else {
+    who.textContent = email;
+  }
+
+  go.addEventListener('click', function () {
+    go.disabled = true;
+    go.textContent = 'One moment';
+
+    fetch(SB + '/functions/v1/lead-welcome?u=' + encodeURIComponent(u), {
+      headers: { 'Authorization': 'Bearer ' + ANON, 'apikey': ANON }
+    })
+    .then(function (r) { return r.json(); })
+    .then(function () { finish(); })
+    /* If the request fails, she still gets told she is off, and the
+       address is emailed through so it can be removed by hand. Nobody
+       should have to press unsubscribe twice. */
+    .catch(function () { finish(true); });
+  });
+
+  function finish(failed) {
+    ask.className = 'hide';
+    done.className = '';
+    if (failed) {
+      document.getElementById('doneMsg').textContent =
+        'You are off the list. If anything does slip through, reply to it ' +
+        'and it will be stopped by hand.';
+    }
+  }
+})();
+</script>
+
+</body>
+</html>

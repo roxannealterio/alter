@@ -1,0 +1,29 @@
+PROGRAM CARD PHOTOS
+===================
+
+Photos for the "Find your fit" cards on the home page. Supplied already
+cropped to 3:4 and resized to 900 x 1200 for the website.
+
+In the order they appear on the page:
+
+  program_define.jpg  Define and Sculpt  seated, black bodysuit
+  program_1.jpg       Glute Build        stability ball
+  program_3.jpg       Bodyweight Base    quadruped leg raise
+  program_2.jpg       Foundations        rear view lunge
+
+program_4.jpg was the Home Strength card, taken off the home page on
+24 September. The file is still in this folder in case it comes back.
+
+NOTHING TO UPLOAD
+-----------------
+These sit in the site's own "programs" folder, the same way the recipe
+photos work. Uploading a program card photo in the admin overrides the
+file here.
+
+To change one, replace that file on the server with another photo of
+the same name.
+
+A NOTE ON SHAPE
+---------------
+The cards crop to 3:4 upright, and the program name sits over the top
+left corner, so keep that corner clear.
