@@ -36,12 +36,12 @@
   --sec:clamp(52px,7.5vw,98px);
 
   /* DM Sans, to match the app. Change this one line to change the whole site. */
-  --f:'DM Sans',ui-sans-serif,system-ui,-apple-system,'Segoe UI',sans-serif;
+  --f:'Hanken Grotesk',ui-sans-serif,system-ui,-apple-system,'Segoe UI',sans-serif;
   /* The wordmark is set separately from body text, because the A in the
      logo is a pure geometric triangle and DM Sans is not. Change this one
      line to match whatever the logo is drawn in. */
-  --f-mark:'Jost','Century Gothic','Futura',var(--f);
-  --f-accent:'Instrument Serif',Georgia,'Times New Roman',serif;
+  --f-mark:'Bricolage Grotesque','Century Gothic','Futura',var(--f);
+  --f-accent:'Bricolage Grotesque','Century Gothic',Futura,var(--f);
 }
 
 *,*::before,*::after{box-sizing:border-box}
