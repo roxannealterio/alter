@@ -271,10 +271,17 @@ window.alterAtLaunch = function (fn) {
    a data-img key. The photo is inserted into the slot, so anything
    sitting on top of it (pills, names, captions) survives.
    ══════════════════════════════════════════════════════════════ */
-/* A second copy of every signup goes here, and Formspree emails it
-   through to you. The database is the real list; this is the safety net
-   and the notification. Clear this line to stop sending the copy. */
-window.ALTER_FORMSPREE = 'https://formspree.io/f/mrenbwpz';
+/* Signups go to two places. The Supabase `leads` table below is the
+   real, permanent list (the safety net). Klaviyo is the email engine:
+   it subscribes the person and fires the welcome / challenge emails.
+   Fill these two in from your Klaviyo account:
+     • company_id = your Klaviyo PUBLIC api key  (Settings → API keys)
+     • list_id    = the ALTER YOU list id        (Lists & Segments → open the list → Settings)
+   Until both are filled, signups still save to Supabase as normal. */
+window.ALTER_KLAVIYO = {
+  company_id: 'YqtEjA',
+  list_id:    'SbescB'
+};
 
 window.ALTER_SUPABASE = {
   url: 'https://ghubvckcfcclzhbaafjh.supabase.co',
@@ -571,21 +578,42 @@ window.ALTER_ANALYTICS = {
       if (err) err.hidden = true;
       if (btn) { btn.disabled = true; btn.textContent = 'One moment'; }
 
-      /* Two copies, on purpose. The database is the real list, and
-         Formspree is the safety net plus the email that tells you someone
-         signed up. Both are sent at once rather than one after the other,
-         so a signup survives either of them failing. She only sees an
-         error if both fail, because in every other case she really is on
-         the list. */
+      /* Two copies, on purpose. The Supabase `leads` table is the real
+         list, and Klaviyo is the email engine that subscribes them and
+         sends the welcome / challenge emails. Both fire at once rather
+         than one after the other, so a signup survives either of them
+         failing. She only sees an error if both fail, because in every
+         other case they really are on the list. */
       var toList = save(form);
 
-      var toEmail = window.ALTER_FORMSPREE
-        ? fetch(window.ALTER_FORMSPREE, {
+      /* Klaviyo subscribe runs only when the person ticked the marketing
+         consent box, so the email list stays properly opt-in. The source
+         (waitlist / challenge) rides along as a profile property, so each
+         kind of signup can trigger its own flow in Klaviyo. */
+      var kl   = window.ALTER_KLAVIYO;
+      var kf   = new FormData(form);
+      var konsent = !!kf.get('consent');
+      var live = kl && kl.company_id && kl.company_id !== 'PUBLIC_KEY'
+                 && kl.list_id && kl.list_id !== 'LIST_ID';
+      var toEmail = (live && konsent)
+        ? fetch('https://a.klaviyo.com/client/subscriptions/?company_id=' + encodeURIComponent(kl.company_id), {
             method: 'POST',
-            body: new FormData(form),
-            headers: { Accept: 'application/json' }
+            headers: { 'Content-Type': 'application/json', 'revision': '2024-10-15' },
+            body: JSON.stringify({
+              data: {
+                type: 'subscription',
+                attributes: {
+                  profile: { data: { type: 'profile', attributes: {
+                    email:      (kf.get('email') || '').toString().trim().toLowerCase(),
+                    first_name: (kf.get('name')  || '').toString().trim(),
+                    properties: { source: form.dataset.source || 'website' }
+                  } } }
+                },
+                relationships: { list: { data: { type: 'list', id: kl.list_id } } }
+              }
+            })
           }).then(function (r) {
-            if (!r.ok) throw new Error('formspree said ' + r.status);
+            if (!r.ok) throw new Error('klaviyo said ' + r.status);
           })
         : Promise.reject(new Error('not in use'));
       toEmail.catch(function () {});   /* handled below, this just keeps the console quiet */
