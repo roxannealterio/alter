@@ -2259,14 +2259,14 @@ button,input,select,textarea{font-family:inherit}
    block edge to edge instead of floating on a wash */
 /* the nutrition card: the oats sit over the corner of the phone, the way
    they do on tile 05 */
-#feat-swipe #fuel .fcard-top{position:relative;overflow:hidden}
-#feat-swipe #fuel .phwrap{position:relative;width:100%;max-width:236px;display:block}
-#feat-swipe #fuel .phwrap .ph{max-width:none}
-#feat-swipe #fuel .dishbadge{position:absolute;left:-16%;top:44%;width:52%;z-index:3;display:block}
-#feat-swipe #fuel .dishbadge img{
+#feat-swipe #meals .fcard-top{position:relative;overflow:hidden}
+#feat-swipe #meals .phwrap{position:relative;width:100%;max-width:236px;display:block}
+#feat-swipe #meals .phwrap .ph{max-width:none}
+#feat-swipe #meals .dishbadge{position:absolute;left:-16%;top:44%;width:52%;z-index:3;display:block}
+#feat-swipe #meals .dishbadge img{
   width:100%;height:auto;aspect-ratio:1/1;object-fit:cover;border-radius:50%;
   border:5px solid #fff;box-shadow:0 18px 38px -14px rgba(34,36,29,.46)}
-#feat-swipe #fuel .dishbadge b{
+#feat-swipe #meals .dishbadge b{
   position:absolute;left:-5%;top:11%;background:#fff;border-radius:999px;
   padding:5px 12px;font-size:.66rem;font-weight:700;color:var(--clay);white-space:nowrap;
   box-shadow:0 8px 18px -7px rgba(34,36,29,.32)}
@@ -2353,12 +2353,12 @@ button,input,select,textarea{font-family:inherit}
   .fcard-top{padding:26px 26px 18px;min-height:423px}
   .fcard-top .ph{max-width:186px}
   #feat-swipe #form .phwrap,
-  #feat-swipe #fuel .phwrap{max-width:186px}
+  #feat-swipe #meals .phwrap{max-width:186px}
 }
 /* On the smallest phones the panel is narrow enough that the overhanging
    bits were being clipped by its own edge, so they tuck in a little. */
 @media(max-width:400px){
-  #feat-swipe #fuel .dishbadge{left:-7%;width:48%}
+  #feat-swipe #meals .dishbadge{left:-7%;width:48%}
   .fcard-body{padding:24px 24px 28px}
   .fcard h3{font-size:1.1rem}
   .fcard p{font-size:.95rem}
@@ -2806,3 +2806,4 @@ button,input,select,textarea{font-family:inherit}
   opacity:0;transition:opacity .3s,transform .3s;z-index:60;pointer-events:none;max-width:90vw;
 }
 .acct-note.on{opacity:1;transform:translate(-50%,0)}
+#feat-swipe .slide:nth-child(11) .fcard-top{background:#EAE4D9}
