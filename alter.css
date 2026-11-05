@@ -2746,3 +2746,63 @@ button,input,select,textarea{font-family:inherit}
 @media(max-width:430px){
   .hero-kicker{letter-spacing:.2em;padding-left:.2em;font-size:.62rem}
 }
+
+/* ══════════════════════════════════════════════════════════════
+   ACCOUNT (account.html)
+   One card, centred. Sign up / log in on the left tab pair, then a
+   small account page once she is in. The full settings are in the app.
+   ══════════════════════════════════════════════════════════════ */
+.acct-sec{min-height:70vh}
+.acct{
+  background:var(--white);border:1px solid var(--sand);border-radius:var(--r);
+  padding:clamp(26px,5vw,44px);max-width:520px;margin:0 auto;
+}
+.acct[hidden],.acct-loading[hidden],.acct-ready[hidden],.acct [data-for][hidden]{display:none}
+.acct-loading{text-align:center;color:var(--soft);font-size:.9rem}
+.acct-tabs{display:flex;gap:6px;background:var(--bone);border-radius:14px;padding:5px;margin-bottom:24px}
+.acct-tabs button{
+  flex:1;border:0;background:transparent;border-radius:10px;padding:11px 8px;cursor:pointer;
+  font-family:var(--f);font-size:.74rem;text-transform:uppercase;letter-spacing:.16em;color:var(--soft);
+}
+.acct-tabs button.on{background:var(--white);color:var(--ink);box-shadow:0 1px 2px rgba(43,45,38,.08)}
+.acct-lede{font-size:.95rem;line-height:1.65;color:var(--soft);margin:0 0 6px}
+.acct-row{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+@media(max-width:420px){.acct-row{grid-template-columns:1fr}}
+.acct-hint{font-size:.8rem;color:var(--soft);line-height:1.5;margin:6px 0 0}
+.acct-fine{font-size:.85rem;color:var(--soft);margin:4px 0 0;text-align:center}
+.acct-fine a,.consent a{color:var(--ink);text-decoration:underline;text-underline-offset:3px}
+.join-err.ok{color:var(--sage-lt)}
+.acct-h{font-size:clamp(1.5rem,4vw,2rem);margin-bottom:20px}
+.acct-h em{font-family:var(--f-accent);font-style:italic;text-transform:none;font-size:1.1em}
+.acct-ready{text-align:center;margin-bottom:26px}
+.acct-ready .tick{
+  width:54px;height:54px;margin:0 auto 16px;border-radius:50%;
+  background:var(--sage);color:var(--on-sage);display:flex;align-items:center;justify-content:center;
+}
+.acct-ready .tick svg{width:26px;height:26px}
+.acct-ready h2{font-size:clamp(1.5rem,4vw,2rem)}
+.acct-ready h2 em{font-family:var(--f-accent);font-style:italic;text-transform:none;font-size:1.1em}
+.acct-list{margin:0 0 22px;border-top:1px solid var(--line)}
+.acct-list>div{display:grid;grid-template-columns:110px 1fr;gap:10px;padding:13px 0;border-bottom:1px solid var(--line)}
+.acct-list dt{font-size:.7rem;text-transform:uppercase;letter-spacing:.18em;color:var(--clay);padding-top:3px}
+.acct-list dd{margin:0;font-size:.98rem;color:var(--ink);line-height:1.5;overflow-wrap:anywhere}
+.acct-app{background:var(--bone);border-radius:14px;padding:18px;margin-bottom:20px}
+.acct-app p{font-size:.9rem;color:var(--soft);line-height:1.6;margin:0 0 14px}
+.acct-app .btn{width:100%}
+.acct-toggle{margin:4px 0 18px}
+.acct-actions{display:flex;flex-wrap:wrap;gap:12px;align-items:center;justify-content:space-between;margin-top:6px}
+.acct-danger{
+  border:0;background:transparent;cursor:pointer;font-family:var(--f);
+  font-size:.82rem;color:#8C4A3F;text-decoration:underline;text-underline-offset:3px;padding:8px 0;
+}
+.acct-danger.armed{font-weight:600}
+.acct-danger:disabled{opacity:.5;cursor:default}
+.acct .acct-fine:last-child{text-align:left;margin-top:14px;line-height:1.55}
+.nav-links a.nav-me{color:var(--clay)}
+
+.acct-note{
+  position:fixed;left:50%;bottom:calc(24px + env(safe-area-inset-bottom,0px));transform:translate(-50%,16px);
+  background:var(--ink);color:var(--bone);padding:12px 20px;border-radius:999px;font-size:.88rem;
+  opacity:0;transition:opacity .3s,transform .3s;z-index:60;pointer-events:none;max-width:90vw;
+}
+.acct-note.on{opacity:1;transform:translate(-50%,0)}

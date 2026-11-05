@@ -1657,3 +1657,38 @@ window.ALTER_ANALYTICS = {
     }
   });
 })();
+
+/* ══════════════════════════════════════════════════════════════
+   ACCOUNT STATE IN THE NAV
+   Signed out: "Log in" and "Sign up free". Signed in: one "My account"
+   link. Reads the saved Supabase session only, no network call.
+   ══════════════════════════════════════════════════════════════ */
+(function () {
+  var login = document.querySelector('[data-acct-login]');
+  var cta   = document.querySelector('[data-acct-cta]');
+  if (!login || !cta || !window.supabase || !window.ALTER_SUPABASE) return;
+  var sb;
+  try { sb = window.supabase.createClient(window.ALTER_SUPABASE.url, window.ALTER_SUPABASE.key); } catch (e) { return; }
+  sb.auth.getSession().then(function (res) {
+    var s = res && res.data && res.data.session;
+    if (!s) return;
+    login.textContent = 'My account';
+    login.href = 'account.html';
+    login.classList.add('nav-me');
+    cta.hidden = true;
+  }).catch(function () {});
+
+  /* small confirmation after log out or delete on the home page */
+  var m = location.search.match(/[?&](out|deleted)=1/);
+  if (m) {
+    var t = document.createElement('div');
+    t.className = 'acct-note';
+    t.setAttribute('role', 'status');
+    t.textContent = m[1] === 'out' ? 'You\u2019re logged out.' : 'Your account has been deleted.';
+    document.body.appendChild(t);
+    setTimeout(function () { t.classList.add('on'); }, 50);
+    setTimeout(function () { t.classList.remove('on'); }, 4200);
+    setTimeout(function () { t.remove(); }, 4800);
+    try { history.replaceState(null, '', location.pathname); } catch (e) {}
+  }
+})();

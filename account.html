@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="en-AU">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+
+<title>Your Account | ALTER YOU</title>
+<meta name="description" content="Create your free ALTER YOU account or log in. One account for the website and the app.">
+<link rel="canonical" href="https://alteryouapp.com/account.html">
+<meta name="theme-color" content="#F6F3ED">
+<meta name="robots" content="noindex, follow">
+<meta name="format-detection" content="telephone=no">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400;12..96,500;12..96,600;12..96,700&family=Hanken+Grotesk:ital,wght@0,300;0,400;0,500;0,600;0,700;1,400&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="alter.css?v=421">
+<link rel="icon" href="favicon.png" id="fav">
+<link rel="apple-touch-icon" href="icon.png" id="appicon">
+</head>
+<body>
+
+<nav class="nav">
+  <div class="nav-in">
+    <button class="burger" type="button" aria-label="Menu" aria-expanded="false" aria-controls="links"><span></span></button>
+    <a class="brand" href="index.html"><span>Alter You</span></a>
+    <div class="nav-links" id="links">
+      <a href="features.html">Features</a>
+      <a href="challenge.html">Booty, Back &amp; Abs</a>
+      <a href="pricing.html">Pricing</a>
+      <a href="about.html">About</a>
+      <a href="blog.html">Blog</a>
+      <a href="faq.html">FAQ</a>
+      <a href="account.html" data-acct-login>Log in</a>
+      <a class="btn sm" href="account.html?mode=signup" data-acct-cta>Sign up free</a>
+    </div>
+  </div>
+</nav>
+
+<section class="sec bg-linen acct-sec">
+  <div class="wrap">
+
+    <!-- ── Signed out: create account / log in / forgot ─────────── -->
+    <div class="acct" id="acctOut" hidden>
+      <div class="acct-tabs" role="tablist">
+        <button type="button" role="tab" class="on" data-mode="signup">Sign up</button>
+        <button type="button" role="tab" data-mode="login">Log in</button>
+      </div>
+
+      <form id="acctForm" class="join-form" novalidate>
+        <p class="acct-lede" data-for="signup">Free, and it takes a minute. The same login works in the app the day it opens.</p>
+        <p class="acct-lede" data-for="login">Pick up where you left off.</p>
+
+        <div class="acct-row" data-for="signup">
+          <div><label for="a_name">First name</label><input id="a_name" name="name" type="text" autocomplete="given-name"></div>
+          <div><label for="a_surname">Last name</label><input id="a_surname" name="surname" type="text" autocomplete="family-name"></div>
+        </div>
+
+        <div><label for="a_email">Email</label><input id="a_email" name="email" type="email" autocomplete="email" inputmode="email" required></div>
+
+        <div><label for="a_pw">Password</label><input id="a_pw" name="password" type="password" autocomplete="current-password" minlength="6"></div>
+
+        <div data-for="signup">
+          <label for="a_dob">Date of birth</label>
+          <input id="a_dob" name="dob" type="text" inputmode="numeric" placeholder="DD / MM / YYYY" maxlength="10" autocomplete="bday">
+          <p class="acct-hint">Your age sets your calorie targets, so we get this right. You need to be 16 or over.</p>
+        </div>
+
+        <label class="consent" data-for="signup"><input type="checkbox" name="marketing" value="yes">
+          <span>Email me about new programs and monthly challenges. Optional, and you can unsubscribe in one tap.</span></label>
+
+        <label class="consent" data-for="signup"><input type="checkbox" name="agree" value="yes">
+          <span>I agree to the <a href="terms.html">Terms</a> and <a href="privacy.html">Privacy Policy</a>.</span></label>
+
+        <p class="join-err" id="acctErr" hidden></p>
+
+        <button type="submit" class="btn" id="acctBtn">Create my account</button>
+
+        <p class="acct-fine" data-for="login"><a href="#" id="acctForgot">Forgot your password?</a></p>
+        <p class="acct-fine" data-for="signup">Already have an account? <a href="#" data-switch="login">Log in</a></p>
+        <p class="acct-fine" data-for="login">New here? <a href="#" data-switch="signup">Create a free account</a></p>
+      </form>
+    </div>
+
+    <!-- ── Signed in: simple account page ───────────────────────── -->
+    <div class="acct" id="acctIn" hidden>
+      <div class="acct-ready" id="acctReady" hidden>
+        <div class="tick" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M5 12l5 5L19 7" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+        <h2>Your account <em>is ready</em></h2>
+        <p class="acct-lede">Use the same email and password in the app and everything carries across.</p>
+      </div>
+      <h2 class="acct-h" id="acctHello">Your account</h2>
+
+      <dl class="acct-list">
+        <div><dt>Name</dt><dd id="acctName"></dd></div>
+        <div><dt>Email</dt><dd id="acctEmail"></dd></div>
+        <div><dt>Membership</dt><dd id="acctPlan"></dd></div>
+        <div><dt>Challenge</dt><dd id="acctChallenge"></dd></div>
+      </dl>
+
+      <div class="acct-app" id="acctApp">
+        <p>The app is where the training, the nutrition and the challenge live.</p>
+        <a class="btn" id="acctAppBtn" href="pricing.html" data-track="Account get app">Get the app</a>
+      </div>
+
+      <label class="consent acct-toggle"><input type="checkbox" id="acctMarketing">
+        <span>Email me about new programs and monthly challenges.</span></label>
+
+      <p class="join-err" id="acctInErr" hidden></p>
+
+      <div class="acct-actions">
+        <button type="button" class="btn line" id="acctLogout">Log out</button>
+        <button type="button" class="acct-danger" id="acctDelete">Delete my account</button>
+      </div>
+      <p class="acct-fine">Deleting removes your account and your data for good. It doesn’t cancel an Apple subscription, so do that in iPhone Settings first.</p>
+    </div>
+
+    <!-- ── Password reset (arrived from the email link) ──────────── -->
+    <div class="acct" id="acctReset" hidden>
+      <h2 class="acct-h">Choose a <em>new password</em></h2>
+      <form id="resetForm" class="join-form" novalidate>
+        <div><label for="r_pw">New password</label><input id="r_pw" type="password" autocomplete="new-password" minlength="6" required></div>
+        <p class="join-err" id="resetErr" hidden></p>
+        <button type="submit" class="btn" id="resetBtn">Save password</button>
+      </form>
+    </div>
+
+    <p class="acct-loading" id="acctLoading">One moment</p>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap">
+    <div class="fgrid">
+      <div>
+        <div class="flock"><svg width="17" height="14" viewBox="0 0 1220 1000" aria-hidden="true" class="mark"><path d="M110 890 L610 110 L1110 890" fill="none" stroke="#2B2D26" stroke-width="220" stroke-linecap="round" stroke-linejoin="round"/></svg><span>Alter You</span></div>
+        <p class="ftag">Unleash your <em>alter ego</em>.</p>
+        <p>Strength training, nutrition and cycle syncing.<br>Made for women, by women.</p>
+        <a class="fsocial" href="https://www.instagram.com/alteryouapp/" target="_blank" rel="noopener" data-track="Instagram footer" aria-label="ALTER YOU on Instagram">
+          <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="5.2"/><circle cx="12" cy="12" r="4.1"/><circle cx="17.3" cy="6.7" r="1.15" fill="currentColor" stroke="none"/></svg>
+          <span>@alteryouapp</span>
+        </a>
+      </div>
+      <div>
+        <h4>App</h4>
+        <ul>
+          <li><a href="features.html">Features</a></li>
+          <li><a href="challenge.html">Booty, Back &amp; Abs</a></li>
+        <li><a href="finder.html">Find your program</a></li>
+        <li><a href="programs.html">All programs</a></li>
+        <li><a href="calculator.html">Macro calculator</a></li>
+                  <li><a href="pricing.html">Pricing</a></li>
+          <li><a href="faq.html">FAQ</a></li>
+        </ul>
+      </div>
+      <div>
+        <h4>Company</h4>
+        <ul>
+          <li><a href="about.html">About</a></li>
+          <li><a href="blog.html">Blog</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="fbot">
+      <span>&copy; 2026 ALTER YOU. Australia.</span>
+      <nav class="fbot-links" aria-label="Legal">
+        <a href="privacy.html">Privacy</a><span aria-hidden="true">&middot;</span>
+        <a href="terms.html">Terms</a><span aria-hidden="true">&middot;</span>
+        <a href="support.html">Support</a>
+      </nav>
+    </div>
+  </div>
+</footer>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="alter.js?v=421"></script>
+<script src="account.js?v=421"></script>
+</body>
+</html>
