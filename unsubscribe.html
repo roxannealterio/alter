@@ -127,7 +127,7 @@
     fetch(SB + '/functions/v1/lead-welcome?u=' + encodeURIComponent(u), {
       headers: { 'Authorization': 'Bearer ' + ANON, 'apikey': ANON }
     })
-    .then(function (r) { return r.json(); })
+    .then(function (r) { if (!r.ok) throw new Error('unsubscribe failed ' + r.status); return r.json(); })
     .then(function () { finish(); })
     /* If the request fails, she still gets told she is off, and the
        address is emailed through so it can be removed by hand. Nobody
@@ -140,8 +140,8 @@
     done.className = '';
     if (failed) {
       document.getElementById('doneMsg').textContent =
-        'You are off the list. If anything does slip through, reply to it ' +
-        'and it will be stopped by hand.';
+        'We could not reach the list just now. Email info@alteryouapp.com with ' +
+        'the word unsubscribe and we will take you off by hand.';
     }
   }
 })();

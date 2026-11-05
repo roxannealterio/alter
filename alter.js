@@ -519,8 +519,10 @@ window.ALTER_ANALYTICS = {
   }
 
   function save(form) {
-    if (!sb) return Promise.resolve();
+    if (!sb) return Promise.reject(new Error('no database client'));
     var f = new FormData(form);
+    /* bots fill the hidden field; people never see it */
+    if (f.get('_gotcha')) return Promise.resolve();
     var row = {
       name:        (f.get('name')  || '').toString().trim() || null,
       email:       (f.get('email') || '').toString().trim().toLowerCase() || null,
@@ -592,7 +594,7 @@ window.ALTER_ANALYTICS = {
          kind of signup can trigger its own flow in Klaviyo. */
       var kl   = window.ALTER_KLAVIYO;
       var kf   = new FormData(form);
-      var konsent = !!kf.get('consent');
+      var konsent = !!kf.get('consent') && !kf.get('_gotcha');
       var live = kl && kl.company_id && kl.company_id !== 'PUBLIC_KEY'
                  && kl.list_id && kl.list_id !== 'LIST_ID';
       var toEmail = (live && konsent)
@@ -1125,6 +1127,9 @@ window.ALTER_ANALYTICS = {
     var reveal = window.ALTER_REVEAL || function () {};
 
     var id = new URLSearchParams(location.search).get('id');
+    /* post.html has its own loader for ?id= (it also handles images), so this
+       one only fills the page when no article was asked for */
+    if (id) { reveal(); return; }
     var q = sb.from('posts').select('*').eq('published', true);
     q = id ? q.eq('id', id) : q.order('featured', { ascending: false }).limit(1);
     q.then(function (r) {
@@ -1248,7 +1253,7 @@ window.ALTER_ANALYTICS = {
     /* No launch date and the app is not out: say it is coming and leave it
        there. Counting down to a date nobody has is worse than not counting,
        and the challenge below hangs off the app being available. */
-    if (!launch && !live) {
+    if (!live && !(launch && now < launch)) {
       if (lab) lab.textContent = 'ALTER YOU is coming';
       out.textContent = '';
       bar.classList.remove('is-urgent');
@@ -1321,7 +1326,8 @@ window.ALTER_ANALYTICS = {
 
     if (now >= start) {
       box.hidden = true;
-      if (note) note.textContent = 'Booty, Back & Abs has started';
+      var liveNow = !window.alterIsLive || window.alterIsLive();
+      if (note) note.textContent = liveNow ? 'Booty, Back & Abs has started' : 'Booty, Back & Abs starts the day the app opens';
       return;
     }
     if (close && now >= close && note) note.textContent = 'until we start on Monday';
@@ -1442,7 +1448,7 @@ window.ALTER_ANALYTICS = {
         a.removeAttribute('data-open');
         a.href = 'index.html#waitpop';
       }
-      if (/download|app store|get the app|days free/i.test(a.textContent)) {
+      if (/download|app store|get the app|days free|join alter you|continue with/i.test(a.textContent)) {
         a.textContent = 'Join the waitlist';
       }
     });

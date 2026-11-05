@@ -133,7 +133,7 @@
         form.hidden = true;
         var p = document.createElement('p');
         p.className = 'acct-lede';
-        p.innerHTML = '<b>Check your email.</b> We sent a link to ' + email + '. Tap it and your account is ready.';
+        p.innerHTML = '<b>Check your email.</b> We sent a link to ' + escapeHtml(email) + '. Tap it and your account is ready.';
         out.appendChild(p);
         done();
       }
@@ -231,7 +231,11 @@
       var md = u.user_metadata || {};
       sb.auth.updateUser({ data: { marketing: on } }).catch(function () {});
       if (on) subscribeKlaviyo(u.email, md.name || '', md.last_name || '');
-      else window.location.href = 'unsubscribe.html?email=' + encodeURIComponent(u.email || '');
+      else {
+        /* the unsubscribe page reads the address wrapped the same way the email footer links do */
+        var wrapped = btoa(u.email || '').replace(/\+/g, '-').replace(/\//g, '_').replace(/=+$/, '');
+        window.location.href = 'unsubscribe.html?u=' + wrapped;
+      }
     });
   });
 
@@ -257,6 +261,14 @@
   var recovering = /[?&]mode=reset/.test(location.search) || /type=recovery/.test(location.hash);
   var q = (location.search.match(/[?&]mode=(\w+)/) || [])[1];
   setMode(q === 'login' ? 'login' : 'signup');
+  /* an expired or already used email link comes back with the reason in the hash */
+  var hashErr = (location.hash.match(/error_description=([^&]+)/) || [])[1];
+  if (hashErr) {
+    recovering = false;
+    setMode('login');
+    showErr(err, 'That link has expired or was already used. Log in, or request a new reset link below.');
+    try { history.replaceState(null, '', 'account.html?mode=login'); } catch (e) {}
+  }
 
   sb.auth.onAuthStateChange(function (event, session) {
     if (event === 'PASSWORD_RECOVERY') { recovering = true; show(reset); return; }

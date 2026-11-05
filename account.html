@@ -31,7 +31,7 @@
       <a href="about.html">About</a>
       <a href="blog.html">Blog</a>
       <a href="faq.html">FAQ</a>
-      <a href="account.html" data-acct-login>Log in</a>
+      <a href="account.html?mode=login" data-acct-login>Log in</a>
       <a class="btn sm" href="account.html?mode=signup" data-acct-cta>Sign up free</a>
     </div>
   </div>
@@ -126,6 +126,13 @@
     </div>
 
     <p class="acct-loading" id="acctLoading">One moment</p>
+    <script>
+      /* if the account script never takes over (blocked script, old browser), say so instead of spinning forever */
+      setTimeout(function () {
+        var l = document.getElementById('acctLoading');
+        if (l && !l.hidden) l.textContent = 'This page could not load. Refresh to try again, or email info@alteryouapp.com and we will sort it out.';
+      }, 8000);
+    </script>
   </div>
 </section>
 
@@ -173,7 +180,7 @@
 </footer>
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-<script src="alter.js?v=421"></script>
-<script src="account.js?v=421"></script>
+<script src="alter.js?v=423"></script>
+<script src="account.js?v=423"></script>
 </body>
 </html>

@@ -241,7 +241,7 @@ setTimeout(function () { window.ALTER_REVEAL(); }, 1500);
 </footer>
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-<script src="alter.js?v=421"></script>
+<script src="alter.js?v=423"></script>
 <script>
 /* If the URL carries ?id=, the article is replaced with that post from the
    admin. Without one, the article written into the page stays as it is. */
@@ -279,10 +279,12 @@ setTimeout(function () { window.ALTER_REVEAL(); }, 1500);
     }).join('');
   }
 
-  sb.from('posts').select('*').eq('id', id).maybeSingle().then(function (res) {
+  sb.from('posts').select('*').eq('id', id).eq('published', true).maybeSingle().then(function (res) {
     var p = res.data;
     if (!p) return;
     document.title = p.title + ' | The ALTER YOU Blog';
+    var canon = document.querySelector('link[rel="canonical"]');
+    if (canon) canon.href = 'https://alteryouapp.com/post.html?id=' + encodeURIComponent(id);
     var cat = document.getElementById('aCat');
     var title = document.getElementById('aTitle');
     var read = document.getElementById('aRead');
