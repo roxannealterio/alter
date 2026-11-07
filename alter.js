@@ -264,10 +264,11 @@ window.alterAtLaunch = function (fn) {
     '<div class="promo-box" role="dialog" aria-modal="true" aria-labelledby="waitpop-t">' +
       '<button class="promo-x" type="button" data-close="waitpop" aria-label="Close"></button>' +
       '<div class="promo-flag">Win $500 cash</div>' +
-      '<h3 id="waitpop-t">Save your<em>spot</em></h3>' +
-      '<p class="promo-lede">Booty, Back \u0026 Abs starts Monday 16 November. Leave your details and ' +
-        'we\u2019ll email you the app link as soon as it\u2019s live. Complete the challenge for your ' +
-        'chance to win <b>$500 cash</b>.</p>' +
+      '<h3 id="waitpop-t">Get the link<em>first</em></h3>' +
+      '<p class="promo-lede">Booty, Back \u0026 Abs runs inside the ALTER YOU app, which opens before ' +
+        'the challenge starts on Monday 16 November. Leave your details and we\u2019ll email you the ' +
+        'download link the moment it\u2019s live, so you can join in the app. Complete the challenge ' +
+        'for your chance to win <b>$500 cash</b>.</p>' +
       '<form id="wait-form" data-source="challenge" class="pop-form">' +
         '<input type="hidden" name="_subject" value="Challenge waitlist">' +
         '<p class="hidden"><label>Skip this: <input name="_gotcha" tabindex="-1"></label></p>' +
@@ -275,13 +276,13 @@ window.alterAtLaunch = function (fn) {
         '<input id="w_name" name="name" type="text" placeholder="First name" autocomplete="given-name" required>' +
         '<label class="sr-only" for="w_email">Email</label>' +
         '<input id="w_email" name="email" type="email" placeholder="Email" autocomplete="email" required>' +
-        '<button type="submit" class="promo-cta" data-track="Waitlist submit">Save my spot</button>' +
+        '<button type="submit" class="promo-cta" data-track="Waitlist submit">Notify me</button>' +
         '<p class="launch-err" hidden>Something went wrong. Please try again, or email info@alteryouapp.com.</p>' +
       '</form>' +
       '<p class="promo-fine">We\u2019ll email you the app link and challenge updates. Unsubscribe anytime.</p>' +
       '<div class="launch-thanks" hidden>' +
         '<div class="thanks-tick" aria-hidden="true"></div>' +
-        '<p><b>Your spot is saved.</b> Check your inbox for the next steps.</p>' +
+        '<p><b>You\u2019re on the list.</b> We\u2019ll email you the app link the moment it\u2019s live, then you join the challenge in the app.</p>' +
         '<button type="button" class="btn line" id="waitRemind" data-track="Waitlist reminder">' +
           'Remind me when it drops</button>' +
         '<p class="promo-fine">Adds it to your calendar, where you will actually see it.</p>' +
@@ -1271,7 +1272,7 @@ window.ALTER_ANALYTICS = {
       cta.removeAttribute('data-open');
       cta.setAttribute('href', 'index.html#waitpop');
     }
-    cta.textContent = 'Save my spot';
+    cta.textContent = 'Notify me';
   }
 
   function tick() {
@@ -1296,7 +1297,7 @@ window.ALTER_ANALYTICS = {
         bar.classList.add('no-count');
       }
       pointAtWaitlist();
-      if (cta) cta.textContent = 'Save my spot';
+      if (cta) cta.textContent = 'Notify me';
       return;
     }
     bar.classList.remove('no-count');
@@ -1487,7 +1488,7 @@ window.ALTER_ANALYTICS = {
         a.href = 'index.html#waitpop';
       }
       if (/download|app store|get the app|days free|join alter you|continue with|waitlist/i.test(a.textContent)) {
-        a.textContent = 'Save my spot';
+        a.textContent = 'Notify me';
       }
     });
 
@@ -1551,7 +1552,7 @@ window.ALTER_ANALYTICS = {
        version names the plan; each card says which it wants */
     if (go) {
       go.textContent = (window.alterIsLive && !window.alterIsLive())
-        ? 'Save my spot'        /* before launch every button says the same thing */
+        ? 'Notify me'        /* before launch every button says the same thing */
         : (card.dataset.go || LABEL[card.dataset.plan] || 'Continue');
       go.removeAttribute('aria-disabled');
       go.classList.add('ready');
@@ -1728,7 +1729,7 @@ window.ALTER_ANALYTICS = {
       } else if (document.getElementById('waitpop')) {
         a.setAttribute('href', '#waitpop');
         a.setAttribute('data-open', 'waitpop');
-        a.textContent = 'Save my spot';
+        a.textContent = 'Notify me';
       }
     });
   }
@@ -1744,7 +1745,7 @@ window.ALTER_ANALYTICS = {
     } else if (document.getElementById('waitpop')) {
       cta.href = '#waitpop';
       cta.setAttribute('data-open', 'waitpop');
-      cta.textContent = 'Save my spot';
+      cta.textContent = 'Notify me';
     }
   }
   set();
