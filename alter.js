@@ -265,8 +265,9 @@ window.alterAtLaunch = function (fn) {
       '<button class="promo-x" type="button" data-close="waitpop" aria-label="Close"></button>' +
       '<div class="promo-flag">Win $500 cash</div>' +
       '<h3 id="waitpop-t">Save your<em>spot</em></h3>' +
-      '<p class="promo-lede">Booty, Back \u0026 Abs starts Monday 16 November. We\u2019ll email you the ' +
-        'app link the moment it\u2019s live, plus how to join and go in the running for <b>$500 cash</b>.</p>' +
+      '<p class="promo-lede">Booty, Back \u0026 Abs starts Monday 16 November. Leave your details and ' +
+        'we\u2019ll email you the app link as soon as it\u2019s live. Complete the challenge for your ' +
+        'chance to win <b>$500 cash</b>.</p>' +
       '<form id="wait-form" data-source="challenge" class="pop-form">' +
         '<input type="hidden" name="_subject" value="Challenge waitlist">' +
         '<p class="hidden"><label>Skip this: <input name="_gotcha" tabindex="-1"></label></p>' +
