@@ -195,6 +195,33 @@
 window.ALTER_APP_STORE = '';                              /* <- paste the App Store link here */
 window.ALTER_LAUNCH_AT = '';                              /* <- a launch date, once you have one */
 
+/* ── LAUNCH WATCH ──────────────────────────────────────────────
+   Nobody has to be at a keyboard when Apple approves the app. Every
+   page asks the App Store whether ALTER YOU is live yet. The moment it
+   is, the App Store link is filled in from Apple's own answer and the
+   whole site flips: download buttons become real downloads, the
+   waitlist popup goes, and the offer bar switches over. A page that is
+   already open flips without a reload. Pasting a link into
+   ALTER_APP_STORE above still works and skips the check. */
+window.ALTER_APP_ID = '6791415358';
+window.alterOnLive = window.alterOnLive || [];
+(function () {
+  if ((window.ALTER_APP_STORE || '').trim()) return;
+  var cb = 'alterAppLookup' + Date.now();
+  window[cb] = function (r) {
+    try {
+      var it = r && r.results && r.results[0];
+      if (!it || !it.trackViewUrl) return;
+      window.ALTER_APP_STORE = String(it.trackViewUrl).split('?')[0];
+      window.alterOnLive.forEach(function (fn) { try { fn(); } catch (e) {} });
+    } catch (e) {} finally { try { delete window[cb]; } catch (e) { window[cb] = undefined; } }
+  };
+  var s = document.createElement('script');
+  s.async = true;
+  s.src = 'https://itunes.apple.com/lookup?id=' + window.ALTER_APP_ID + '&country=au&callback=' + cb;
+  (document.head || document.documentElement).appendChild(s);
+})();
+
 window.alterLaunchAt = function () {
   var t = new Date(window.ALTER_LAUNCH_AT || '');
   return isNaN(t) ? null : t;
@@ -238,9 +265,10 @@ window.alterAtLaunch = function (fn) {
     '<div class="promo-box" role="dialog" aria-modal="true" aria-labelledby="waitpop-t">' +
       '<button class="promo-x" type="button" data-close="waitpop" aria-label="Close"></button>' +
       '<div class="promo-flag">Launching soon</div>' +
-      '<h3 id="waitpop-t">Be the first<em>to know</em></h3>' +
-      '<p class="promo-lede">Leave your name and the link comes straight to you the ' +
-        'morning it drops, before anyone else gets it.</p>' +
+      '<h3 id="waitpop-t">Save your<em>spot</em></h3>' +
+      '<p class="promo-lede">The app opens before Booty, Back \u0026 Abs starts on Monday 16 November. ' +
+        'Leave your name and the link comes straight to you the moment it\u2019s live, so you can join ' +
+        'and go in the running for <b>$500 cash</b>.</p>' +
       '<form id="wait-form" data-source="waitlist" class="pop-form">' +
         '<input type="hidden" name="_subject" value="App waitlist">' +
         '<p class="hidden"><label>Skip this: <input name="_gotcha" tabindex="-1"></label></p>' +
@@ -1254,11 +1282,21 @@ window.ALTER_ANALYTICS = {
        there. Counting down to a date nobody has is worse than not counting,
        and the challenge below hangs off the app being available. */
     if (!live && !(launch && now < launch)) {
-      if (lab) lab.textContent = 'ALTER YOU is coming';
-      out.textContent = '';
-      bar.classList.remove('is-urgent');
-      bar.classList.add('no-count');
+      /* App not out yet: sell the challenge and count down to sign-ups
+         closing, with the button saving a spot on the waitlist. */
+      if (now < close) {
+        if (lab) lab.textContent = 'Win $500 cash \u00b7 Booty, Back & Abs';
+        out.textContent = left(close - now);
+        bar.classList.remove('no-count');
+        bar.classList.add('is-urgent');
+      } else {
+        if (lab) lab.textContent = 'ALTER YOU is coming';
+        out.textContent = '';
+        bar.classList.remove('is-urgent');
+        bar.classList.add('no-count');
+      }
       pointAtWaitlist();
+      if (cta) cta.textContent = 'Save my spot';
       return;
     }
     bar.classList.remove('no-count');
@@ -1269,7 +1307,7 @@ window.ALTER_ANALYTICS = {
       bar.classList.remove('is-urgent');
       pointAtWaitlist();
     } else if (now < close) {
-      if (lab) lab.textContent = 'Booty, Back & Abs \u00b7 save 43%';
+      if (lab) lab.textContent = 'Win $500 cash \u00b7 Booty, Back & Abs';
       out.textContent = left(close - now);
       bar.classList.add('is-urgent');
       pointAtShred();
@@ -1480,6 +1518,7 @@ window.ALTER_ANALYTICS = {
 
   apply();
   window.alterAtLaunch(apply);     /* a page left open flips itself at 7:30 */
+  window.alterOnLive.push(apply);  /* and the moment the App Store says it is live */
 })();
 
 /* ── choosing a plan ───────────────────────────────────────────
