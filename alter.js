@@ -253,7 +253,6 @@ window.alterAtLaunch = function (fn) {
    ══════════════════════════════════════════════════════════════ */
 (function () {
   if (document.getElementById('waitpop')) return;
-  if (!document.querySelector('[data-appstore]')) return;
   if (window.alterIsLive()) return;                    /* app is out, no popup needed */
 
   var d = document.createElement('div');
@@ -264,28 +263,24 @@ window.alterAtLaunch = function (fn) {
     '<div class="promo-bg" data-close="waitpop"></div>' +
     '<div class="promo-box" role="dialog" aria-modal="true" aria-labelledby="waitpop-t">' +
       '<button class="promo-x" type="button" data-close="waitpop" aria-label="Close"></button>' +
-      '<div class="promo-flag">Launching soon</div>' +
+      '<div class="promo-flag">Win $500 cash</div>' +
       '<h3 id="waitpop-t">Save your<em>spot</em></h3>' +
-      '<p class="promo-lede">The app opens before Booty, Back \u0026 Abs starts on Monday 16 November. ' +
-        'Leave your name and the link comes straight to you the moment it\u2019s live, so you can join ' +
-        'and go in the running for <b>$500 cash</b>.</p>' +
-      '<form id="wait-form" data-source="waitlist" class="pop-form">' +
-        '<input type="hidden" name="_subject" value="App waitlist">' +
+      '<p class="promo-lede">Booty, Back \u0026 Abs starts Monday 16 November. We\u2019ll email you the ' +
+        'app link the moment it\u2019s live, plus how to join and go in the running for <b>$500 cash</b>.</p>' +
+      '<form id="wait-form" data-source="challenge" class="pop-form">' +
+        '<input type="hidden" name="_subject" value="Challenge waitlist">' +
         '<p class="hidden"><label>Skip this: <input name="_gotcha" tabindex="-1"></label></p>' +
         '<label class="sr-only" for="w_name">First name</label>' +
         '<input id="w_name" name="name" type="text" placeholder="First name" autocomplete="given-name" required>' +
         '<label class="sr-only" for="w_email">Email</label>' +
         '<input id="w_email" name="email" type="email" placeholder="Email" autocomplete="email" required>' +
-        '<label class="consent"><input type="checkbox" name="consent" value="yes">' +
-          '<span>Also email me about ALTER YOU and anything free I\u2019m running. ' +
-          'One click to stop at any time.</span></label>' +
-        '<button type="submit" class="promo-cta" data-track="Waitlist submit">Put me on the list</button>' +
+        '<button type="submit" class="promo-cta" data-track="Waitlist submit">Save my spot</button>' +
         '<p class="launch-err" hidden>Something went wrong. Please try again, or email info@alteryouapp.com.</p>' +
       '</form>' +
-      '<p class="promo-fine">No cost, no catch. I\u2019ll email you when it opens.</p>' +
+      '<p class="promo-fine">We\u2019ll email you the app link and challenge updates. Unsubscribe anytime.</p>' +
       '<div class="launch-thanks" hidden>' +
         '<div class="thanks-tick" aria-hidden="true"></div>' +
-        '<p><b>You\u2019re on the list.</b></p>' +
+        '<p><b>Your spot is saved.</b> Check your inbox for the next steps.</p>' +
         '<button type="button" class="btn line" id="waitRemind" data-track="Waitlist reminder">' +
           'Remind me when it drops</button>' +
         '<p class="promo-fine">Adds it to your calendar, where you will actually see it.</p>' +
@@ -558,7 +553,7 @@ window.ALTER_ANALYTICS = {
       source:      form.dataset.source || 'website',
       days:        (f.get('days')  || '').toString() || null,
       where_train: (f.get('where') || '').toString() || null,
-      consent:     !!f.get('consent')
+      consent:     form.querySelector('[name="consent"]') ? !!f.get('consent') : true
     };
     if (!row.email) return Promise.resolve();
 
@@ -622,7 +617,11 @@ window.ALTER_ANALYTICS = {
          kind of signup can trigger its own flow in Klaviyo. */
       var kl   = window.ALTER_KLAVIYO;
       var kf   = new FormData(form);
-      var konsent = !!kf.get('consent') && !kf.get('_gotcha');
+      /* A form with no tick-box is a sign-up whose whole point is the email
+         (the app link and challenge updates, stated under the button), so
+         submitting it is the agreement. A form with a box still needs it ticked. */
+      var hasBox  = !!form.querySelector('[name="consent"]');
+      var konsent = (hasBox ? !!kf.get('consent') : true) && !kf.get('_gotcha');
       var live = kl && kl.company_id && kl.company_id !== 'PUBLIC_KEY'
                  && kl.list_id && kl.list_id !== 'LIST_ID';
       var toEmail = (live && konsent)
@@ -1271,7 +1270,7 @@ window.ALTER_ANALYTICS = {
       cta.removeAttribute('data-open');
       cta.setAttribute('href', 'index.html#waitpop');
     }
-    cta.textContent = 'Join the waitlist';
+    cta.textContent = 'Save my spot';
   }
 
   function tick() {
@@ -1486,8 +1485,8 @@ window.ALTER_ANALYTICS = {
         a.removeAttribute('data-open');
         a.href = 'index.html#waitpop';
       }
-      if (/download|app store|get the app|days free|join alter you|continue with/i.test(a.textContent)) {
-        a.textContent = 'Join the waitlist';
+      if (/download|app store|get the app|days free|join alter you|continue with|waitlist/i.test(a.textContent)) {
+        a.textContent = 'Save my spot';
       }
     });
 
@@ -1550,7 +1549,9 @@ window.ALTER_ANALYTICS = {
     /* the paywall layout keeps one label on the button, the homepage
        version names the plan; each card says which it wants */
     if (go) {
-      go.textContent = card.dataset.go || LABEL[card.dataset.plan] || 'Continue';
+      go.textContent = (window.alterIsLive && !window.alterIsLive())
+        ? 'Save my spot'        /* before launch every button says the same thing */
+        : (card.dataset.go || LABEL[card.dataset.plan] || 'Continue');
       go.removeAttribute('aria-disabled');
       go.classList.add('ready');
     }
@@ -1701,6 +1702,52 @@ window.ALTER_ANALYTICS = {
       }, 2000);
     }
   });
+})();
+
+/* ── the menu button follows the launch ────────────────────────
+   Before the app is out a website account does nothing useful, so the
+   menu's "Sign up free" saves a spot instead. Once the App Store says
+   the app is live it becomes "Get the app". A signed-in member never
+   sees it (the account block below hides it). */
+(function () {
+  var cta = document.querySelector('[data-acct-cta]');
+  /* "Start 3 days free" links that only lead to the price cards: before
+     launch they save a spot too, so the button and what happens match. */
+  var trial = [].slice.call(document.querySelectorAll('a:not([data-appstore])')).filter(function (a) {
+    return /3 days free/i.test(a.textContent);
+  });
+  trial.forEach(function (a) { a.dataset.liveHref = a.getAttribute('href') || ''; a.dataset.liveLabel = a.textContent; });
+  function setTrial() {
+    var live = window.alterIsLive();
+    trial.forEach(function (a) {
+      if (live) {
+        a.setAttribute('href', a.dataset.liveHref);
+        a.removeAttribute('data-open');
+        a.textContent = a.dataset.liveLabel;
+      } else if (document.getElementById('waitpop')) {
+        a.setAttribute('href', '#waitpop');
+        a.setAttribute('data-open', 'waitpop');
+        a.textContent = 'Save my spot';
+      }
+    });
+  }
+  setTrial();
+  window.alterOnLive.push(setTrial);
+  if (!cta) return;
+  function set() {
+    if (window.alterIsLive()) {
+      cta.href = (window.ALTER_APP_STORE || '').trim();
+      cta.setAttribute('rel', 'noopener');
+      cta.removeAttribute('data-open');
+      cta.textContent = 'Get the app';
+    } else if (document.getElementById('waitpop')) {
+      cta.href = '#waitpop';
+      cta.setAttribute('data-open', 'waitpop');
+      cta.textContent = 'Save my spot';
+    }
+  }
+  set();
+  window.alterOnLive.push(set);
 })();
 
 /* ══════════════════════════════════════════════════════════════
