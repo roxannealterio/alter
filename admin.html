@@ -913,6 +913,12 @@
     </div>
     <div class="note">Every exercise in the app, with its set up, movement, mistakes and cues already written. Click one to upload the video members watch when they tap "how to".</div>
     <div class="chips" id="fgChips"></div>
+    <div class="card" id="fgBulk" style="border:2px dashed var(--sage);text-align:center;padding:22px;cursor:pointer;margin-bottom:14px">
+      <b>Drop lots of videos at once</b>
+      <div class="meta">Drag videos here, or click to pick them. Name each file after the exercise, like "Hip Thrust.mp4", and it goes to that exercise automatically.</div>
+      <div id="fgBulkLog" style="text-align:left;margin-top:10px;font-size:13px;line-height:1.6"></div>
+    </div>
+    <input type="file" id="fg_bulk" accept="video/*" multiple style="display:none">
     <div class="card" id="fgList"><div class="loading"><span class="spin" style="border-color:rgba(0,0,0,.15);border-top-color:var(--sage)"></span></div></div>
     <input type="file" id="fg_file" accept="video/*" style="display:none">
   </section>
@@ -2099,6 +2105,52 @@ $('fg_file')?.addEventListener('change', async e => {
     pendingGuide = null; e.target.value = '';
   }
 });
+
+// ── BULK VIDEO DROP ────────────────────────────────────────
+// Each file is matched to an exercise by its name, ignoring capitals,
+// spaces and punctuation, so "90-90 Hip Switch.mp4" finds "90/90 Hip Switch".
+const normName = (s) => String(s||'').toLowerCase().replace(/[^a-z0-9]/g,'');
+async function bulkUploadVideos(files){
+  const log = $('fgBulkLog');
+  const line = (t) => { log.insertAdjacentHTML('beforeend', `<div>${t}</div>`); };
+  log.innerHTML = '';
+  if(!allGuides.length) await loadFormGuides();
+  const { data: vids } = await sb.from('videos').select('id,exercise_name').limit(2000);
+  let done = 0, skipped = 0;
+  for(const file of files){
+    const base = file.name.replace(/\.[^.]+$/, '');
+    const g = allGuides.find(x => normName(x.exercise_name) === normName(base));
+    if(!g){ skipped++; line(`&#9888; <b>${esc(file.name)}</b>: no exercise with this name, skipped`); continue; }
+    const name = g.exercise_name;
+    try {
+      line(`Uploading <b>${esc(name)}</b>...`);
+      const path = `form-${slug(name)}-${Date.now()}.${(file.name.split('.').pop()||'mp4').toLowerCase()}`;
+      const { error: upErr } = await sb.storage.from('videos').upload(path, file, { upsert: true, contentType: file.type || 'video/mp4' });
+      if(upErr) throw upErr;
+      const { data: pub } = sb.storage.from('videos').getPublicUrl(path);
+      const { error } = await sb.from('form_guides').update({ video_url: pub.publicUrl }).eq('exercise_name', name);
+      if(error) throw error;
+      const v = (vids || []).find(x => x.exercise_name === name);
+      const r = v ? await sb.from('videos').update({ url: pub.publicUrl }).eq('id', v.id)
+                  : await sb.from('videos').insert({ title: name, exercise_name: name, url: pub.publicUrl });
+      if(r.error) console.warn('videos table not updated:', r.error.message);
+      done++; log.lastChild.innerHTML = `&#10003; <b>${esc(name)}</b>`;
+    } catch(err){
+      skipped++; log.lastChild.innerHTML = `&#10007; <b>${esc(name)}</b>: ${esc(err.message || 'upload failed')}`;
+    }
+  }
+  line(`<b>Done: ${done} uploaded${skipped ? ', ' + skipped + ' skipped' : ''}.</b>`);
+  toast(`${done} videos uploaded`); loadFormGuides();
+}
+(() => {
+  const zone = $('fgBulk'), inp = $('fg_bulk');
+  if(!zone || !inp) return;
+  zone.addEventListener('click', e => { if(e.target === zone || e.target.tagName === 'B' || e.target.className === 'meta') inp.click(); });
+  inp.addEventListener('change', e => { const f = [...e.target.files]; e.target.value = ''; if(f.length) bulkUploadVideos(f); });
+  ['dragenter','dragover'].forEach(t => zone.addEventListener(t, e => { e.preventDefault(); zone.style.background = 'rgba(0,0,0,.04)'; }));
+  ['dragleave','drop'].forEach(t => zone.addEventListener(t, e => { e.preventDefault(); zone.style.background = ''; }));
+  zone.addEventListener('drop', e => { const f = [...e.dataTransfer.files].filter(x => /^video\//.test(x.type) || /\.(mp4|mov|m4v)$/i.test(x.name)); if(f.length) bulkUploadVideos(f); });
+})();
 
 // ── RECIPE PHOTOS ──────────────────────────────────────────
 let allRecipes = [], pendingRecipeId = null;
