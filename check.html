@@ -227,14 +227,14 @@
     var tf = new Image();
     tf.onload = function () {
       row('db', 'pass', 'Transformation photos',
-        'results/client1.jpg loads, so the folder uploaded correctly.');
+        'results/client2.jpg loads, so the folder uploaded correctly.');
     };
     tf.onerror = function () {
       row('db', 'fail', 'Transformation photos',
-        'results/client1.jpg will not load. The photos are missing from the server.',
+        'results/client2.jpg will not load. The photos are missing from the server.',
         'Upload the whole <code>results</code> folder into the same place as index.html, keeping it as a folder.');
     };
-    tf.src = 'results/client1.jpg';
+    tf.src = 'results/client2.jpg';
 
     sb.from('transformations').select('image_url,published').eq('published', true)
       .then(function (r2) {
