@@ -1020,7 +1020,7 @@ header.top .brandmark span,.login-card .brandmark span{color:#5A6049}
   <section class="page wrap hidden" id="page-forms">
     <div class="row-between">
       <h2>Exercises and videos</h2>
-      <div class="hdr-tools"><input class="searchbar" id="fgSearch" placeholder="Search exercises" style="margin:0"><button class="btn small" id="fgAdd" type="button" style="width:auto">Add exercise</button></div>
+      <div class="hdr-tools"><input class="searchbar" id="fgSearch" placeholder="Search exercises" style="margin:0"><button class="btn ghost small" id="fgCovers" type="button" style="width:auto">Make covers</button><button class="btn small" id="fgAdd" type="button" style="width:auto">Add exercise</button></div>
     </div>
     <div class="note">The demo video members see on each exercise.</div>
     <div class="chips" id="fgChips"></div>
@@ -2247,6 +2247,7 @@ async function bulkUploadVideos(files){
       const r = v ? await sb.from('videos').update({ url: pub.publicUrl }).eq('id', v.id)
                   : await sb.from('videos').insert({ title: name, exercise_name: name, url: pub.publicUrl });
       if(r.error) console.warn('videos table not updated:', r.error.message);
+      try { await makeCover(name, URL.createObjectURL(file)); } catch(e){ console.warn(e); }
       done++; log.lastChild.innerHTML = `&#10003; <b>${esc(name)}</b>`;
     } catch(err){
       skipped++; log.lastChild.innerHTML = `&#10007; <b>${esc(name)}</b>: ${esc(err.message || 'upload failed')}`;
@@ -2264,6 +2265,46 @@ async function bulkUploadVideos(files){
   ['dragleave','drop'].forEach(t => zone.addEventListener(t, e => { e.preventDefault(); zone.style.background = ''; }));
   zone.addEventListener('drop', e => { const f = [...e.dataTransfer.files].filter(x => /^video\//.test(x.type) || /\.(mp4|mov|m4v)$/i.test(x.name)); if(f.length) bulkUploadVideos(f); });
 })();
+
+// ── VIDEO COVERS ───────────────────────────────────────────
+// The app shows a still from each video as its cover. It reads it from
+// videos/covers/<exercise-name>.jpg, so making one here is all it takes.
+const coverSlug = n => String(n || '').toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '');
+function makeCover(name, src){
+  return new Promise((resolve, reject) => {
+    const v = document.createElement('video');
+    v.crossOrigin = 'anonymous'; v.muted = true; v.playsInline = true; v.preload = 'auto'; v.src = src;
+    const fail = () => reject(new Error('Could not read the video for ' + name));
+    const t = setTimeout(fail, 30000);
+    v.addEventListener('error', () => { clearTimeout(t); fail(); });
+    v.addEventListener('loadeddata', () => { v.currentTime = Math.min(1, (v.duration || 2) / 3); }, { once: true });
+    v.addEventListener('seeked', () => {
+      try {
+        const w = 360, h = Math.round(w * (v.videoHeight / v.videoWidth || 16 / 9));
+        const c = document.createElement('canvas'); c.width = w; c.height = h;
+        c.getContext('2d').drawImage(v, 0, 0, w, h);
+        c.toBlob(async blob => {
+          clearTimeout(t);
+          if(!blob) return fail();
+          const { error } = await sb.storage.from('videos').upload(`covers/${coverSlug(name)}.jpg`, blob, { upsert: true, contentType: 'image/jpeg', cacheControl: '60' });
+          error ? reject(error) : resolve();
+        }, 'image/jpeg', 0.82);
+      } catch(e){ clearTimeout(t); reject(e); }
+    }, { once: true });
+  });
+}
+async function makeAllCovers(btn){
+  const list = allGuides.filter(g => g.video_url);
+  if(!list.length) return toast('No exercises have a video yet');
+  btn.disabled = true; let ok = 0, bad = 0;
+  for(const g of list){
+    btn.textContent = `Making covers ${ok + bad + 1}/${list.length}`;
+    try { await makeCover(g.exercise_name, g.video_url); ok++; } catch(e){ bad++; console.warn(e); }
+  }
+  btn.disabled = false; btn.textContent = 'Make covers';
+  toast(`${ok} covers made${bad ? ', ' + bad + ' failed' : ''}`);
+}
+$('fgCovers')?.addEventListener('click', e => makeAllCovers(e.currentTarget));
 
 // ── RECIPES ────────────────────────────────────────────────
 // Add, edit and remove recipes, with their ingredients. The app works
@@ -2530,6 +2571,7 @@ function openExerciseEditor(id){
         const { error: upErr } = await sb.storage.from('videos').upload(path, file, { upsert: true, contentType: file.type || 'video/mp4' });
         if(upErr) throw upErr;
         row.video_url = sb.storage.from('videos').getPublicUrl(path).data.publicUrl;
+        try { await makeCover(name, URL.createObjectURL(file)); } catch(e){ console.warn(e); }
       } else if($('fe_novid') && $('fe_novid').checked){
         row.video_url = null;
       }
