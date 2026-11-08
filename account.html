@@ -118,7 +118,9 @@
     <!-- ── Password reset (arrived from the email link) ──────────── -->
     <div class="acct" id="acctReset" hidden>
       <h2 class="acct-h">Choose a <em>new password</em></h2>
+      <p class="acct-lede" id="resetLede" hidden></p>
       <form id="resetForm" class="join-form" novalidate>
+        <div id="r_codeWrap" hidden><label for="r_code">Code from the email</label><input id="r_code" type="text" inputmode="numeric" autocomplete="one-time-code" maxlength="10"></div>
         <div><label for="r_pw">New password</label><input id="r_pw" type="password" autocomplete="new-password" minlength="6" required></div>
         <p class="join-err" id="resetErr" hidden></p>
         <button type="submit" class="btn" id="resetBtn">Save password</button>
@@ -181,6 +183,6 @@
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script src="alter.js?v=423"></script>
-<script src="account.js?v=423"></script>
+<script src="account.js?v=424"></script>
 </body>
 </html>
