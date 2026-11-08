@@ -609,6 +609,24 @@ input:focus,textarea:focus,select:focus{border-color:var(--ink);box-shadow:0 0 0
 .toast{background:var(--ink);color:#fff;border-radius:8px}
 header.top .brandmark span,.login-card .brandmark span{color:#5A6049}
 .shell{padding:0;margin:0}
+.modal.wide{max-width:780px}
+.fgrid{display:grid;grid-template-columns:1fr 1fr;gap:0 14px}
+.inghead,.ingrow{display:grid;grid-template-columns:2.4fr .7fr .8fr .9fr 1.6fr 30px;gap:6px;align-items:center}
+.inghead{font-size:11.5px;color:var(--ink3);margin:2px 0 4px}
+.ingrow{margin-bottom:6px}
+.ingrow input{padding:7px 9px;font-size:13px}
+.ing-x{border:0;background:none;font-size:20px;line-height:1;color:var(--ink3);cursor:pointer;padding:4px}
+.ing-x:hover{color:var(--bad)}
+.macros{margin-top:10px;padding:10px 12px;border-radius:8px;background:var(--wash);font-size:13px;font-weight:600;color:var(--ink)}
+@media(max-width:620px){
+  .fgrid{grid-template-columns:1fr}
+  .inghead{display:none}
+  .ingrow{grid-template-columns:1fr 1fr;padding-bottom:8px;border-bottom:1px solid var(--line)}
+  .ingrow .ing-food,.ingrow .ing-name{grid-column:1/-1}
+}
+.hdr-tools{display:flex;gap:8px;align-items:center}
+.hdr-tools .searchbar{width:240px;flex:none}
+@media(max-width:600px){.hdr-tools{width:100%}.hdr-tools .searchbar{flex:1;width:auto}}
 </style>
 </head>
 <body>
@@ -668,7 +686,7 @@ header.top .brandmark span,.login-card .brandmark span{color:#5A6049}
       <div class="navgroup">
         <div class="navlabel">Content</div>
         <button class="tab" data-tab="forms"><span class="ico">&#9650;</span>Exercises <b class="pill" id="n-forms"></b></button>
-        <button class="tab" data-tab="recipes"><span class="ico">&#9670;</span>Recipe photos <b class="pill" id="n-recipes"></b></button>
+        <button class="tab" data-tab="recipes"><span class="ico">&#9670;</span>Recipes <b class="pill" id="n-recipes"></b></button>
         <button class="tab" data-tab="blog"><span class="ico">&#9644;</span>Blog</button>
       </div>
       <div class="navgroup">
@@ -1002,7 +1020,7 @@ header.top .brandmark span,.login-card .brandmark span{color:#5A6049}
   <section class="page wrap hidden" id="page-forms">
     <div class="row-between">
       <h2>Exercises and videos</h2>
-      <input class="searchbar" id="fgSearch" placeholder="Search form guides" style="margin:0">
+      <div class="hdr-tools"><input class="searchbar" id="fgSearch" placeholder="Search exercises" style="margin:0"><button class="btn small" id="fgAdd" type="button" style="width:auto">Add exercise</button></div>
     </div>
     <div class="note">The demo video members see on each exercise.</div>
     <div class="chips" id="fgChips"></div>
@@ -1019,10 +1037,10 @@ header.top .brandmark span,.login-card .brandmark span{color:#5A6049}
   <!-- RECIPE PHOTOS PAGE -->
   <section class="page wrap hidden" id="page-recipes">
     <div class="row-between">
-      <h2>Recipe Photos</h2>
-      <input class="searchbar" id="recipeSearch" placeholder="Search recipes" style="margin:0">
+      <h2>Recipes</h2>
+      <div class="hdr-tools"><input class="searchbar" id="recipeSearch" placeholder="Search recipes" style="margin:0"><button class="btn small" id="recipeAdd" type="button" style="width:auto">Add recipe</button></div>
     </div>
-    <div class="note">Click a photo to upload or replace it.</div>
+    <div class="note">Add, edit or remove recipes. Calories and macros come from the ingredients.</div>
     <div class="card" id="recipeList"><div class="loading"><span class="spin" style="border-color:rgba(0,0,0,.15);border-top-color:var(--sage)"></span></div></div>
     <input type="file" id="r_file" accept="image/*" style="display:none">
   </section>
@@ -2134,8 +2152,10 @@ function renderGuides(list){
         <div class="meta">${esc(g.category || '')}${g.video_url ? ' · video uploaded' : ' · no video yet'}</div>
       </div>
       ${g.video_url ? `<a class="btn ghost small" href="${esc(g.video_url)}" target="_blank">Play</a>` : ''}
-      <button class="btn ghost small" data-fgvid="${g.id}">${g.video_url ? 'Replace' : 'Add video'}</button>
+      <button class="btn ghost small" data-fgvid="${g.id}">${g.video_url ? 'Replace video' : 'Add video'}</button>
+      <button class="btn small" data-fgedit="${g.id}">Edit</button>
     </div>`).join('');
+  box.querySelectorAll('[data-fgedit]').forEach(b => b.addEventListener('click', () => openExerciseEditor(b.dataset.fgedit)));
   document.querySelectorAll('[data-fgvid]').forEach(b => b.addEventListener('click', () => {
     pendingGuide = b.dataset.fgvid; $('fg_file').click();
   }));
@@ -2245,55 +2265,284 @@ async function bulkUploadVideos(files){
   zone.addEventListener('drop', e => { const f = [...e.dataTransfer.files].filter(x => /^video\//.test(x.type) || /\.(mp4|mov|m4v)$/i.test(x.name)); if(f.length) bulkUploadVideos(f); });
 })();
 
-// ── RECIPE PHOTOS ──────────────────────────────────────────
-let allRecipes = [], pendingRecipeId = null;
+// ── RECIPES ────────────────────────────────────────────────
+// Add, edit and remove recipes, with their ingredients. The app works
+// out calories and macros from the ingredients (each one points at a
+// food, and qty is how many of that food's servings go in), so that is
+// what is edited here too.
+let allRecipes = [], pendingRecipeId = null, allFoods = null;
+const MEAL_TYPES = ['Breakfast','Lunch','Dinner','Snack','Dessert'];
+const toLines = s => String(s || '').split('\n').map(x => x.trim()).filter(Boolean);
+const toList  = s => String(s || '').split(',').map(x => x.trim()).filter(Boolean);
+const num = (v, d) => { const n = parseFloat(v); return isFinite(n) ? n : d; };
+const foodLabel = f => f.name + (f.brand ? ' (' + f.brand + ')' : '');
+
+function recipeMacrosPer(ings, servings){
+  const t = { k:0, p:0, c:0, f:0 }, per = 1 / (servings || 1);
+  (ings || []).forEach(i => { const f = i.foods || {}, q = (i.qty || 0) * per;
+    t.k += (f.calories || 0) * q; t.p += (f.protein || 0) * q; t.c += (f.carbs || 0) * q; t.f += (f.fat || 0) * q; });
+  return t;
+}
 function renderRecipes(list){
   const box = $('recipeList');
   if(!list.length){ box.innerHTML = '<div class="note">No recipes match.</div>'; return; }
-  box.innerHTML = list.map(r => `<div class="rrow">
-      <img class="thumb" src="${esc(r.image_url || '')}" alt="">
-      <div style="flex:1"><b>${esc(r.title || r.name || 'Recipe')}</b>
-        <div class="meta">${r.image_url ? 'Has photo' : 'No photo yet'}</div></div>
-      <button class="btn ghost small" data-photo="${r.id}">${r.image_url ? 'Replace' : 'Add photo'}</button>
-    </div>`).join('');
-  document.querySelectorAll('[data-photo]').forEach(b => b.addEventListener('click', () => {
+  box.innerHTML = list.map(r => {
+    const m = recipeMacrosPer(r.recipe_ingredients, r.servings);
+    const n = (r.recipe_ingredients || []).length;
+    const bits = [r.meal_type, n ? Math.round(m.k) + ' kcal' : null, n ? Math.round(m.p) + 'g protein' : null,
+                  n + (n === 1 ? ' ingredient' : ' ingredients'), r.image_url ? null : 'no photo'].filter(Boolean);
+    return `<div class="rrow">
+      ${r.image_url ? `<img class="thumb" src="${esc(r.image_url)}" alt="">` : '<div class="thumb"></div>'}
+      <div style="flex:1;min-width:0"><b>${esc(r.title || 'Recipe')}</b>
+        <div class="meta">${esc(bits.join(' · '))}</div></div>
+      <button class="btn ghost small" data-photo="${r.id}">${r.image_url ? 'Photo' : 'Add photo'}</button>
+      <button class="btn small" data-redit="${r.id}">Edit</button>
+    </div>`; }).join('');
+  box.querySelectorAll('[data-photo]').forEach(b => b.addEventListener('click', () => {
     pendingRecipeId = b.dataset.photo; $('r_file').click();
   }));
+  box.querySelectorAll('[data-redit]').forEach(b => b.addEventListener('click', () => openRecipeEditor(b.dataset.redit)));
 }
 async function loadRecipes(){
   const box = $('recipeList');
   box.innerHTML = '<div class="loading"><span class="spin" style="border-color:rgba(0,0,0,.15);border-top-color:var(--sage)"></span></div>';
   try {
-    const { data, error } = await sb.from('recipes').select('*').order('sort_order', { ascending: true }).limit(500);
+    const { data, error } = await sb.from('recipes').select('*, recipe_ingredients(*, foods(*))').order('sort_order', { ascending: true }).limit(1000);
     if(error) throw error;
     allRecipes = data || [];
-    renderRecipes(allRecipes);
+    applyRecipeFilter();
   } catch(e){
-    box.innerHTML = `<div class="note">Could not load recipes: ${esc(e.message || String(e))}.<br>If it mentions permission, run <b>MEDIA_LIBRARY.sql</b> once.</div>`;
+    box.innerHTML = `<div class="note">Could not load recipes: ${esc(e.message || String(e))}.</div>`;
   }
 }
-$('recipeSearch')?.addEventListener('input', e => {
-  const q = e.target.value.trim().toLowerCase();
-  renderRecipes(!q ? allRecipes : allRecipes.filter(r => String(r.title || r.name || '').toLowerCase().includes(q)));
-});
+function applyRecipeFilter(){
+  const q = ($('recipeSearch')?.value || '').trim().toLowerCase();
+  renderRecipes(!q ? allRecipes : allRecipes.filter(r => (String(r.title || '') + ' ' + (r.meal_type || '')).toLowerCase().includes(q)));
+}
+$('recipeSearch')?.addEventListener('input', applyRecipeFilter);
+$('recipeAdd')?.addEventListener('click', () => openRecipeEditor(null));
 $('r_file')?.addEventListener('change', async e => {
   const file = e.target.files[0];
   if(!file || !pendingRecipeId) return;
   try {
     toast('Uploading photo...');
-    const path = `${pendingRecipeId}-${Date.now()}.${(file.name.split('.').pop()||'jpg')}`;
-    const { error: upErr } = await sb.storage.from('recipe-photos').upload(path, file, { upsert: true, contentType: file.type });
-    if(upErr) throw upErr;
-    const { data: pub } = sb.storage.from('recipe-photos').getPublicUrl(path);
-    const { error } = await sb.from('recipes').update({ image_url: pub.publicUrl }).eq('id', pendingRecipeId);
-    if(error) throw error;
-    toast('Photo added'); loadRecipes();
+    await setRecipePhoto(pendingRecipeId, file);
+    toast('Photo saved'); loadRecipes();
   } catch(err){
     toast(err.message || 'Upload failed');
   } finally {
     pendingRecipeId = null; e.target.value = '';
   }
 });
+async function setRecipePhoto(id, file){
+  const path = `${id}-${Date.now()}.${(file.name.split('.').pop() || 'jpg').toLowerCase()}`;
+  const { error: upErr } = await sb.storage.from('recipe-photos').upload(path, file, { upsert: true, contentType: file.type || 'image/jpeg' });
+  if(upErr) throw upErr;
+  const { data: pub } = sb.storage.from('recipe-photos').getPublicUrl(path);
+  const { error } = await sb.from('recipes').update({ image_url: pub.publicUrl }).eq('id', id);
+  if(error) throw error;
+}
+async function loadFoods(){
+  if(allFoods) return allFoods;
+  const { data, error } = await sb.from('foods').select('id,name,brand,calories,protein,carbs,fat,serving_desc').order('name').limit(3000);
+  if(error) throw error;
+  allFoods = data || [];
+  return allFoods;
+}
+function ingRowHtml(i){
+  const f = i && i.foods;
+  return `<div class="ingrow">
+    <input class="ing-food" list="foodList" placeholder="Start typing a food" value="${esc(f ? foodLabel(f) : '')}">
+    <input class="ing-qty" type="number" step="0.25" min="0" placeholder="Qty" value="${esc(i ? i.qty : 1)}" title="How many of the food's servings">
+    <input class="ing-amt" type="number" step="any" min="0" placeholder="Amount" value="${esc(i && i.unit_amount != null ? i.unit_amount : '')}">
+    <input class="ing-unit" placeholder="Unit" value="${esc(i ? i.unit || '' : '')}">
+    <input class="ing-name" placeholder="Shown as" value="${esc(i ? i.display_name || '' : '')}">
+    <button type="button" class="ing-x" title="Remove">&times;</button>
+  </div>`;
+}
+async function openRecipeEditor(id){
+  const r = id ? allRecipes.find(x => String(x.id) === String(id)) : null;
+  let foods = [];
+  try { foods = await loadFoods(); } catch(e){ toast('Could not load foods: ' + (e.message || e)); }
+  const ings = (r && r.recipe_ingredients || []).slice().sort((a, b) => (a.sort_order || 0) - (b.sort_order || 0));
+  showModal(`
+    <h2>${r ? 'Edit recipe' : 'New recipe'}</h2>
+    <div class="sub">${r ? 'Changes show in the app straight away.' : 'It shows in the app as soon as you save.'}</div>
+    <label>Title</label><input id="re_title" value="${esc(r ? r.title : '')}">
+    <label>Short description</label><input id="re_blurb" value="${esc(r ? r.blurb || '' : '')}">
+    <div class="fgrid">
+      <div><label>Meal</label><select id="re_meal">${MEAL_TYPES.map(m => `<option${r && r.meal_type === m ? ' selected' : ''}>${m}</option>`).join('')}</select></div>
+      <div><label>Serves</label><input id="re_serv" type="number" min="1" value="${esc(r ? r.servings || 1 : 1)}"></div>
+      <div><label>Prep (min)</label><input id="re_prep" type="number" min="0" value="${esc(r ? r.prep_min || 0 : 0)}"></div>
+      <div><label>Cook (min)</label><input id="re_cook" type="number" min="0" value="${esc(r ? r.cook_min || 0 : 0)}"></div>
+    </div>
+    <label>Tags</label><input id="re_tags" placeholder="High protein · Under 15 min" value="${esc(r ? r.tags || '' : '')}">
+    <label>Contains (comma separated)</label><input id="re_contains" placeholder="Dairy, Gluten" value="${esc(r ? (r.contains || []).join(', ') : '')}">
+    <label>Ingredients</label>
+    <div class="inghead"><span>Food</span><span>Qty</span><span>Amount</span><span>Unit</span><span>Shown as</span><span></span></div>
+    <div id="re_ings">${(ings.length ? ings : [null]).map(ingRowHtml).join('')}</div>
+    <button type="button" class="btn ghost small" id="re_addIng">Add ingredient</button>
+    <div class="meta" style="margin-top:6px">Qty is how many of the food's servings go in, and sets the macros. Amount and unit are what members read, like 1 scoop.</div>
+    <div class="macros" id="re_macros"></div>
+    <datalist id="foodList">${foods.map(f => `<option value="${esc(foodLabel(f))}"></option>`).join('')}</datalist>
+    <label>Method (one step per line)</label><textarea id="re_method" rows="6">${esc(r ? (r.method || []).join('\n') : '')}</textarea>
+    <label>Photo</label>
+    <div style="display:flex;align-items:center;gap:12px">${r && r.image_url ? `<img class="thumb" src="${esc(r.image_url)}" alt="">` : ''}<input id="re_photo" type="file" accept="image/*" style="flex:1"></div>
+    <div class="err" id="re_err"></div>
+    <div class="card-actions">
+      <button class="btn" id="re_save" style="width:auto">Save recipe</button>
+      <button class="btn ghost" id="re_cancel" style="width:auto">Cancel</button>
+      ${r ? '<button class="btn ghost" id="re_del" style="width:auto;margin-left:auto;color:var(--bad)">Delete recipe</button>' : ''}
+    </div>`, 'wide');
+  const byLabel = new Map(foods.map(f => [foodLabel(f).toLowerCase(), f]));
+  const box = $('re_ings');
+  const update = () => {
+    const rows = [...box.querySelectorAll('.ingrow')].map(row => ({ qty: num(row.querySelector('.ing-qty').value, 0), foods: byLabel.get(row.querySelector('.ing-food').value.trim().toLowerCase()) }));
+    rows.forEach((x, k) => { const f = x.foods, hint = box.querySelectorAll('.ing-qty')[k]; if(hint) hint.title = f && f.serving_desc ? '1 = ' + f.serving_desc : "How many of the food's servings"; });
+    const m = recipeMacrosPer(rows.filter(x => x.foods), num($('re_serv').value, 1));
+    $('re_macros').textContent = `Per serving: ${Math.round(m.k)} kcal · ${Math.round(m.p)}g protein · ${Math.round(m.c)}g carbs · ${Math.round(m.f)}g fat`;
+  };
+  const wire = row => {
+    row.querySelector('.ing-x').addEventListener('click', () => { row.remove(); update(); });
+    row.querySelectorAll('input').forEach(inp => inp.addEventListener('input', update));
+    row.querySelector('.ing-food').addEventListener('change', () => {
+      const f = byLabel.get(row.querySelector('.ing-food').value.trim().toLowerCase());
+      const nm = row.querySelector('.ing-name'), un = row.querySelector('.ing-unit'), am = row.querySelector('.ing-amt');
+      if(f && !nm.value) nm.value = f.name.toLowerCase();
+      if(f && f.serving_desc && !un.value){ const mm = String(f.serving_desc).match(/^([\d.\/]+)\s*(.*)$/); if(mm){ am.value = am.value || mm[1]; un.value = mm[2]; } else un.value = f.serving_desc; }
+      update();
+    });
+  };
+  box.querySelectorAll('.ingrow').forEach(wire);
+  $('re_addIng').addEventListener('click', () => { box.insertAdjacentHTML('beforeend', ingRowHtml(null)); wire(box.lastElementChild); box.lastElementChild.querySelector('.ing-food').focus(); });
+  $('re_serv').addEventListener('input', update);
+  update();
+  $('re_cancel').addEventListener('click', closeModal);
+  let delArmed = false;
+  $('re_del')?.addEventListener('click', async e => {
+    const b = e.currentTarget;
+    if(!delArmed){ delArmed = true; b.textContent = 'Tap again to delete'; return; }
+    b.disabled = true;
+    try {
+      const { error: e1 } = await sb.from('recipe_ingredients').delete().eq('recipe_id', r.id); if(e1) throw e1;
+      const { error: e2 } = await sb.from('recipes').delete().eq('id', r.id); if(e2) throw e2;
+      closeModal(); toast('Recipe deleted'); loadRecipes();
+    } catch(err){ $('re_err').textContent = err.message || 'Could not delete'; b.disabled = false; }
+  });
+  $('re_save').addEventListener('click', async e => {
+    const btn = e.currentTarget, err = $('re_err'); err.textContent = '';
+    const title = $('re_title').value.trim();
+    if(!title) return err.textContent = 'Give the recipe a title.';
+    const rows = [], bad = [];
+    [...box.querySelectorAll('.ingrow')].forEach((row, k) => {
+      const label = row.querySelector('.ing-food').value.trim();
+      if(!label) return;
+      const f = byLabel.get(label.toLowerCase());
+      if(!f){ bad.push(k + 1); return; }
+      const amt = row.querySelector('.ing-amt').value;
+      rows.push({ food_id: f.id, qty: num(row.querySelector('.ing-qty').value, 1),
+        unit_amount: amt === '' ? null : num(amt, null), unit: row.querySelector('.ing-unit').value.trim() || null,
+        display_name: row.querySelector('.ing-name').value.trim() || f.name.toLowerCase() });
+    });
+    if(bad.length) return err.textContent = `Pick a food from the list for ingredient ${bad.join(', ')}.`;
+    const rec = { title, blurb: $('re_blurb').value.trim() || null, meal_type: $('re_meal').value,
+      servings: Math.max(1, Math.round(num($('re_serv').value, 1))), prep_min: Math.round(num($('re_prep').value, 0)),
+      cook_min: Math.round(num($('re_cook').value, 0)), tags: $('re_tags').value.trim() || null,
+      contains: toList($('re_contains').value), method: toLines($('re_method').value) };
+    btn.disabled = true; btn.innerHTML = '<span class="spin"></span>';
+    try {
+      let rid = r && r.id;
+      if(rid){
+        const { error } = await sb.from('recipes').update(rec).eq('id', rid); if(error) throw error;
+      } else {
+        rec.sort_order = allRecipes.reduce((m, x) => Math.max(m, x.sort_order || 0), 0) + 1;
+        const { data, error } = await sb.from('recipes').insert(rec).select('id').single(); if(error) throw error;
+        rid = data.id;
+      }
+      const { error: dErr } = await sb.from('recipe_ingredients').delete().eq('recipe_id', rid); if(dErr) throw dErr;
+      if(rows.length){
+        const { error: iErr } = await sb.from('recipe_ingredients').insert(rows.map((x, k) => Object.assign({ recipe_id: rid, sort_order: k + 1 }, x)));
+        if(iErr) throw iErr;
+      }
+      const ph = $('re_photo').files[0];
+      if(ph) await setRecipePhoto(rid, ph);
+      closeModal(); toast(r ? 'Recipe saved' : 'Recipe added'); loadRecipes();
+    } catch(ex){
+      err.textContent = ex.message || 'Could not save';
+      btn.disabled = false; btn.textContent = 'Save recipe';
+    }
+  });
+}
+
+// ── EXERCISE EDITOR ────────────────────────────────────────
+// Add a new exercise or change an existing one: its name, category,
+// how-to notes and its video. The app reads all of this from form_guides.
+const FG_LIST_FIELDS = [['setup','Set up'],['execution','Movement'],['cues','Cues'],['mistakes','Common mistakes']];
+function openExerciseEditor(id){
+  const g = id ? allGuides.find(x => String(x.id) === String(id)) : null;
+  const cats = Array.from(new Set(allGuides.map(x => x.category).filter(Boolean))).sort();
+  showModal(`
+    <h2>${g ? 'Edit exercise' : 'New exercise'}</h2>
+    <div class="sub">${g ? 'Changes show in the app straight away.' : 'It shows in the app as soon as you save.'}</div>
+    <label>Name</label><input id="fe_name" value="${esc(g ? g.exercise_name : '')}">
+    ${g ? '<div class="meta">Workouts find this exercise by its name, so only rename it if the workouts use the new name too.</div>' : ''}
+    <div class="fgrid">
+      <div><label>Category</label><input id="fe_cat" list="fe_cats" value="${esc(g ? g.category || '' : '')}"><datalist id="fe_cats">${cats.map(c => `<option value="${esc(c)}"></option>`).join('')}</datalist></div>
+      <div><label>Equipment</label><input id="fe_eq" placeholder="Barbell, bench" value="${esc(g ? g.equipment || '' : '')}"></div>
+      <div><label>Main muscles (comma separated)</label><input id="fe_pm" value="${esc(g ? (g.primary_muscles || []).join(', ') : '')}"></div>
+      <div><label>Other muscles (comma separated)</label><input id="fe_sm" value="${esc(g ? (g.secondary_muscles || []).join(', ') : '')}"></div>
+    </div>
+    ${FG_LIST_FIELDS.map(([k, l]) => `<label>${l} (one per line)</label><textarea id="fe_${k}" rows="3">${esc(g ? (g[k] || []).join('\n') : '')}</textarea>`).join('')}
+    <label>Breathing</label><input id="fe_breath" value="${esc(g ? g.breathing || '' : '')}">
+    <label>Video</label>
+    ${g && g.video_url ? `<div class="meta" style="margin-bottom:6px"><a href="${esc(g.video_url)}" target="_blank">Play current video</a> · <label style="display:inline;text-transform:none;font-weight:400;margin:0"><input type="checkbox" id="fe_novid" style="width:auto;margin:0 4px 0 6px">Remove it</label></div>` : ''}
+    <input id="fe_video" type="file" accept="video/*">
+    <div class="err" id="fe_err"></div>
+    <div class="card-actions">
+      <button class="btn" id="fe_save" style="width:auto">Save exercise</button>
+      <button class="btn ghost" id="fe_cancel" style="width:auto">Cancel</button>
+    </div>`, 'wide');
+  $('fe_cancel').addEventListener('click', closeModal);
+  $('fe_save').addEventListener('click', async e => {
+    const btn = e.currentTarget, err = $('fe_err'); err.textContent = '';
+    const name = $('fe_name').value.trim();
+    if(!name) return err.textContent = 'Give the exercise a name.';
+    const clash = allGuides.find(x => String(x.exercise_name).toLowerCase() === name.toLowerCase() && (!g || x.id !== g.id));
+    if(clash) return err.textContent = 'There is already an exercise called ' + clash.exercise_name + '.';
+    const row = { exercise_name: name, category: $('fe_cat').value.trim() || null, equipment: $('fe_eq').value.trim() || null,
+      primary_muscles: toList($('fe_pm').value), secondary_muscles: toList($('fe_sm').value),
+      breathing: $('fe_breath').value.trim() || null };
+    FG_LIST_FIELDS.forEach(([k]) => { row[k] = toLines($('fe_' + k).value); });
+    btn.disabled = true; btn.innerHTML = '<span class="spin"></span>';
+    try {
+      const file = $('fe_video').files[0];
+      if(file){
+        const path = `form-${slug(name)}-${Date.now()}.${(file.name.split('.').pop() || 'mp4').toLowerCase()}`;
+        const { error: upErr } = await sb.storage.from('videos').upload(path, file, { upsert: true, contentType: file.type || 'video/mp4' });
+        if(upErr) throw upErr;
+        row.video_url = sb.storage.from('videos').getPublicUrl(path).data.publicUrl;
+      } else if($('fe_novid') && $('fe_novid').checked){
+        row.video_url = null;
+      }
+      if(g){
+        const { error } = await sb.from('form_guides').update(row).eq('id', g.id); if(error) throw error;
+      } else {
+        row.sort_order = allGuides.reduce((m, x) => Math.max(m, x.sort_order || 0), 0) + 1;
+        const { error } = await sb.from('form_guides').insert(row); if(error) throw error;
+      }
+      if('video_url' in row){
+        const { data: v } = await sb.from('videos').select('id').eq('exercise_name', name).limit(1);
+        if(v && v.length) await sb.from('videos').update({ url: row.video_url }).eq('id', v[0].id);
+        else if(row.video_url) await sb.from('videos').insert({ title: name, exercise_name: name, url: row.video_url });
+      }
+      closeModal(); toast(g ? 'Exercise saved' : 'Exercise added'); loadFormGuides();
+    } catch(ex){
+      err.textContent = ex.message || 'Could not save';
+      btn.disabled = false; btn.textContent = 'Save exercise';
+    }
+  });
+}
+$('fgAdd')?.addEventListener('click', () => openExerciseEditor(null));
 
 // ── PROGRESS PHOTOS ────────────────────────────────────────
 let photoFilterReady = false;
@@ -2629,11 +2878,11 @@ async function pickWinner(challengeId, entryId){
 }
 
 // ── MODAL + EMPTY ──────────────────────────────────────────
-function showModal(html){
+function showModal(html, cls){
   closeModal();
   const bg = document.createElement('div');
   bg.className = 'modal-bg'; bg.id = 'modalBg';
-  bg.innerHTML = `<div class="modal">${html}</div>`;
+  bg.innerHTML = `<div class="modal ${cls || ''}">${html}</div>`;
   bg.addEventListener('click', e => { if(e.target === bg) closeModal(); });
   document.body.appendChild(bg);
 }
