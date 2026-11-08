@@ -506,6 +506,116 @@
   .stat{padding:14px 14px;border-radius:12px}
   .stat .n{font-size:1.5rem}
 }
+
+/* ══════════════════════════════════════════════════════════════
+   MATCH THE WEBSITE
+   Same type, colours and buttons as alteryouapp.com: Hanken Grotesk,
+   uppercase spaced labels, ink pill buttons, a cream bar with the clay
+   wordmark, sage for what is selected, the pale sage tiles for numbers.
+   Only looks change here. Nothing below touches behaviour.
+   ══════════════════════════════════════════════════════════════ */
+:root{
+  --olive:#2B2D26; --sage:#8B907A; --sage-d:#5A6049; --on-sage:#22241D;
+  --clay:#5A6049; --mist:#DDE2D3; --linen:#EDE8E0; --bone:#F5F2EC;
+  --wash:#EDE8E0; --soft:#5A5F4E; --ink3:#7A7E70; --line:#E4E0D6; --sand:#DDD8CC;
+  --f:'Hanken Grotesk',ui-sans-serif,system-ui,-apple-system,'Segoe UI',sans-serif;
+  --f-mark:'Bricolage Grotesque','Century Gothic','Futura','Hanken Grotesk',sans-serif;
+}
+body{font-family:var(--f);background:var(--bone);color:var(--ink);letter-spacing:.005em}
+h1,h2,h3,.stat .n,.stat-n,.stat b{font-family:var(--f)}
+input,textarea,select,button{font-family:var(--f)}
+
+/* the wordmark, as in the site nav */
+.brandmark span{font-family:var(--f-mark);font-weight:500;letter-spacing:.22em;font-size:.98rem;color:var(--clay);text-transform:uppercase}
+.brandmark svg path{stroke:var(--clay)}
+
+/* top bar: cream and blurred like the site nav, not a dark slab */
+.top,header.top{
+  background:rgba(245,242,236,.92);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);
+  color:var(--ink);border-bottom:1px solid var(--sand);box-shadow:none;height:66px;
+}
+header.top .brandmark span{color:var(--clay)}
+.who,header.top .who{color:var(--soft);font-size:.8rem}
+.logout{color:var(--ink);text-decoration:none;font-size:.7rem;font-weight:500;text-transform:uppercase;letter-spacing:.2em;border-bottom:1px solid var(--sand);padding-bottom:3px}
+.logout:hover{border-color:var(--ink)}
+.menu-btn{background:transparent;color:var(--ink)}
+.shell{min-height:calc(100vh - 66px)}
+.side{top:66px;height:calc(100vh - 66px);background:var(--bone);border-right:1px solid var(--sand);padding:22px 14px 40px}
+@media(max-width:900px){
+  .side{top:66px;background:var(--bone)}
+  .scrim{inset:66px 0 0}
+}
+
+/* side menu: spaced capitals, sage when selected */
+.navlabel{font-size:.62rem;font-weight:500;letter-spacing:.3em;color:var(--clay);opacity:1;margin-bottom:10px}
+.navgroup{margin-bottom:24px}
+.tab,.side .tab{
+  font-size:.72rem;font-weight:500;text-transform:uppercase;letter-spacing:.16em;
+  color:var(--ink);border-radius:999px;padding:11px 16px;
+}
+.tab:hover,.side .tab:hover{background:var(--linen);color:var(--ink)}
+.tab.on,.side .tab.on{background:var(--sage);color:var(--on-sage);border-color:var(--sage)}
+.tab .ico{display:none}
+.tab .pill{background:var(--ink);color:var(--bone);letter-spacing:0}
+.tab.on .pill{background:var(--on-sage);color:var(--bone)}
+
+/* page titles: the site's uppercase headings */
+.page h2,.row-between h2{
+  font-size:clamp(1.4rem,2.6vw,1.9rem);font-weight:500;text-transform:uppercase;
+  letter-spacing:.03em;line-height:1.1;
+}
+.page > .row-between:first-child{border-bottom:1px solid var(--sand);padding-bottom:18px}
+.card h3,.modal h2{font-weight:500;letter-spacing:.01em}
+.modal h2{text-transform:uppercase;letter-spacing:.03em}
+.note,.page > .note{color:var(--soft)}
+.meta{color:var(--ink3)}
+
+/* buttons: ink pills with spaced capitals, exactly like the site */
+.btn{
+  background:var(--ink);color:var(--bone);border:1px solid transparent;border-radius:999px;
+  font-size:.72rem;font-weight:500;text-transform:uppercase;letter-spacing:.2em;
+  padding:16px 30px;transition:transform .18s ease,background .18s ease;
+}
+.btn:hover{opacity:1;background:#14160F;transform:translateY(-1px)}
+.btn.small{font-size:.64rem;letter-spacing:.16em;padding:10px 18px}
+.btn.ghost{background:transparent;color:var(--ink);border-color:var(--sand)}
+.btn.ghost:hover{background:#fff}
+.btn.gold{background:var(--sage);color:var(--on-sage)}
+.btn.gold:hover{background:#7C8169}
+.btn.danger{background:var(--bad);color:#fff}
+
+/* fields and labels */
+label{font-size:.64rem;font-weight:500;letter-spacing:.24em;color:var(--clay)}
+input,textarea,select{background:#fff;border:1px solid var(--sand);border-radius:14px}
+input:focus,textarea:focus,select:focus{border-color:var(--ink)}
+.searchbar{border-radius:999px}
+
+/* cards and pills */
+.card,.login-card,.modal{border-radius:22px}
+.card{border-color:var(--line)}
+.pill{background:var(--mist);color:var(--clay);letter-spacing:.14em}
+.chip{text-transform:uppercase;letter-spacing:.14em;font-size:.66rem}
+.chip.on{background:var(--sage);color:var(--on-sage);border-color:var(--sage)}
+
+/* number tiles: the pale sage blocks from the site countdown */
+.stat{background:var(--mist);border:0;border-radius:16px}
+.stat .n,.stat-n,.stat b{font-weight:500;letter-spacing:0}
+.stat .lab,.stat .l,.stat-l,.stat .meta{font-size:.62rem;font-weight:500;letter-spacing:.22em;color:var(--clay)}
+
+/* sign in */
+.login-shell{background:var(--linen)}
+.login-card{border-color:var(--sand);padding:40px 34px}
+.login-card .brandmark{justify-content:center;margin-bottom:6px}
+.login-card h1{text-align:center;font-size:1.7rem;font-weight:500;text-transform:uppercase;letter-spacing:.04em;margin:18px 0 8px}
+.login-card p{text-align:center;color:var(--soft)}
+
+/* the bulk video box, in the site's colours */
+#fgBulk{border-color:var(--sage);border-radius:22px;background:#fff}
+#fgBulk b{text-transform:uppercase;letter-spacing:.16em;font-size:.78rem;font-weight:500}
+
+.toast{background:var(--ink);color:var(--bone)}
+.top .wrap,header.top .wrap{height:100%;display:flex;align-items:center;justify-content:space-between}
+@media(min-width:901px){.main{padding:34px 40px 80px}}
 </style>
 </head>
 <body>
