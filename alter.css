@@ -739,7 +739,8 @@ nav.nav{
 @media(prefers-reduced-motion:reduce){
   .sticky{transition:none}
 }
-@media(max-width:819px){ body{padding-bottom:82px} }
+/* room for the bottom Join bar, only on pages that have it */
+@media(max-width:819px){ body:has(.sticky){padding-bottom:82px} }
 
 /* ── modal ──────────────────────────────────────────────────── */
 .promo{position:fixed;inset:0;z-index:90;display:flex;align-items:center;justify-content:center;padding:20px}
