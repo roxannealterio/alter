@@ -507,115 +507,108 @@
   .stat .n{font-size:1.5rem}
 }
 
-/* ══════════════════════════════════════════════════════════════
-   MATCH THE WEBSITE
-   Same type, colours and buttons as alteryouapp.com: Hanken Grotesk,
-   uppercase spaced labels, ink pill buttons, a cream bar with the clay
-   wordmark, sage for what is selected, the pale sage tiles for numbers.
-   Only looks change here. Nothing below touches behaviour.
-   ══════════════════════════════════════════════════════════════ */
+/* ── ADMIN LOOK ──────────────────────────────────────────────────
+   A plain, dense working admin in the brand colours: white panels,
+   sentence case, small type, square-ish corners. Looks only. */
 :root{
-  --olive:#2B2D26; --sage:#8B907A; --sage-d:#5A6049; --on-sage:#22241D;
-  --clay:#5A6049; --mist:#DDE2D3; --linen:#EDE8E0; --bone:#F5F2EC;
-  --wash:#EDE8E0; --soft:#5A5F4E; --ink3:#7A7E70; --line:#E4E0D6; --sand:#DDD8CC;
+  --olive:#2B2D26; --sage:#8B907A; --sage-d:#5A6049; --clay:#5A6049;
+  --bg:#F6F4EF; --card:#FFFFFF; --line:#E6E2D9; --sand:#DDD8CC;
+  --ink:#24261F; --ink2:#55594C; --ink3:#878A7E; --soft:#55594C; --wash:#F1EEE7;
   --f:'Hanken Grotesk',ui-sans-serif,system-ui,-apple-system,'Segoe UI',sans-serif;
-  --f-mark:'Bricolage Grotesque','Century Gothic','Futura','Hanken Grotesk',sans-serif;
 }
-body{font-family:var(--f);background:var(--bone);color:var(--ink);letter-spacing:.005em}
-h1,h2,h3,.stat .n,.stat-n,.stat b{font-family:var(--f)}
-input,textarea,select,button{font-family:var(--f)}
+body{font-family:var(--f);background:var(--bg);color:var(--ink);font-size:14px;letter-spacing:0}
+h1,h2,h3,input,textarea,select,button,.stat .n,.stat-n,.stat b{font-family:var(--f)}
 
-/* the wordmark, as in the site nav */
-.brandmark span{font-family:var(--f-mark);font-weight:500;letter-spacing:.22em;font-size:.98rem;color:var(--clay);text-transform:uppercase}
-.brandmark svg path{stroke:var(--clay)}
-
-/* top bar: cream and blurred like the site nav, not a dark slab */
-.top,header.top{
-  background:rgba(245,242,236,.92);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);
-  color:var(--ink);border-bottom:1px solid var(--sand);box-shadow:none;height:66px;
-}
-header.top .brandmark span{color:var(--clay)}
-.who,header.top .who{color:var(--soft);font-size:.8rem}
-.logout{color:var(--ink);text-decoration:none;font-size:.7rem;font-weight:500;text-transform:uppercase;letter-spacing:.2em;border-bottom:1px solid var(--sand);padding-bottom:3px}
-.logout:hover{border-color:var(--ink)}
-.menu-btn{background:transparent;color:var(--ink)}
-.shell{min-height:calc(100vh - 66px)}
-.side{top:66px;height:calc(100vh - 66px);background:var(--bone);border-right:1px solid var(--sand);padding:22px 14px 40px}
-@media(max-width:900px){
-  .side{top:66px;background:var(--bone)}
-  .scrim{inset:66px 0 0}
+/* wordmark only, no icon */
+.brandmark svg{display:none}
+.brandmark span{font-family:var(--f);font-weight:600;font-size:13px;letter-spacing:.18em;color:var(--ink);text-transform:uppercase}
+header.top .brandmark span::after{
+  content:"Admin";margin-left:10px;padding:2px 7px;border-radius:5px;
+  background:var(--wash);color:var(--ink2);font-size:11px;font-weight:600;letter-spacing:.02em;text-transform:none;
 }
 
-/* side menu: spaced capitals, sage when selected */
-.navlabel{font-size:.62rem;font-weight:500;letter-spacing:.3em;color:var(--clay);opacity:1;margin-bottom:10px}
-.navgroup{margin-bottom:24px}
+/* top bar */
+.top,header.top{background:#fff;color:var(--ink);height:56px;border-bottom:1px solid var(--line);box-shadow:none}
+.top .wrap,header.top .wrap{height:100%;display:flex;align-items:center;justify-content:space-between;padding:0 20px}
+.who,header.top .who{color:var(--ink3);font-size:13px;gap:18px}
+.logout{color:var(--ink2);text-decoration:none;font-size:13px;font-weight:500}
+.logout:hover{color:var(--ink);text-decoration:underline}
+.menu-btn{background:var(--wash);color:var(--ink);border-radius:8px}
+
+/* sidebar */
+.shell{min-height:calc(100vh - 56px)}
+.side{top:56px;height:calc(100vh - 56px);background:#fff;border-right:1px solid var(--line);padding:16px 10px 40px}
+@media(max-width:900px){.side{top:56px}.scrim{inset:56px 0 0}}
+.navgroup{margin-bottom:18px}
+.navlabel{font-size:11px;font-weight:600;letter-spacing:.06em;color:var(--ink3);opacity:1;padding:0 10px;margin-bottom:4px}
 .tab,.side .tab{
-  font-size:.72rem;font-weight:500;text-transform:uppercase;letter-spacing:.16em;
-  color:var(--ink);border-radius:999px;padding:11px 16px;
+  font-size:14px;font-weight:500;text-transform:none;letter-spacing:0;color:var(--ink2);
+  border-radius:7px;padding:7px 10px;margin-bottom:1px;border:0;
 }
-.tab:hover,.side .tab:hover{background:var(--linen);color:var(--ink)}
-.tab.on,.side .tab.on{background:var(--sage);color:var(--on-sage);border-color:var(--sage)}
+.tab:hover,.side .tab:hover{background:var(--wash);color:var(--ink)}
+.tab.on,.side .tab.on{background:var(--wash);color:var(--ink);font-weight:600;box-shadow:inset 3px 0 0 var(--sage)}
 .tab .ico{display:none}
-.tab .pill{background:var(--ink);color:var(--bone);letter-spacing:0}
-.tab.on .pill{background:var(--on-sage);color:var(--bone)}
+.tab .pill{background:var(--sage);color:#fff;font-size:11px;letter-spacing:0;border-radius:5px}
+.tab.on .pill{background:var(--sage);color:#fff}
 
-/* page titles: the site's uppercase headings */
-.page h2,.row-between h2{
-  font-size:clamp(1.4rem,2.6vw,1.9rem);font-weight:500;text-transform:uppercase;
-  letter-spacing:.03em;line-height:1.1;
-}
-.page > .row-between:first-child{border-bottom:1px solid var(--sand);padding-bottom:18px}
-.card h3,.modal h2{font-weight:500;letter-spacing:.01em}
-.modal h2{text-transform:uppercase;letter-spacing:.03em}
-.note,.page > .note{color:var(--soft)}
-.meta{color:var(--ink3)}
+/* page header */
+@media(min-width:901px){.main{padding:28px 36px 80px}}
+.page h2,.row-between h2{font-size:22px;font-weight:600;text-transform:none;letter-spacing:-.01em;line-height:1.25;margin:0}
+.page > .row-between:first-child{border-bottom:0;padding-bottom:0;margin-bottom:4px;align-items:center}
+.page > .note{font-size:13.5px;color:var(--ink3);max-width:none;margin:0 0 20px;padding:0;background:none;border:0}
+.card h3{font-size:15px;font-weight:600;letter-spacing:0}
+.modal h2{font-size:18px;font-weight:600;text-transform:none;letter-spacing:0}
+.meta{color:var(--ink3);font-size:12.5px}
+.note{color:var(--ink2)}
 
-/* buttons: ink pills with spaced capitals, exactly like the site */
+/* buttons */
 .btn{
-  background:var(--ink);color:var(--bone);border:1px solid transparent;border-radius:999px;
-  font-size:.72rem;font-weight:500;text-transform:uppercase;letter-spacing:.2em;
-  padding:16px 30px;transition:transform .18s ease,background .18s ease;
+  background:var(--ink);color:#fff;border:1px solid var(--ink);border-radius:8px;
+  font-size:14px;font-weight:600;text-transform:none;letter-spacing:0;padding:10px 16px;
+  transition:background .12s ease;transform:none;
 }
-.btn:hover{opacity:1;background:#14160F;transform:translateY(-1px)}
-.btn.small{font-size:.64rem;letter-spacing:.16em;padding:10px 18px}
-.btn.ghost{background:transparent;color:var(--ink);border-color:var(--sand)}
-.btn.ghost:hover{background:#fff}
-.btn.gold{background:var(--sage);color:var(--on-sage)}
-.btn.gold:hover{background:#7C8169}
-.btn.danger{background:var(--bad);color:#fff}
+.btn:hover{background:#000;opacity:1;transform:none}
+.btn.small{font-size:13px;padding:6px 12px;border-radius:7px}
+.btn.ghost{background:#fff;color:var(--ink);border-color:var(--sand)}
+.btn.ghost:hover{background:var(--wash)}
+.btn.gold{background:var(--sage);border-color:var(--sage);color:#fff}
+.btn.gold:hover{background:var(--sage-d)}
+.btn.danger{background:var(--bad);border-color:var(--bad);color:#fff}
 
-/* fields and labels */
-label{font-size:.64rem;font-weight:500;letter-spacing:.24em;color:var(--clay)}
-input,textarea,select{background:#fff;border:1px solid var(--sand);border-radius:14px}
-input:focus,textarea:focus,select:focus{border-color:var(--ink)}
-.searchbar{border-radius:999px}
+/* forms */
+label{font-size:12.5px;font-weight:600;text-transform:none;letter-spacing:0;color:var(--ink2);margin-bottom:6px}
+input,textarea,select{background:#fff;border:1px solid var(--sand);border-radius:8px;font-size:14px;padding:9px 12px}
+input:focus,textarea:focus,select:focus{border-color:var(--ink);box-shadow:0 0 0 3px rgba(36,38,31,.08)}
+.searchbar{border-radius:8px;padding:8px 12px;font-size:14px;max-width:280px}
 
-/* cards and pills */
-.card,.login-card,.modal{border-radius:22px}
-.card{border-color:var(--line)}
-.pill{background:var(--mist);color:var(--clay);letter-spacing:.14em}
-.chip{text-transform:uppercase;letter-spacing:.14em;font-size:.66rem}
-.chip.on{background:var(--sage);color:var(--on-sage);border-color:var(--sage)}
+/* panels, badges, chips */
+.card{border-radius:10px;border-color:var(--line);box-shadow:none;padding:16px 18px}
+.modal{border-radius:12px;background:#fff}
+.login-card{border-radius:12px}
+.pill{background:var(--wash);color:var(--ink2);border-radius:5px;letter-spacing:.02em;font-size:11px;text-transform:none;font-weight:600}
+.chip{text-transform:none;letter-spacing:0;font-size:13px;border-radius:7px}
+.chip.on{background:var(--ink);color:#fff;border-color:var(--ink)}
 
-/* number tiles: the pale sage blocks from the site countdown */
-.stat{background:var(--mist);border:0;border-radius:16px}
-.stat .n,.stat-n,.stat b{font-weight:500;letter-spacing:0}
-.stat .lab,.stat .l,.stat-l,.stat .meta{font-size:.62rem;font-weight:500;letter-spacing:.22em;color:var(--clay)}
+/* number cards */
+.stat{background:#fff;border:1px solid var(--line);border-radius:10px;padding:14px 16px}
+.stat .n,.stat-n,.stat b{font-size:26px;font-weight:600;letter-spacing:-.01em;color:var(--ink)}
+.stat .lab,.stat .l,.stat-l,.stat .meta{font-size:12px;font-weight:500;letter-spacing:0;text-transform:none;color:var(--ink3)}
 
 /* sign in */
-.login-shell{background:var(--linen)}
-.login-card{border-color:var(--sand);padding:40px 34px}
-.login-card .brandmark{justify-content:center;margin-bottom:6px}
-.login-card h1{text-align:center;font-size:1.7rem;font-weight:500;text-transform:uppercase;letter-spacing:.04em;margin:18px 0 8px}
-.login-card p{text-align:center;color:var(--soft)}
+.login-shell{background:var(--bg)}
+.login-card{border-color:var(--line);padding:32px 28px}
+.login-card .brandmark{justify-content:flex-start;margin-bottom:4px}
+.login-card h1{font-size:20px;font-weight:600;text-transform:none;letter-spacing:-.01em;text-align:left;margin:16px 0 4px}
+.login-card p{font-size:13.5px;color:var(--ink3);text-align:left;margin-bottom:18px}
 
-/* the bulk video box, in the site's colours */
-#fgBulk{border-color:var(--sage);border-radius:22px;background:#fff}
-#fgBulk b{text-transform:uppercase;letter-spacing:.16em;font-size:.78rem;font-weight:500}
+/* bulk upload box */
+#fgBulk{border:1.5px dashed var(--sand);border-radius:10px;background:#fff;padding:18px;text-align:left}
+#fgBulk:hover{border-color:var(--sage)}
+#fgBulk b{text-transform:none;letter-spacing:0;font-size:14px;font-weight:600}
 
-.toast{background:var(--ink);color:var(--bone)}
-.top .wrap,header.top .wrap{height:100%;display:flex;align-items:center;justify-content:space-between}
-@media(min-width:901px){.main{padding:34px 40px 80px}}
+.toast{background:var(--ink);color:#fff;border-radius:8px}
+header.top .brandmark span,.login-card .brandmark span{color:var(--ink)}
+.shell{padding:0;margin:0}
 </style>
 </head>
 <body>
@@ -711,7 +704,7 @@ input:focus,textarea:focus,select:focus{border-color:var(--ink)}
   <section class="page wrap hidden" id="page-events">
     <div class="row-between">
       <h2>Events</h2>
-    <div class="note">Real world events, like a class in the park. They show on the website and in the app, and disappear on their own once the date has passed.</div>
+    <div class="note">Shown on the website and in the app. Removed automatically after the date.</div>
       <button class="btn small" id="newEvent">Add event</button>
     </div>
     <div id="eventsList"><div class="loading"><span class="spin" style="border-color:rgba(0,0,0,.15);border-top-color:var(--sage)"></span></div></div>
@@ -721,7 +714,7 @@ input:focus,textarea:focus,select:focus{border-color:var(--ink)}
   <section class="page wrap hidden" id="page-challenges">
     <div class="row-between">
       <h2>Challenges</h2>
-    <div class="note">Every challenge, past and upcoming. Dates here drive the countdown in the app, so keep them matching the website.</div>
+    <div class="note">Dates here set the countdown in the app.</div>
       <button class="btn small" id="newChallenge">Add challenge</button>
     </div>
     <div id="challengesList"><div class="loading"><span class="spin" style="border-color:rgba(0,0,0,.15);border-top-color:var(--sage)"></span></div></div>
@@ -814,13 +807,7 @@ input:focus,textarea:focus,select:focus{border-color:var(--ink)}
       </div>
     </div>
     <input type="file" id="leadCsv" accept=".csv,text/csv" style="display:none">
-  <div class="note">
-    Everyone who has filled in a form on the website. Yours to keep, and
-    yours to export. The consent column is the one that matters before you
-    send anything: a tick means they agreed to hear from you generally, and
-    a blank means you may only contact them about the thing they signed up
-    for.
-  </div>
+  <div class="note">Website sign-ups. A tick under consent means they agreed to marketing emails.</div>
 
   <div class="lead-bar">
     <input type="search" id="leadSearch" placeholder="Search name or email">
@@ -844,11 +831,7 @@ input:focus,textarea:focus,select:focus{border-color:var(--ink)}
 <!-- ═══ SEND ═══════════════════════════════════════════════════ -->
   <section class="page wrap hidden" id="page-send">
     <div class="row-between"><h2>Send a message</h2></div>
-    <div class="note">
-      Write once, then take it wherever you send from. Who it goes to is set by
-      the filters on the Leads tab, so filter there first and the count here follows.
-      Anyone who has unsubscribed is always left out, whatever the filters say.
-    </div>
+    <div class="note">Goes to the leads filtered on the Leads page. Unsubscribed people are always excluded.</div>
 
     <!-- The robot's own work, shown first, because the first thing anyone
          wants to know in the morning is whether it ran overnight. -->
@@ -968,7 +951,7 @@ input:focus,textarea:focus,select:focus{border-color:var(--ink)}
       <h2>Announcements</h2>
       <button class="btn small" id="newAnnounce">New announcement</button>
     </div>
-    <div class="note">Announcements appear in the app and members get a notification next time they open it. Good for "Bikini Build starts Monday", or anything else you want members to see.</div>
+    <div class="note">Shown in the app with a notification.</div>
     <div id="announceList"><div class="loading"><span class="spin" style="border-color:rgba(0,0,0,.15);border-top-color:var(--sage)"></span></div></div>
   </section>
 
@@ -978,7 +961,7 @@ input:focus,textarea:focus,select:focus{border-color:var(--ink)}
       <h2>Transformations</h2>
       <button class="btn small" id="newTf">Add transformation</button>
     </div>
-    <div class="note">Client before and after photos for the homepage and glute page. Always get written permission before you put someone's photo up.</div>
+    <div class="note">Before and after photos for the homepage and glute page. Written permission required.</div>
     <div class="card" id="tfList"><div class="loading"><span class="spin" style="border-color:rgba(0,0,0,.15);border-top-color:var(--sage)"></span></div></div>
     <input type="file" id="tf_file" accept="image/*" style="display:none">
   </section>
@@ -999,7 +982,7 @@ input:focus,textarea:focus,select:focus{border-color:var(--ink)}
 
   <section class="page wrap hidden" id="page-siteimg">
     <div class="row-between"><h2>Website Images</h2></div>
-    <div class="note">Every photo spot on the website, grouped by the page it appears on. Upload one and it replaces the placeholder on the live site straight away, no republishing needed. The size note under each one is the shape it gets cropped to, so pick a photo that suits it.<br>If this list is empty, run <b>SITE_IMAGES.sql</b> in Supabase once.</div>
+    <div class="note">Photo spots on the website, by page. Uploads go live straight away. If the list is empty, run <b>SITE_IMAGES.sql</b> in Supabase.</div>
     <div class="card" id="siteImgList"><div class="loading"><span class="spin" style="border-color:rgba(0,0,0,.15);border-top-color:var(--sage)"></span></div></div>
     <input type="file" id="si_file" accept="image/*" style="display:none">
   </section>
@@ -1010,7 +993,7 @@ input:focus,textarea:focus,select:focus{border-color:var(--ink)}
       <h2>Blog</h2>
       <button class="btn small" id="newPost">New article</button>
     </div>
-    <div class="note">Articles you publish here appear on the website blog straight away. Add a cover image and it shows on the card and at the top of the article.</div>
+    <div class="note">Published posts appear on the website blog straight away.</div>
     <div id="postList"><div class="loading"><span class="spin" style="border-color:rgba(0,0,0,.15);border-top-color:var(--sage)"></span></div></div>
     <input type="file" id="p_file" accept="image/*" style="display:none">
   </section>
@@ -1021,11 +1004,11 @@ input:focus,textarea:focus,select:focus{border-color:var(--ink)}
       <h2>Exercises and videos</h2>
       <input class="searchbar" id="fgSearch" placeholder="Search form guides" style="margin:0">
     </div>
-    <div class="note">Every exercise in the app, with its set up, movement, mistakes and cues already written. Click one to upload the video members watch when they tap "how to".</div>
+    <div class="note">The demo video members see on each exercise.</div>
     <div class="chips" id="fgChips"></div>
     <div class="card" id="fgBulk" style="border:2px dashed var(--sage);text-align:center;padding:22px;cursor:pointer;margin-bottom:14px">
-      <b>Drop lots of videos at once</b>
-      <div class="meta">Drag videos here, or click to pick them. Name each file after the exercise, like "Hip Thrust.mp4", and it goes to that exercise automatically.</div>
+      <b>Bulk upload</b>
+      <div class="meta">Drag videos here or click to choose. Each file name must match the exercise, e.g. Hip Thrust.mp4.</div>
       <div id="fgBulkLog" style="text-align:left;margin-top:10px;font-size:13px;line-height:1.6"></div>
     </div>
     <input type="file" id="fg_bulk" accept="video/*" multiple style="display:none">
@@ -1039,7 +1022,7 @@ input:focus,textarea:focus,select:focus{border-color:var(--ink)}
       <h2>Recipe Photos</h2>
       <input class="searchbar" id="recipeSearch" placeholder="Search recipes" style="margin:0">
     </div>
-    <div class="note">Click a photo to upload or replace it. It updates in the app straight away.</div>
+    <div class="note">Click a photo to upload or replace it.</div>
     <div class="card" id="recipeList"><div class="loading"><span class="spin" style="border-color:rgba(0,0,0,.15);border-top-color:var(--sage)"></span></div></div>
     <input type="file" id="r_file" accept="image/*" style="display:none">
   </section>
@@ -1050,7 +1033,7 @@ input:focus,textarea:focus,select:focus{border-color:var(--ink)}
       <h2>Progress Photos</h2>
       <select class="filter" id="photoChallenge"><option value="all">All photos</option></select>
     </div>
-    <div class="note">These are private client photos. They load through secure, expiring links and are only visible to you here. Filter by a challenge to see just that round's submissions.</div>
+    <div class="note">Private. Only visible to admins.</div>
     <div id="photoGrid" class="photo-grid"><div class="loading"><span class="spin" style="border-color:rgba(0,0,0,.15);border-top-color:var(--sage)"></span></div></div>
   </section>
 
