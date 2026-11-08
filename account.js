@@ -14,6 +14,7 @@
   var form = $('acctForm'), err = $('acctErr'), btn = $('acctBtn');
   var mode = 'signup';
   var justCreated = false;
+  var resetEmail = '';
 
   /* ── mode: signup / login ─────────────────────────────────── */
   function setMode(m) {
@@ -148,8 +149,12 @@
     if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) return showErr(err, 'Type your email above first, then tap Forgot your password.');
     sb.auth.resetPasswordForEmail(email, { redirectTo: 'https://alteryouapp.com/account.html?mode=reset' }).then(function (res) {
       if (res.error) throw res.error;
-      err.classList.add('ok');
-      showErr(err, 'Reset link sent. Check your inbox, and your junk folder if it is not there in a few minutes.');
+      /* the reset email carries a code (the same email the app uses), so ask for it here */
+      resetEmail = email; recovering = true;
+      $('r_codeWrap').hidden = false;
+      $('resetLede').textContent = 'We\u2019ve emailed a code to ' + email + '. Type it below with your new password. Check your junk folder if it isn\u2019t there in a few minutes.';
+      $('resetLede').hidden = false;
+      show(reset);
     }).catch(function (e2) { err.classList.remove('ok'); showErr(err, friendly(e2)); });
   });
 
@@ -159,9 +164,17 @@
     var rerr = $('resetErr'), rbtn = $('resetBtn');
     rerr.hidden = true;
     var pw = $('r_pw').value || '';
+    var withCode = !$('r_codeWrap').hidden;
+    var code = String($('r_code').value || '').replace(/\D/g, '');
+    if (withCode && code.length < 6) return showErr(rerr, 'Type the code from the email.');
     if (pw.length < 6) return showErr(rerr, 'Use at least 6 characters.');
     rbtn.disabled = true;
-    sb.auth.updateUser({ password: pw }).then(function (res) {
+    var step = withCode
+      ? sb.auth.verifyOtp({ email: resetEmail, token: code, type: 'recovery' }).then(function (r) {
+          if (r.error) throw new Error('That code is wrong or has expired. Check the newest email, or go back and request a new one.');
+        })
+      : Promise.resolve();
+    step.then(function () { return sb.auth.updateUser({ password: pw }); }).then(function (res) {
       if (res.error) throw res.error;
       recovering = false;
       try { history.replaceState(null, '', 'account.html'); } catch (e2) {}
