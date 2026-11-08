@@ -1713,6 +1713,8 @@ window.ALTER_ANALYTICS = {
    sees it (the account block below hides it). */
 (function () {
   var cta = document.querySelector('[data-acct-cta]');
+  /* a website account is not a membership, so the button never says free */
+  if (cta && /free/i.test(cta.textContent)) cta.textContent = 'Sign up';
   /* "Start 3 days free" links that only lead to the price cards: before
      launch they save a spot too, so the button and what happens match. */
   var trial = [].slice.call(document.querySelectorAll('a:not([data-appstore])')).filter(function (a) {
