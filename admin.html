@@ -2477,6 +2477,15 @@ async function openRecipeEditor(id){
 // ── EXERCISE EDITOR ────────────────────────────────────────
 // Add a new exercise or change an existing one: its name, category,
 // how-to notes and its video. The app reads all of this from form_guides.
+// The app's muscle map only lights up these exact keys, so names typed
+// here are turned into them (Glutes -> glutes, Upper back -> traps).
+const MUSCLE_KEYS = { glutes:'glutes', hamstrings:'hamstrings', quads:'quads', legs:'quads', calves:'calves',
+  'lower back':'lower_back', lower_back:'lower_back', lats:'lats', back:'lats', 'upper back':'traps', traps:'traps',
+  shoulders:'shoulders', 'front shoulders':'shoulders', 'rear delts':'shoulders', 'side delts':'shoulders', delts:'shoulders',
+  chest:'chest', 'upper chest':'chest', biceps:'biceps', triceps:'triceps', core:'core', abs:'core', 'lower abs':'core',
+  'deep core':'core', obliques:'core', forearms:'forearms', grip:'forearms' };
+const normMuscle = m => MUSCLE_KEYS[String(m).trim().toLowerCase()] || String(m).trim();
+const muscleLabel = m => /^[a-z_]+$/.test(m) ? (m.charAt(0).toUpperCase() + m.slice(1)).replace('_', ' ') : m;
 const FG_LIST_FIELDS = [['setup','Set up'],['execution','Movement'],['cues','Cues'],['mistakes','Common mistakes']];
 function openExerciseEditor(id){
   const g = id ? allGuides.find(x => String(x.id) === String(id)) : null;
@@ -2489,8 +2498,8 @@ function openExerciseEditor(id){
     <div class="fgrid">
       <div><label>Category</label><input id="fe_cat" list="fe_cats" value="${esc(g ? g.category || '' : '')}"><datalist id="fe_cats">${cats.map(c => `<option value="${esc(c)}"></option>`).join('')}</datalist></div>
       <div><label>Equipment</label><input id="fe_eq" placeholder="Barbell, bench" value="${esc(g ? g.equipment || '' : '')}"></div>
-      <div><label>Main muscles (comma separated)</label><input id="fe_pm" value="${esc(g ? (g.primary_muscles || []).join(', ') : '')}"></div>
-      <div><label>Other muscles (comma separated)</label><input id="fe_sm" value="${esc(g ? (g.secondary_muscles || []).join(', ') : '')}"></div>
+      <div><label>Main muscles (comma separated)</label><input id="fe_pm" value="${esc(g ? (g.primary_muscles || []).map(muscleLabel).join(', ') : '')}"></div>
+      <div><label>Other muscles (comma separated)</label><input id="fe_sm" value="${esc(g ? (g.secondary_muscles || []).map(muscleLabel).join(', ') : '')}"></div>
     </div>
     ${FG_LIST_FIELDS.map(([k, l]) => `<label>${l} (one per line)</label><textarea id="fe_${k}" rows="3">${esc(g ? (g[k] || []).join('\n') : '')}</textarea>`).join('')}
     <label>Breathing</label><input id="fe_breath" value="${esc(g ? g.breathing || '' : '')}">
@@ -2510,7 +2519,7 @@ function openExerciseEditor(id){
     const clash = allGuides.find(x => String(x.exercise_name).toLowerCase() === name.toLowerCase() && (!g || x.id !== g.id));
     if(clash) return err.textContent = 'There is already an exercise called ' + clash.exercise_name + '.';
     const row = { exercise_name: name, category: $('fe_cat').value.trim() || null, equipment: $('fe_eq').value.trim() || null,
-      primary_muscles: toList($('fe_pm').value), secondary_muscles: toList($('fe_sm').value),
+      primary_muscles: [...new Set(toList($('fe_pm').value).map(normMuscle))], secondary_muscles: [...new Set(toList($('fe_sm').value).map(normMuscle))],
       breathing: $('fe_breath').value.trim() || null };
     FG_LIST_FIELDS.forEach(([k]) => { row[k] = toLines($('fe_' + k).value); });
     btn.disabled = true; btn.innerHTML = '<span class="spin"></span>';
