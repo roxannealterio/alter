@@ -212,8 +212,8 @@
       if (p && p.name && !first) $('acctName').textContent = p.name;
       $('acctPlan').textContent = p && p.premium
         ? 'Member'
-        : 'Free. Start your 3-day free trial in the app.';
-    }, function () { $('acctPlan').textContent = 'Free'; });
+        : 'Not a member yet. Start your 3-day free trial in the app.';
+    }, function () { $('acctPlan').textContent = 'Not a member yet'; });
 
     sb.from('challenge_entries').select('challenge_id, challenges(title, starts_on)').eq('user_id', user.id).then(function (res) {
       var rows = (res && res.data) || [];
