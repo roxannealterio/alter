@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en-AU">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>ALTER YOU</title>
+<meta name="robots" content="noindex">
+<meta name="theme-color" content="#F6F3ED">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,600&family=Hanken+Grotesk:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="icon" href="/favicon.png">
+<link rel="apple-touch-icon" href="/icon.png">
+<style>
+  /* This page catches every address that has no page of its own. Most
+     importantly the links shared from the app:
+       alteryouapp.com/join/CODE  (ambassador link)
+       alteryouapp.com/add/CODE   (friend invite)
+     It opens the app if she has it, and otherwise shows her the code. */
+  :root { --bg:#F6F3ED; --card:#FFFFFF; --ink:#2B2A26; --ink2:#6B685F; --sage:#5A6049; --line:#E4DFD4; }
+  * { box-sizing:border-box; }
+  body { margin:0; min-height:100vh; background:var(--bg); color:var(--ink);
+    font:400 16px/1.55 'Hanken Grotesk', system-ui, -apple-system, sans-serif;
+    display:flex; flex-direction:column; align-items:center; justify-content:center;
+    padding:32px max(20px, env(safe-area-inset-left, 0px)) 32px max(20px, env(safe-area-inset-right, 0px)); }
+  .logo { font:500 .98rem 'Bricolage Grotesque', system-ui, sans-serif; letter-spacing:.22em; color:var(--sage); text-decoration:none; margin-bottom:28px; }
+  .card { width:100%; max-width:420px; background:var(--card); border:1px solid var(--line); border-radius:22px; padding:32px 26px; text-align:center; }
+  h1 { font:600 1.6rem/1.2 'Bricolage Grotesque', system-ui, sans-serif; margin:0 0 10px; text-wrap:balance; }
+  p { margin:0 0 18px; color:var(--ink2); }
+  .code { display:inline-block; font:600 1.5rem 'Bricolage Grotesque', system-ui, sans-serif; letter-spacing:.14em;
+    border:1.5px dashed var(--sage); color:var(--sage); border-radius:14px; padding:10px 22px; margin:4px 0 20px; user-select:all; }
+  .btn { display:block; width:100%; padding:15px 18px; border-radius:100px; font:600 1rem 'Hanken Grotesk', sans-serif;
+    text-decoration:none; border:0; cursor:pointer; margin-top:10px; }
+  .btn.main { background:var(--sage); color:#fff; }
+  .btn.ghost { background:transparent; color:var(--ink); border:1px solid var(--line); }
+  .small { font-size:.85rem; margin:16px 0 0; }
+  [hidden] { display:none !important; }
+</style>
+</head>
+<body>
+  <a class="logo" href="/">ALTER YOU</a>
+
+  <div class="card" id="invite" hidden>
+    <h1 id="h"></h1>
+    <p id="lede"></p>
+    <div class="code" id="code"></div>
+    <a class="btn main" id="open" href="#">Open in the app</a>
+    <a class="btn ghost" id="get" href="/pricing.html">Get the app</a>
+    <p class="small" id="note"></p>
+  </div>
+
+  <div class="card" id="lost" hidden>
+    <h1>This page has moved</h1>
+    <p>The link you followed doesn't go anywhere. Everything is on the home page.</p>
+    <a class="btn main" href="/">Go to the home page</a>
+  </div>
+
+<script>
+  // ROXY: once the app is live, put the App Store link here and the
+  // "Get the app" button goes straight to it.
+  var APP_STORE = '';
+
+  (function () {
+    var m = location.pathname.match(/^\/(join|add)\/([A-Za-z0-9_]+)\/?$/);
+    if (!m) { document.getElementById('lost').hidden = false; return; }
+    var kind = m[1], code = kind === 'join' ? m[2].toUpperCase() : m[2];
+    var appLink = 'alteryou://' + kind + '/' + code;
+
+    document.title = kind === 'join' ? 'Join ALTER YOU' : 'Train with me on ALTER YOU';
+    document.getElementById('h').textContent = kind === 'join' ? "You're invited to ALTER YOU" : 'Train with me on ALTER YOU';
+    document.getElementById('lede').textContent = kind === 'join'
+      ? 'Already have the app? Open it below. New here? Get the app and enter this code when it asks "Got a referral code?"'
+      : 'Open the app to add them as a friend. New here? Get the app first, then tap this link again.';
+    document.getElementById('code').textContent = code;
+    if (kind === 'add') document.getElementById('code').hidden = true;
+    document.getElementById('note').textContent = kind === 'join'
+      ? 'Your code is saved to your account once you sign up.'
+      : 'They will see your posts once you accept each other.';
+    document.getElementById('open').href = appLink;
+    if (APP_STORE) { var g = document.getElementById('get'); g.href = APP_STORE; g.textContent = 'Download the app'; }
+    // No automatic jump to the app: on an iPhone without the app installed,
+    // Safari shows an "address is invalid" error. She taps the button instead.
+    document.getElementById('invite').hidden = false;
+  })();
+</script>
+</body>
+</html>
