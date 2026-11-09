@@ -2130,10 +2130,10 @@ $('ex_file')?.addEventListener('change', async e => {
       // The videos table has no video_url column, so writing one made every
       // upload here fail. It is url only.
       if(existing && existing.id){
-        const { error } = await sb.from('videos').update({ url: pub.publicUrl }).eq('id', existing.id);
+        const { error } = await sb.from('videos').update({ url: pub.publicUrl, ...vidExtras(existing.exercise_name || name) }).eq('id', existing.id);
         if(error) throw error;
       } else {
-        const { error } = await sb.from('videos').insert({ title: name, exercise_name: name, url: pub.publicUrl });
+        const { error } = await sb.from('videos').insert({ title: name, exercise_name: name, url: pub.publicUrl, ...vidExtras(name) });
         if(error) throw error;
       }
 
@@ -2255,8 +2255,8 @@ async function bulkUploadVideos(files){
       const { error } = await sb.from('form_guides').update({ video_url: pub.publicUrl }).eq('exercise_name', name);
       if(error) throw error;
       const v = (vids || []).find(x => x.exercise_name === name);
-      const r = v ? await sb.from('videos').update({ url: pub.publicUrl }).eq('id', v.id)
-                  : await sb.from('videos').insert({ title: name, exercise_name: name, url: pub.publicUrl });
+      const r = v ? await sb.from('videos').update({ url: pub.publicUrl, ...vidExtras(name) }).eq('id', v.id)
+                  : await sb.from('videos').insert({ title: name, exercise_name: name, url: pub.publicUrl, ...vidExtras(name) });
       if(r.error) console.warn('videos table not updated:', r.error.message);
       try { await makeCover(name, URL.createObjectURL(file)); } catch(e){ console.warn(e); }
       done++; log.lastChild.innerHTML = `&#10003; <b>${esc(name)}</b>`;
@@ -2337,6 +2337,9 @@ $('od_file')?.addEventListener('change', async e => {
 // The app shows a still from each video as its cover. It reads it from
 // videos/covers/<exercise-name>.jpg, so making one here is all it takes.
 const coverSlug = n => String(n || '').toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '');
+// A video row needs its library section and its cover, or the app's Video
+// library leaves it out (no section) or shows a blank tile (no thumbnail).
+function vidExtras(name){ return { collection: 'Form Library', thumb_url: sb.storage.from('videos').getPublicUrl(`covers/${coverSlug(name)}.jpg`).data.publicUrl }; }
 function makeCover(name, src){
   return new Promise((resolve, reject) => {
     const v = document.createElement('video');
@@ -2650,8 +2653,8 @@ function openExerciseEditor(id){
       }
       if('video_url' in row){
         const { data: v } = await sb.from('videos').select('id').eq('exercise_name', name).limit(1);
-        if(v && v.length) await sb.from('videos').update({ url: row.video_url }).eq('id', v[0].id);
-        else if(row.video_url) await sb.from('videos').insert({ title: name, exercise_name: name, url: row.video_url });
+        if(v && v.length) await sb.from('videos').update(row.video_url ? { url: row.video_url, ...vidExtras(name) } : { url: null, collection: null, thumb_url: null }).eq('id', v[0].id);
+        else if(row.video_url) await sb.from('videos').insert({ title: name, exercise_name: name, url: row.video_url, ...vidExtras(name) });
       }
       closeModal(); toast(g ? 'Exercise saved' : 'Exercise added'); loadFormGuides();
     } catch(ex){
