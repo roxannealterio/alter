@@ -1807,3 +1807,14 @@ window.ALTER_ANALYTICS = {
     ul.appendChild(li);
   });
 })();
+
+/* ── "Coach with us" in the top menu, before Log in ───────── */
+(function () {
+  var links = document.getElementById('links');
+  if (!links || links.querySelector('a[href="coach.html"]')) return;
+  var a = document.createElement('a');
+  a.href = 'coach.html';
+  a.textContent = 'Coach with us';
+  var login = links.querySelector('[data-acct-login]');
+  links.insertBefore(a, login || null);
+})();
