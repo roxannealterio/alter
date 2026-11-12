@@ -554,7 +554,11 @@ window.ALTER_ANALYTICS = {
       phone:       (f.get('phone') || '').toString().trim() || null,
       source:      form.dataset.source || 'website',
       days:        (f.get('days')  || '').toString() || null,
-      where_train: (f.get('where') || '').toString() || null,
+      /* A coach application has no "where do you train" question, so its two
+         extra answers ride in that column and show in the admin lead list. */
+      where_train: (f.get('where') || '').toString()
+        || [f.get('instagram') ? 'IG ' + f.get('instagram') : '', (f.get('qualified') || '').toString()].filter(Boolean).join(' · ')
+        || null,
       consent:     form.querySelector('[name="consent"]') ? !!f.get('consent') : true
     };
     if (!row.email) return Promise.resolve();
@@ -585,7 +589,7 @@ window.ALTER_ANALYTICS = {
     });
   }
 
-  ['join-form', 'launch-form', 'wait-form', 'build-form'].forEach(function (id) {
+  ['join-form', 'launch-form', 'wait-form', 'build-form', 'coach-form'].forEach(function (id) {
     var form = document.getElementById(id);
     if (!form) return;
     /* the challenge form and the event popup name their parts differently,
@@ -637,7 +641,9 @@ window.ALTER_ANALYTICS = {
                   profile: { data: { type: 'profile', attributes: {
                     email:      (kf.get('email') || '').toString().trim().toLowerCase(),
                     first_name: (kf.get('name')  || '').toString().trim(),
-                    properties: { source: form.dataset.source || 'website' }
+                    properties: Object.assign({ source: form.dataset.source || 'website' },
+                      kf.get('instagram') ? { instagram: (kf.get('instagram') || '').toString().trim() } : {},
+                      kf.get('qualified') ? { coach_qualified: (kf.get('qualified') || '').toString() } : {})
                   } } }
                 },
                 relationships: { list: { data: { type: 'list', id: kl.list_id } } }
@@ -1787,4 +1793,17 @@ window.ALTER_ANALYTICS = {
     setTimeout(function () { t.remove(); }, 4800);
     try { history.replaceState(null, '', location.pathname); } catch (e) {}
   }
+})();
+
+/* ── "Coach with us" in every footer ──────────────────────────
+   Added here once instead of editing the footer on every page. */
+(function () {
+  document.querySelectorAll('footer h4').forEach(function (h) {
+    if (h.textContent.trim() !== 'Company') return;
+    var ul = h.nextElementSibling;
+    if (!ul || ul.querySelector('a[href="coach.html"]')) return;
+    var li = document.createElement('li');
+    li.innerHTML = '<a href="coach.html">Coach with us</a>';
+    ul.appendChild(li);
+  });
 })();
